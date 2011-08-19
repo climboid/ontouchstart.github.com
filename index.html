@@ -38,6 +38,26 @@
         }
       }
 
+      function touchMoveToSpin(sensor, element, d, xmin, xmax) {
+        var spinClassArray = new Array(n);
+        var angle = -180;
+        var n = xmax - xmin;
+        for(var i = 0; i < n; i++){
+          css('.spin-' + i + ' { -webkit-transform: rotateY(' + angle + 'deg);}');
+          angle += d;
+        } 
+        var oldClass = el.className;
+
+        sensor.ontouchstart = function () { 
+          sensor.ontouchmove = function (e) {
+            var x = e.touches[0].pageX;
+            if( x < xmin) return;
+            if( x > xmax) return;
+            element.className = oldClass + ' spin-' + (x - xmin);
+          };
+        }
+      }
+
       window.addEventListener('load', function() {
         lockDocument();
         resetCSS();
@@ -45,6 +65,8 @@
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
         holdToChange(helloWorld, 'Hello World from ontouchstart');
+        var w = document.body.scrollWidth;
+        touchMoveToSpin(document, helloWorld, 360/w, 0, w);
       });
     </script>
   </head>
