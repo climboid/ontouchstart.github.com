@@ -26,6 +26,9 @@
         css(" h1 { width: 100%; text-align: center; }");
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
+        helloWorld.ontouchstart = function () {
+          this.innerHTML = 'Hello World from ontouchstart';
+        };
       });
     </script>
   </head>
