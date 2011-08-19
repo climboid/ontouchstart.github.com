@@ -14,8 +14,15 @@
         parent.appendChild(_el);
         return _el;
       }
+      
+      function lockDocument() {
+        document.addEventListener('touchmove', function (e) {
+           e.preventDefault();
+        })
+      }
 
       window.addEventListener('load', function() {
+        lockDocument();
         css(" h1 { width: 100%; text-align: center; }");
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
