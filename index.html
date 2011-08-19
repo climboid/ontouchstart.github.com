@@ -20,6 +20,16 @@
            e.preventDefault();
         })
       }
+      
+      function holdToChange(el, text) {
+        var old = el.innerHTML;
+        el.ontouchstart = function () { 
+          this.innerHTML = text;
+        }
+        el.ontouchend = function () { 
+          this.innerHTML = old;
+        }
+      }
 
       window.addEventListener('load', function() {
         lockDocument();
@@ -28,12 +38,9 @@
         css(" * { -webkit-text-size-adjust:none; }");
         css(" * { -webkit-tap-highlight-color: transparent;}");
         css(" h1 { width: 100%; text-align: center; }");
-        css(" h1 { width: 100%; text-align: center; }");
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
-        helloWorld.ontouchstart = function () {
-          this.innerHTML = 'Hello World from ontouchstart';
-        };
+        holdToChange(helloWorld, 'hello World from ontouchstart');
       });
     </script>
   </head>
