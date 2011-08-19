@@ -23,6 +23,11 @@
 
       window.addEventListener('load', function() {
         lockDocument();
+        css(" * { -webkit-touch-callout:none; }");
+        css(" * { -webkit-user-select:none; }");
+        css(" * { -webkit-text-size-adjust:none; }");
+        css(" * { -webkit-tap-highlight-color: transparent;}");
+        css(" h1 { width: 100%; text-align: center; }");
         css(" h1 { width: 100%; text-align: center; }");
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
