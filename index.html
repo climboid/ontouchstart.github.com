@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ontouchstart.github.com</title>
+    <style>
+    </style>
+    <script type="text/javascript">
+      function css(rule) {
+        document.styleSheets[0].insertRule(rule);
+      }
+
+      function el(parent, tag) {
+        var _el = document.createElement(tag);
+        parent.appendChild(_el);
+        return _el;
+      }
+
+      window.addEventListener('load', function() {
+        css(" h1 { width: 100%; text-align: center; }");
+        var helloWorld = el(document.body, 'h1');
+        helloWorld.innerHTML = 'Hello World';
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
