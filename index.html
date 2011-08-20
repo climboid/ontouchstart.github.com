@@ -14,7 +14,7 @@
         parent.appendChild(_el);
         return _el;
       }
-      
+
       function resetCSS() {
         css(" * { -webkit-touch-callout:none; }");
         css(" * { -webkit-user-select:none; }");
@@ -38,24 +38,39 @@
         }
       }
 
-      function touchMoveToSpin(sensor, element, d, xmin, xmax) {
-        var spinClassArray = new Array(n);
-        var angle = -180;
-        var n = xmax - xmin;
-        for(var i = 0; i < n; i++){
-          css('.spin-' + i + ' { -webkit-transform: rotateY(' + angle + 'deg);}');
-          angle += d;
-        } 
-        var oldClass = el.className;
+      function touchMoveToSpin(sensor, element, x_min, x_max) {
+
+        function spinCSS (angle_min, angle_max, n) {
+          var angle = angle_min;
+          var d = (angle_max - angle_min) / n;
+          for(var i = 0; i < n; i++){
+            css('.spin-' + i + ' { -webkit-transform: rotateY(' + angle + 'deg);}');
+            angle += d;
+          }
+        }
+
+        function trigger(target, name, data) {
+          var evt = document.createEvent('Events');
+          evt.initEvent(name, true, true);
+          evt.data = data;
+          target.dispatchEvent(evt);
+        }
+
+        spinCSS(-180, 180, x_max - x_min);
+        var oldClass = element.className;
 
         sensor.ontouchstart = function () { 
           sensor.ontouchmove = function (e) {
             var x = e.touches[0].pageX;
-            if( x < xmin) return;
-            if( x > xmax) return;
-            element.className = oldClass + ' spin-' + (x - xmin);
+            if( x < x_min) return;
+            if( x > x_max) return;
+            trigger(element, 'spin', 'spin-' + (x - x_min));
           };
         }
+
+        element.addEventListener('spin', function (e) {
+          element.className = oldClass + ' ' + e.data;
+        });
       }
 
       window.addEventListener('load', function() {
@@ -65,8 +80,7 @@
         var helloWorld = el(document.body, 'h1');
         helloWorld.innerHTML = 'Hello World';
         holdToChange(helloWorld, 'Hello World from ontouchstart');
-        var w = document.body.scrollWidth;
-        touchMoveToSpin(document, helloWorld, 360/w, 0, w);
+        touchMoveToSpin(document, helloWorld, 0, document.body.scrollWidth);
       });
     </script>
   </head>
