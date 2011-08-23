@@ -22,10 +22,13 @@
       }
 
       function resetCSS() {
-        css(" * { -webkit-touch-callout:none; }");
-        css(" * { -webkit-user-select:none; }");
-        css(" * { -webkit-text-size-adjust:none; }");
-        css(" * { -webkit-tap-highlight-color: transparent;}");
+        css(" * { position: absolute}");
+        css(" * { margin: 0}");
+        css(" * { padding: 0}");
+        css(" * { -webkit-touch-callout:none}");
+        css(" * { -webkit-user-select:none}");
+        css(" * { -webkit-text-size-adjust:none}");
+        css(" * { -webkit-tap-highlight-color: transparent}");
       }
       
       function holdToChange(el, text) {
@@ -45,8 +48,10 @@
         target.dispatchEvent(evt);
       }
 
-      function touchMoveToSpin(sensor, x_min, x_max, listenerArray) {
-
+      function touchMoveToSpin(sensor, listenerArray) {
+        var x_min = parseInt(sensor.style.left);
+        var w = parseInt(sensor.style.width);
+        
         function spinCSS (angle_min, angle_max, n) {
           var angle = angle_min;
           var d = (angle_max - angle_min) / n;
@@ -56,35 +61,56 @@
           }
         }
 
-        spinCSS(-180, 180, x_max - x_min);
+        spinCSS(-180, 180, w);
 
-        sensor.ontouchstart = function () { 
-          sensor.ontouchmove = function (e) {
-            var x = e.touches[0].pageX;
+        function spin (e) {
+          var x = e.touches[0].pageX;
+          var x_min = parseInt(sensor.style.left);
+          var w = parseInt(sensor.style.width);
             if( x < x_min) return;
-            if( x > x_max) return;
+            if( x > (x_min + w)) return;
             for(var i = 0; i < listenerArray.length; i++) {
               trigger(listenerArray[i], 'spin', 'spin-' + (x - x_min));
             }
-          };
-        }
+        };
+        sensor.addEventListener('touchstart', spin);
+        sensor.addEventListener('touchmove', spin);
       }
+
 
       window.addEventListener('load', function() {
         lockDocument();
         resetCSS();
-        css(" * { width: 100%; text-align: center; }");     
-        var spinClass = el(document.body, 'h4');
+    
+        var width = 640;
+        var height = 480;
+        var depth = 500;
         var container = el(document.body, 'div');
-        container.id = 'container';
-        css(" #container { width: 100%; height: 100%; margin-top: 20%;}");
-        css(" #container { -webkit-perspective: 500px;}}");
+        container.style.width = width + 'px';
+        container.style.height = height + 'px';
+        container.style.webkitPerspective = depth + 'px';
+        container.style.backgroundColor = '#abc';
+        
+        function centerContainer() {
+          container.style.left = (document.body.scrollWidth - width) / 2 + 'px';
+          container.style.top = (document.body.scrollHeight - height) / 2 + 'px';
+        }
+        centerContainer();
+
+        window.addEventListener('resize', centerContainer);
 
         var helloWorld = el(container, 'h1');
+        helloWorld.style.width = '100%';
+        helloWorld.style.textAlign = 'center';
+        helloWorld.style.bottom = '50%';
 
         helloWorld.innerHTML = 'Hello World';
         holdToChange(helloWorld, 'Hello World from ontouchstart');
-        touchMoveToSpin(document, 0, document.body.scrollWidth,[helloWorld, spinClass]);
+
+        var spinClass = el(container, 'h4');
+        spinClass.style.width = '100%';
+        spinClass.style.textAlign = 'center';
+        touchMoveToSpin(container,[helloWorld, spinClass]);
 
         helloWorld.addEventListener('spin', function (e) {
           this.className = e.data;
