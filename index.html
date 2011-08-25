@@ -150,8 +150,12 @@
         var pageArray = [];       
         pageArray.push(helloSpin());
         pageArray[0].display();
-        setTimeout(pageArray[0].hide, 2000);
-        setInterval(pageArray[0].displayOrHide, 5000);
+        setTimeout(pageArray[0].hide, 5000);
+        document.addEventListener('touchstart', function (e) {
+          if (e.touches.length > 1) {
+            pageArray[0].displayOrHide();
+          }
+        });
       });
     </script>
   </head>
