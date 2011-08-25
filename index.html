@@ -91,13 +91,31 @@
         container.style.fontFamily = 'Helvetica';
         container.style.display = "none";
         
-        function centerContainer() {
+        container.display = function () {
+          container.style.display = 'block';
+        }
+
+        container.hide = function () {
+          container.style.display = 'none';
+        }
+
+        container.displayOrHide = function () {
+          if( container.style.display === 'block' ) {
+            return container.style.display = 'none';            
+          }
+          if( container.style.display === 'none' ) {
+            return container.style.display = 'block';            
+          }          
+        }
+
+        container.center = function (){
           container.style.left = (document.body.scrollWidth - width) / 2 + 'px';
           container.style.top = (document.body.scrollHeight - height) / 2 + 'px';
         }
-        centerContainer();
 
-        window.addEventListener('resize', centerContainer);
+        window.addEventListener('resize', container.center);
+        container.center();
+
         return container;
       }
 
@@ -131,7 +149,9 @@
         resetCSS();
         var pageArray = [];       
         pageArray.push(helloSpin());
-        pageArray[0].style.display = 'block';
+        pageArray[0].display();
+        setTimeout(pageArray[0].hide, 2000);
+        setInterval(pageArray[0].displayOrHide, 5000);
       });
     </script>
   </head>
