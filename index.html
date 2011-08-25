@@ -77,7 +77,7 @@
         sensor.addEventListener('touchmove', spin);
       }
 
-      function page (id) {
+      function container (id) {
         var width = 640;
         var height = 480;
         var depth = 500;
@@ -89,6 +89,7 @@
         container.style.backgroundColor = '#123';
         container.style.color = '#abc';
         container.style.fontFamily = 'Helvetica';
+        container.style.display = "none";
         
         function centerContainer() {
           container.style.left = (document.body.scrollWidth - width) / 2 + 'px';
@@ -101,8 +102,8 @@
       }
 
       function helloSpin() {    
-        var page1 = page("hello-spin");        
-        var helloWorld = el(page1, 'h1');
+        var page = container("hello-spin");        
+        var helloWorld = el(page, 'h1');
         helloWorld.style.width = '100%';
         helloWorld.style.textAlign = 'center';
         helloWorld.style.bottom = '50%';
@@ -110,10 +111,10 @@
         helloWorld.innerHTML = 'Hello World';
         holdToChange(helloWorld, 'Hello World from ontouchstart');
 
-        var spinClass = el(page1, 'h4');
+        var spinClass = el(page, 'h4');
         spinClass.style.width = '100%';
         spinClass.style.textAlign = 'center';
-        touchMoveToSpin(page1,[helloWorld, spinClass]);
+        touchMoveToSpin(page,[helloWorld, spinClass]);
 
         helloWorld.addEventListener('spin', function (e) {
           this.className = e.data;
@@ -122,13 +123,15 @@
         spinClass.addEventListener('spin', function (e) {
           this.innerHTML = e.data;
         });
-        return page1;
+        return page;
       }
 
       window.addEventListener('load', function() {
         lockDocument();
         resetCSS();
-        helloSpin();
+        var pageArray = [];       
+        pageArray.push(helloSpin());
+        pageArray[0].style.display = 'block';
       });
     </script>
   </head>
