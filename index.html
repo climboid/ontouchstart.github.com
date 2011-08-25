@@ -77,11 +77,12 @@
         sensor.addEventListener('touchmove', spin);
       }
 
-      function page () {
+      function page (id) {
         var width = 640;
         var height = 480;
         var depth = 500;
         var container = el(document.body, 'div');
+        container.id = id;
         container.style.width = width + 'px';
         container.style.height = height + 'px';
         container.style.webkitPerspective = depth + 'px';
@@ -99,11 +100,8 @@
         return container;
       }
 
-      window.addEventListener('load', function() {
-        lockDocument();
-        resetCSS();
-    
-        var page1 = page();
+      function helloSpin() {    
+        var page1 = page("hello-spin");        
         var helloWorld = el(page1, 'h1');
         helloWorld.style.width = '100%';
         helloWorld.style.textAlign = 'center';
@@ -124,6 +122,13 @@
         spinClass.addEventListener('spin', function (e) {
           this.innerHTML = e.data;
         });
+        return page1;
+      }
+
+      window.addEventListener('load', function() {
+        lockDocument();
+        resetCSS();
+        helloSpin();
       });
     </script>
   </head>
