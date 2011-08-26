@@ -77,12 +77,11 @@
         sensor.addEventListener('touchmove', spin);
       }
 
-      function container (id) {
+      function container () {
         var width = 640;
         var height = 480;
         var depth = 500;
         var container = el(document.body, 'div');
-        container.id = id;
         container.style.width = width + 'px';
         container.style.height = height + 'px';
         container.style.webkitPerspective = depth + 'px';
@@ -120,7 +119,7 @@
       }
 
       function helloSpin() {    
-        var page = container("hello-spin");        
+        var page = container();        
         var helloWorld = el(page, 'h1');
         helloWorld.style.width = '100%';
         helloWorld.style.textAlign = 'center';
@@ -149,12 +148,14 @@
         resetCSS();
         var pageArray = [];       
         pageArray.push(helloSpin());
+        pageArray.push(helloSpin());
+        pageArray[1].style.color = '#123';
+        pageArray[1].style.backgroundColor = '#abc';
         pageArray[0].display();
-        setTimeout(pageArray[0].hide, 5000);
-        document.addEventListener('touchstart', function (e) {
-          if (e.touches.length > 1) {
-            pageArray[0].displayOrHide();
-          }
+        pageArray[1].hide();
+        document.addEventListener('touchend', function (e) {
+          pageArray[0].displayOrHide();
+          pageArray[1].displayOrHide();
         });
       });
     </script>
