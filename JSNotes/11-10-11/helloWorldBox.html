@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>JSNotes</title>
+<style>
+pre {
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid black;
+}
+
+pre.done {
+  display: none;
+}
+</style>
+<script>
+window.addEventListener('load', function () {
+  function load(code) {
+    var js = document.createElement('script');
+    js.innerText = code.innerText;
+    document.body.appendChild(js);
+    code.className = 'done';
+    code.onclick = null;
+  }
+
+  var codeArray = document.getElementsByTagName('pre');
+  function code(i) {
+    return function () {
+      for( var j = 0; j <= i; j++) {
+        load(codeArray[j]);
+      }
+    };
+  }
+
+  for (var i = 0; i < codeArray.length; i++) {
+    codeArray[i].onclick = code(i);
+  }
+});
+</script>
+</head>
+<body>
+<pre>
+function loadJS(src, cbk, err) {
+  var js = document.createElement('script');
+  js.src = src;
+  js.onload = cbk;
+  js.onerror = err;
+  document.body.appendChild(js);
+  return js;
+}
+</pre>
+<pre>
+function el(parent, tag, id, className) {
+  var element = document.createElement(tag);
+  if(id) element.id = id;
+  if(className) element.className = className;
+  parent.appendChild(element);
+  return element;
+}
+</pre>
+<pre>
+loadJS('helloWorldBox.js', 
+function () {
+  document.title = "success";
+  helloWorldBox();
+}, 
+function () {
+  document.title = "failure";
+});
+</pre>
+</body>
+</html>
