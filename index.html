@@ -1,165 +1,226 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ontouchstart.github.com</title>
-    <style>
-    </style>
-    <script type="text/javascript">      
-      function lockDocument() {
-        document.addEventListener('touchmove', function (e) {
-           e.preventDefault();
-        })
-      }
+<head>
+<title>ontouchstart.github.com</title>
+<style>
+pre {
+  width: 90%;
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid black;
+  -webkit-transition-duration: 1000ms;
+}
+</style>
+<script>
+window.addEventListener('load', function () {
+  var codeArray = document.getElementsByTagName('pre');
+  function loadCode(i) {
+    var code = codeArray[i];
+    var js = document.createElement('script');
+    js.innerText = code.innerText;
 
-      function css(rule) {
-        document.styleSheets[0].insertRule(rule);
-      }
+    code.style.webkitTransitionDelay = i * 100 + 'ms';
+    code.style.padding = '0';
+    code.style.width = '0';
+    code.style.height = '0';
+    
+    code.style.overflow = 'hidden';
 
-      function el(parent, tag) {
-        var _el = document.createElement(tag);
-        parent.appendChild(_el);
-        return _el;
+    code.addEventListener('webkitTransitionEnd', function () {
+      code.ontouchstart = null;
+      code.style.display = 'none';
+      document.body.appendChild(js);
+    });
+  }
+  
+  function code(i) {
+    return function () {
+      for( var j = 0; j <= i; j++) {
+        loadCode(j);
       }
+    };
+  }
 
-      function resetCSS() {
-        css(" * { position: absolute}");
-        css(" * { margin: 0}");
-        css(" * { padding: 0}");
-        css(" * { -webkit-touch-callout:none}");
-        css(" * { -webkit-user-select:none}");
-        css(" * { -webkit-text-size-adjust:none}");
-        css(" * { -webkit-tap-highlight-color: transparent}");
-      }
+  for (var i = 0; i < codeArray.length; i++) {
+    codeArray[i].ontouchstart = code(i);
+  }
+});
+</script>
+</head>
+<body>
+<pre>      
+function preventTouchmove() {
+   document.addEventListener('touchmove', function (e) {
+   e.preventDefault();
+   })
+}
+</pre>
+
+<pre>
+function css(rule) {
+  document.styleSheets[0].insertRule(rule);
+}
+</pre>
+
+<pre>
+function el(parent, tag, id, className) {
+  var element = document.createElement(tag);
+  if(id) element.id = id;
+  if(className) element.className = className;
+  parent.appendChild(element);
+  return element;
+}
+</pre>
+
+<pre>
+function resetCSS() {
+  css(" * { position: absolute}");
+  css(" * { margin: 0}");
+  css(" * { padding: 0}");
+  css(" * { -webkit-touch-callout:none}");
+  css(" * { -webkit-user-select:none}");
+  css(" * { -webkit-text-size-adjust:none}");
+  css(" * { -webkit-tap-highlight-color: transparent}");
+}
+</pre>
       
-      function holdToChange(el, text) {
-        var old = el.innerHTML;
-        el.ontouchstart = function () { 
-          this.innerHTML = text;
-        }
-        el.ontouchend = function () { 
-          this.innerHTML = old;
-        }
-      }
-
-      function trigger(target, name, data) {
-        var evt = document.createEvent('Events');
-        evt.initEvent(name, true, true);
-        evt.data = data;
-        target.dispatchEvent(evt);
-      }
-
-      function touchMoveToSpin(sensor, listenerArray) {
-        var x_min = parseInt(sensor.style.left);
-        var w = parseInt(sensor.style.width);
+<pre>
+function holdToChange(el, text) {
+  var old = el.innerHTML;
+  el.ontouchstart = function () { 
+    this.innerHTML = text;
+  };
+  el.ontouchend = function () { 
+    this.innerHTML = old;
+  };
+}
+</pre>
+       
+<pre>
+function trigger(target, name, data) {
+  var evt = document.createEvent('Events');
+  evt.initEvent(name, true, true);
+  evt.data = data;
+  target.dispatchEvent(evt);
+}
+</pre>
+       
+<pre>
+function touchmoveToSpin(sensor, listenerArray) {
+  var x_min = parseInt(sensor.style.left);
+  var w = parseInt(sensor.style.width);
         
-        function spinCSS (angle_min, angle_max, n) {
-          var angle = angle_min;
-          var d = (angle_max - angle_min) / n;
-          for(var i = 0; i < n; i++){
-            css('.spin-' + i + ' { -webkit-transform: rotateY(' + angle + 'deg);}');
-            angle += d;
-          }
-        }
+  function spinCSS (angle_min, angle_max, n) {
+    var angle = angle_min;
+    var d = (angle_max - angle_min) / n;
+    for(var i = 0; i < n; i++){
+      css('.spin-' + i + ' { -webkit-transform: rotateY(' + angle + 'deg);}');
+      angle += d;
+    }
+  }
+  
+  spinCSS(-180, 180, w);
 
-        spinCSS(-180, 180, w);
-
-        function spin (e) {
-          var x = e.touches[0].pageX;
-          var x_min = parseInt(sensor.style.left);
-          var w = parseInt(sensor.style.width);
-            if( x < x_min) return;
-            if( x > (x_min + w)) return;
-            for(var i = 0; i < listenerArray.length; i++) {
-              trigger(listenerArray[i], 'spin', 'spin-' + (x - x_min));
-            }
-        };
-        sensor.addEventListener('touchstart', spin);
-        sensor.addEventListener('touchmove', spin);
+  function spin (e) {
+    var x = e.touches[0].pageX;
+    var x_min = parseInt(sensor.style.left);
+    var w = parseInt(sensor.style.width);
+      if( x < x_min) return;
+      if( x > (x_min + w)) return;
+      for(var i = 0; i < listenerArray.length; i++) {
+        trigger(listenerArray[i], 'spin', 'spin-' + (x - x_min));
       }
-
-      function container () {
-        var width = 640;
-        var height = 480;
-        var depth = 500;
-        var container = el(document.body, 'div');
-        container.style.width = width + 'px';
-        container.style.height = height + 'px';
-        container.style.webkitPerspective = depth + 'px';
-        container.style.backgroundColor = '#123';
-        container.style.color = '#abc';
-        container.style.fontFamily = 'Helvetica';
-        container.style.display = "none";
+    };
+    sensor.addEventListener('touchstart', spin);
+    sensor.addEventListener('touchmove', spin);
+  }
+</pre>
+       
+<pre>
+function container () {
+  var width = 640;
+  var height = 480;
+  var depth = 500;
+  var c = el(document.body, 'div');
+  c.style.width = width + 'px';
+  c.style.height = height + 'px';
+  c.style.webkitPerspective = depth + 'px';
+  c.style.backgroundColor = '#123';
+  c.style.color = '#abc';
+  c.style.fontFamily = 'Helvetica';
+  c.style.display = "none";
         
-        container.display = function () {
-          container.style.display = 'block';
-        }
+  c.display = function () {
+    this.style.display = 'block';
+  };
 
-        container.hide = function () {
-          container.style.display = 'none';
-        }
+  c.hide = function () {
+    this.style.display = 'none';
+  };
 
-        container.displayOrHide = function () {
-          if( container.style.display === 'block' ) {
-            return container.style.display = 'none';            
-          }
-          if( container.style.display === 'none' ) {
-            return container.style.display = 'block';            
-          }          
-        }
+  c.displayOrHide = function () {
+    if( this.style.display === 'block' ) {
+      return this.style.display = 'none';            
+    }
+    if( this.style.display === 'none' ) {
+      return this.style.display = 'block';            
+    }          
+  };
 
-        container.center = function (){
-          container.style.left = (document.body.scrollWidth - width) / 2 + 'px';
-          container.style.top = (document.body.scrollHeight - height) / 2 + 'px';
-        }
+  c.center = function (){
+    this.style.left = (document.body.scrollWidth - width) / 2 + 'px';
+    this.style.top = (document.body.scrollHeight - height) / 2 + 'px';
+  };
 
-        window.addEventListener('resize', container.center);
-        container.center();
+  window.addEventListener('resize', c.center);
+  c.center();
 
-        return container;
-      }
+  return c;
+}
+</pre>
+       
+<pre>
+function helloSpin() {    
+  var page = container();        
+  var helloWorld = el(page, 'h1');
+  helloWorld.style.width = '100%';
+  helloWorld.style.textAlign = 'center';
+  helloWorld.style.bottom = '50%';
 
-      function helloSpin() {    
-        var page = container();        
-        var helloWorld = el(page, 'h1');
-        helloWorld.style.width = '100%';
-        helloWorld.style.textAlign = 'center';
-        helloWorld.style.bottom = '50%';
+  helloWorld.innerHTML = 'Hello World';
+  holdToChange(helloWorld, 'Hello World from ontouchstart');
 
-        helloWorld.innerHTML = 'Hello World';
-        holdToChange(helloWorld, 'Hello World from ontouchstart');
+  var spinClass = el(page, 'h4');
+  spinClass.style.width = '100%';
+  spinClass.style.textAlign = 'center';
+  touchmoveToSpin(page,[helloWorld, spinClass]);
 
-        var spinClass = el(page, 'h4');
-        spinClass.style.width = '100%';
-        spinClass.style.textAlign = 'center';
-        touchMoveToSpin(page,[helloWorld, spinClass]);
+  helloWorld.addEventListener('spin', function (e) {
+    this.className = e.data;
+  });
 
-        helloWorld.addEventListener('spin', function (e) {
-          this.className = e.data;
-        });
+  spinClass.addEventListener('spin', function (e) {
+    this.innerHTML = e.data;
+  });
+  return page;
+}
+</pre>
 
-        spinClass.addEventListener('spin', function (e) {
-          this.innerHTML = e.data;
-        });
-        return page;
-      }
+<pre>
+preventTouchmove();
+resetCSS();
+var pageArray = [];       
+pageArray.push(helloSpin());
+pageArray.push(helloSpin());
+pageArray[1].style.color = '#123';
+pageArray[1].style.backgroundColor = '#abc';
+pageArray[0].display();
+pageArray[1].hide();
 
-      window.addEventListener('load', function() {
-        lockDocument();
-        resetCSS();
-        var pageArray = [];       
-        pageArray.push(helloSpin());
-        pageArray.push(helloSpin());
-        pageArray[1].style.color = '#123';
-        pageArray[1].style.backgroundColor = '#abc';
-        pageArray[0].display();
-        pageArray[1].hide();
-        document.addEventListener('touchend', function (e) {
-          pageArray[0].displayOrHide();
-          pageArray[1].displayOrHide();
-        });
-      });
-    </script>
-  </head>
-  <body>
-  </body>
+document.addEventListener('touchend', function (e) {
+  pageArray[0].displayOrHide();
+  pageArray[1].displayOrHide();
+});
+</pre>
+</body>
 </html>
