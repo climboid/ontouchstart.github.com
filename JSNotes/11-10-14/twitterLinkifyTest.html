@@ -49,11 +49,6 @@ window.addEventListener('load', function () {
 </head>
 <body>
 <pre>
-function css(rule) {
-  document.styleSheets[0].insertRule(rule);
-}
-</pre>
-<pre>
 function el(parent, tag, html) {
   var element = document.createElement(tag);
   if(html) element.innerHTML = html;
