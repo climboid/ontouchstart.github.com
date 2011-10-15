@@ -49,10 +49,14 @@ window.addEventListener('load', function () {
 </head>
 <body>
 <pre>
-function el(parent, tag, id, className) {
+function css(rule) {
+  document.styleSheets[0].insertRule(rule);
+}
+</pre>
+<pre>
+function el(parent, tag, html) {
   var element = document.createElement(tag);
-  if(id) element.id = id;
-  if(className) element.className = className;
+  if(html) element.innerHTML = html;
   parent.appendChild(element);
   return element;
 }
@@ -68,35 +72,36 @@ function loadJS(src, cbk, err) {
 }
 </pre>
 <pre>
+var results;
 function twitterTestCallback (data) {
-  var results = data.results;
+  results = data.results;
+}
+</pre>
+<pre>
+function twitterList () {
+  var list = el(document.body, 'ol');
   for(var i in results) {
     var result = results[i];
-    var resultList = el(document.body, 'li', 'feed-' + i);
-    for(var j in result) {
-      var content = result[j];
-      var contentDiv = el(resultList,'div').innerHTML = content;
-/*
-      for(var k in content) {
-        el(contentDiv, 'p').innerHTML = content[k];
-      }
-*/
-    }    
+    var li = el(list, 'li');
+    var item = el(li, 'div');
+    item.style.margin = '2em';
+    el(item, 'img').src = result.profile_image_url;
+    el(item, 'span', result.from_user);
+    el(item, 'div', result.text);
   }
 }
 </pre>
 <pre>
 function twitterTest() {
   var api = 'http://search.twitter.com/search.json?';
-  var q = 'q=twitter%20api';
-  var rpp = '&rpp=5';
+  var q = 'q=iPhone%204S';
   var include_entities = '&include_entities=true';
   var with_twitter_user_id = '&with_twitter_user_id=true';
   var result_type = '&result_type=mixed';
 
   var cb = '&callback=twitterTestCallback';
-  var url = api + q + rpp + include_entities + with_twitter_user_id + result_type + cb;
-  loadJS(url, null, null);
+  var url = api + q + include_entities + with_twitter_user_id + result_type + cb;
+  loadJS(url, twitterList, null);
 }
 </pre>
 <pre>
