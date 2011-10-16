@@ -74,9 +74,12 @@ function twitterTestCallback (data) {
 </pre>
 <pre>
 function twitterList () {
-  var tweet = el(document.body, 'div');
-  tweet.style.height = '100px';
-  tweet.style.fontFamily = 'Helvetica';
+  var content = el(document.body, 'div');
+  content.style.height = '5em';
+  content.style.fontFamily = 'Helvetica';
+  var user = el(content, 'a');
+  var tweet = el(content, 'div');
+
   var wall = el(document.body, 'div');
   for(var i in results) {
     var result = results[i];
@@ -87,7 +90,9 @@ function twitterList () {
     img.user = result.from_user;
     img.tweet = result.text;
     img.ontouchstart = function () {
-      tweet.innerHTML = '@' + this.user + ': ' + linkify(this.tweet);
+      tweet.innerHTML = linkify(this.tweet);
+      user.innerHTML = '@' + this.user;
+      user.href = 'http://twitter.com/' + this.user;
     };
   }
 }
