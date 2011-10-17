@@ -76,8 +76,7 @@ function gmap(center, w, h, markers) {
     var m = new google.maps.Map(container, options);
     var markerArray = [];
     markerArray.push(new google.maps.Marker({
-      position: latLng, 
-      title:"Times Square"
+      position: latLng
     }));   
 
     for(var i = 0; i < markers.length; i++) { 
