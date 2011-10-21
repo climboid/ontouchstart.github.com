@@ -27,6 +27,7 @@ webpage = kup.render ->
           draw context, 300, 200
     body ->
       header -> h1 'Seed of Life'
+      header -> h2 'on iPad'
       canvas id: 'drawCanvas', width: 600, height: 400
 # Server-side HTTP server
 http = require 'http'
