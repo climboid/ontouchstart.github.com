@@ -1,10 +1,6 @@
 ns = 'http://www.w3.org/2000/svg'
 width = 512
 
-caption = document.createElement 'div'
-caption.style.fontFamily = 'monospace'
-caption.style.width = "#{width}px"
-
 svgIn = (p, w, h) ->
   el = document.createElementNS ns, 'svg'
   el.setAttribute 'width', w
@@ -26,12 +22,10 @@ pathIn = (p,d) ->
   el.d = d
   el.draw = ->
     el.setAttribute 'd', el.d
-    caption.innerHTML = el.d
   p.appendChild el
   return el
 
 s = svgIn document.body, width, width
-document.body.appendChild caption
 
 root = groupIn s, 'translate(185,145)', 1, 'none', 'none'
 
