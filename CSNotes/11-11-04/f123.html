@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>CSNotes</title>
+<style>
+pre {
+  width: 90%;
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid black;
+  -webkit-transition-duration: 1000ms;
+}
+</style>
+<script>
+window.addEventListener('load', function () {
+var codeArray = document.getElementsByTagName('pre');
+  function loadCode(i) {
+    var code = codeArray[i];
+    var js = document.createElement('script');
+    js.innerText = CoffeeScript.compile(code.innerText);
+
+    code.style.webkitTransitionDelay = i * 100 + 'ms';
+    code.style.padding = '0';
+    code.style.width = '0';
+    code.style.height = '0';
+    
+    code.style.overflow = 'hidden';
+
+    code.addEventListener('webkitTransitionEnd', function () {
+      code.ontouchstart = null;
+      code.style.display = 'none';
+      document.body.appendChild(js);
+    });
+  }
+  
+  function code(i) {
+    return function () {
+      for( var j = 0; j <= i; j++) {
+        loadCode(j);
+      }
+    };
+  }
+
+  for (var i = 0; i < codeArray.length; i++) {
+    codeArray[i].ontouchstart = code(i);
+  }
+});
+</script>
+</head>
+<body>
+<pre>
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+$output = el document.body, 'h1'
+$output.style.width = '100px'
+$output.style.margin = 'auto'
+
+count = (i) ->
+  () =>
+    $output.innerHTML = i
+
+nextFn = (current, next, delay) ->
+   () => 
+     current()
+     setTimeout next, delay
+
+f23 = nextFn count(2), count(3), 1000
+
+f123 = nextFn count(1), f23, 1000
+
+setTimeout f123, 1000
+</pre>
+<script type="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
