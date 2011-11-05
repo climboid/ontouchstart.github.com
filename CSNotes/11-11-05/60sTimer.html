@@ -35,8 +35,10 @@ d0 = new Date
 dt = (60000 - (new Date() - d0))/1000
 refresh = () =>
   dt = (60000 - (new Date() - d0))/1000
-  if dt >= 0 
-    update "#{dt.toFixed(2)}"    
+  if dt < 0
+    clearInterval(timer)
+    dt = 0
+  update "#{dt.toFixed(2)}"    
 
 timer = setInterval refresh, 1
 clearInterval(timer)
@@ -48,7 +50,7 @@ $output.ontouchstart = () =>
   refresh()
 
 $output.ontouchend = () =>
-    timer = setInterval refresh, 1
+  timer = setInterval refresh, 1
 
 </pre>
 <script src="coffee-script.js"></script>
