@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>CSNotes</title>
+</head>
+<body>
+<pre>
+document.addEventListener 'touchmove', (e) ->
+  e.preventDefault()
+
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+$output = el document.body, 'div'
+
+$output.style.margin = '0.5em'
+$output.style.padding = '1em'
+$output.style.fontFamily = 'Helvetica'
+$output.style.fontSize = '96px'
+$output.style.textAlign = 'center'
+$output.style.backgroundColor = '#000'
+$output.style.color = '#0F0'
+$output.style.borderRadius = '0.5em'
+$output.style.webkitUserSelect = 'none'
+
+update = (message) ->
+  $output.innerHTML = message
+
+d0 = new Date
+dt = (60000 - (new Date() - d0))/1000
+refresh = () =>
+  dt = (60000 - (new Date() - d0))/1000
+  if dt >= 0 
+    update "#{dt.toFixed(2)}"    
+
+timer = setInterval refresh, 1
+clearInterval(timer)
+refresh()
+
+$output.ontouchstart = () =>
+  clearInterval(timer)
+  d0 = new Date()
+  refresh()
+
+$output.ontouchend = () =>
+    timer = setInterval refresh, 1
+
+</pre>
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
+</body>
+</html>
