@@ -2,7 +2,11 @@
 <head>
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" type="text/css" href="code.css" />
-<style></style>
+<style>
+* {
+  -webkit-user-select: none;
+}
+</style>
 <title>CSNotes</title>
 </head>
 <body>
@@ -25,7 +29,6 @@ $output.style.textAlign = 'center'
 $output.style.backgroundColor = '#000'
 $output.style.color = '#0F0'
 $output.style.borderRadius = '0.5em'
-$output.style.webkitUserSelect = 'none'
 
 update = (message) ->
   $output.innerHTML = message
