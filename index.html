@@ -6,45 +6,25 @@
 <style></style>
 </head>
 <body>
-<pre>      
-window.preventTouchmove = () ->
-   document.addEventListener 'touchmove',  (e) -> 
-     e.preventDefault()
-</pre>
-
 <pre>
 window.css = (rule) -> 
   document.styleSheets[0].insertRule rule
 </pre>
-
 <pre>
 window.el = (parent, tag, id, className) ->
   element = document.createElement tag
   parent.appendChild element
   return element
-</pre>
-
+</pre>       
 <pre>
-window.resetCSS = () ->
-  css " * { position: absolute}"
-  css " * { margin: 0}"
-  css " * { padding: 0}"
-  css " * { -webkit-touch-callout:none}"
-  css " * { -webkit-user-select:none}"
-  css " * { -webkit-text-size-adjust:none}"
-  css " * { -webkit-tap-highlight-color: transparent}"
-</pre>
-       
-<pre>
-window.trigger = (target, name, data) ->
+window.ask = (target, task, data) ->
   evt = document.createEvent 'Events'
-  evt.initEvent name, true, true
+  evt.initEvent task, true, true
   evt.data = data
   target.dispatchEvent evt
 </pre>
-       
 <pre>
-window.touchmoveToSpin = (sensor, listenerArray) ->
+window.swipeToSpin = (sensor, listenerArray) ->
   x_min = parseInt sensor.style.left 
   w = parseInt sensor.style.width 
         
@@ -54,72 +34,64 @@ window.touchmoveToSpin = (sensor, listenerArray) ->
     for i in [0..n-1]
       css ".spin-#{i} { -webkit-transform: rotateY(#{angle}deg);}"
       angle += d
-  
-  spinCSS -180, 180, w
-
+   
   spin = (e) ->
     x = e.touches[0].pageX
     x_min = parseInt sensor.style.left
     w = parseInt sensor.style.width 
-    if x < x_min
-      return
-    if x > (x_min + w)
-      return
-    for i in [0..listenerArray.length-1]
-        trigger listenerArray[i], 'spin', "spin-#{x - x_min}"
+    return if x < x_min
+    return if x > (x_min + w)
+    for listener in listenerArray
+      ask listener, 'to spin', "spin-#{x - x_min}"
+
+  spinCSS -180, 180, w
   sensor.addEventListener 'touchmove', spin
 </pre>
-       
 <pre>
-window.container = () ->
-  width = 640
-  height = 480
-  depth = 500
-  c = el document.body, 'div'
-  c.style.width = width + 'px'
-  c.style.height = height + 'px'
-  c.style.webkitPerspective = depth + 'px'
-  c.style.backgroundColor = '#123'
-  c.style.color = '#abc'
-  c.style.fontFamily = 'Helvetica'
-  c.center = () ->
-    c.style.left = (document.body.scrollWidth - width) / 2 + 'px'
-    c.style.top = (document.body.scrollHeight - height) / 2 + 'px'
+window.main = () ->
+  document.addEventListener 'touchmove', (e) -> e.preventDefault()
 
-  window.addEventListener 'resize', c.center
-  c.center()
-  return c
-</pre>
-       
-<pre>
-window.spin = () ->    
-  page = container()        
-  text = el page, 'h1'
+  container = el document.body, 'div'
+  container.style.width = '640px'
+  container.style.height = '480px'
+  container.style.webkitPerspective = '500px'
+  container.style.backgroundColor = '#123'
+  container.style.color = '#abc'
+  container.style.fontFamily = 'Helvetica'
+  container.style.position = 'absolute'
+
+  window.addEventListener 'resize', () ->
+    width = parseInt container.style.width
+    height = parseInt container.style.height
+    container.style.left = (document.body.scrollWidth - width) / 2 + 'px'
+    container.style.top = (document.body.scrollHeight - height) / 2 + 'px'
+
+
+         
+  text = el container, 'h1'
   text.style.width = '100%'
+  text.style.position = 'absolute'
   text.style.textAlign = 'center'
   text.style.bottom = '50%'
 
   text.innerHTML = 'Simple is hard'
   document.title = 'Simple is hard'
 
-  spinClass = el page, 'h4' 
+  spinClass = el container, 'h4' 
   spinClass.style.width = '100%'
   spinClass.style.textAlign = 'center'
-  touchmoveToSpin page, [text, spinClass]
+  swipeToSpin container, [text, spinClass]
 
-  text.addEventListener 'spin', (e) ->
-    text.className = e.data
+  text.addEventListener 'to spin', (e) ->
+    @className = e.data
 
-  spinClass.addEventListener 'spin', (e) ->
-    spinClass.innerHTML = e.data
+  spinClass.addEventListener 'to spin', (e) ->
+    @innerHTML = e.data  
 
-  return page
+  ask window, 'resize'
 </pre>
-
 <pre>
-preventTouchmove()
-resetCSS()
-spin()
+main()
 </pre>
 
 <script src="coffee-script.js"></script>
