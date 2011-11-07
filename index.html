@@ -2,15 +2,8 @@
 <head>
 <meta name="viewport" content="width=768, initial-scale=1" />
 <title>ontouchstart.github.com</title>
-<style>
-pre {
-  width: 90%;
-  margin: 1em;
-  padding: 1em;
-  border: 1px solid black;
-  -webkit-transition-duration: 1000ms;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
 </head>
 <body>
 <pre>      
@@ -27,10 +20,6 @@ window.css = (rule) ->
 <pre>
 window.el = (parent, tag, id, className) ->
   element = document.createElement tag
-  if(id) 
-    element.id = id
-  if(className)
-    element.className = className
   parent.appendChild element
   return element
 </pre>
@@ -111,6 +100,7 @@ window.spin = () ->
   text.style.bottom = '50%'
 
   text.innerHTML = 'Simple is hard'
+  document.title = 'Simple is hard'
 
   spinClass = el page, 'h4' 
   spinClass.style.width = '100%'
@@ -132,41 +122,7 @@ resetCSS()
 spin()
 </pre>
 
-<script type="text/javascript" src="coffee-script.js"></script>
-<script>
-(function () {
-  var codeArray = document.getElementsByTagName('pre');
-  function loadCode(i) {
-    var code = codeArray[i];
-    var js = document.createElement('script');
-    js.innerText = CoffeeScript.compile(code.innerText);
-
-    code.style.webkitTransitionDelay = i * 100 + 'ms';
-    code.style.padding = '0';
-    code.style.width = '0';
-    code.style.height = '0';
-    
-    code.style.overflow = 'hidden';
-
-    code.addEventListener('webkitTransitionEnd', function () {
-      code.ontouchstart = null;
-      code.style.display = 'none';
-      document.body.appendChild(js);
-    });
-  }
-  
-  function code(i) {
-    return function () {
-      for( var j = 0; j <= i; j++) {
-        loadCode(j);
-      }
-    };
-  }
-
-  for (var i = 0; i < codeArray.length; i++) {
-    codeArray[i].ontouchstart = code(i);
-  }
-})();
-</script>
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
 </body>
 </html>
