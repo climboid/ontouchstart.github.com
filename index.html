@@ -1,99 +1,26 @@
 <html>
 <head>
-<meta name="viewport" content="width=768, initial-scale=1" />
-<title>ontouchstart.github.com</title>
+<meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <style></style>
+<title>ontouchstart</title>
 </head>
 <body>
 <pre>
-window.css = (rule) -> 
-  document.styleSheets[0].insertRule rule
-</pre>
-<pre>
-window.el = (parent, tag, id, className) ->
+el = (parent, tag) ->
   element = document.createElement tag
   parent.appendChild element
   return element
-</pre>       
-<pre>
-window.ask = (target, task, data) ->
-  evt = document.createEvent 'Events'
-  evt.initEvent task, true, true
-  evt.data = data
-  target.dispatchEvent evt
+
+print = (message) ->
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+
+print "Hello, world."
+
+print "Time is #{new Date()}."
 </pre>
-<pre>
-window.swipeToSpin = (sensor, listenerArray) ->
-  x_min = parseInt sensor.style.left 
-  w = parseInt sensor.style.width 
-        
-  spinCSS = (angle_min, angle_max, n) ->
-    angle = angle_min
-    d = (angle_max - angle_min) / n
-    for i in [0..n-1]
-      css ".spin-#{i} { -webkit-transform: rotateY(#{angle}deg);}"
-      angle += d
-   
-  spin = (e) ->
-    x = e.touches[0].pageX
-    x_min = parseInt sensor.style.left
-    w = parseInt sensor.style.width 
-    return if x < x_min
-    return if x > (x_min + w)
-    for listener in listenerArray
-      ask listener, 'to spin', "spin-#{x - x_min}"
-
-  spinCSS -180, 180, w
-  sensor.addEventListener 'touchmove', spin
-</pre>
-<pre>
-window.main = () ->
-  document.addEventListener 'touchmove', (e) -> e.preventDefault()
-
-  container = el document.body, 'div'
-  container.style.width = '640px'
-  container.style.height = '480px'
-  container.style.webkitPerspective = '500px'
-  container.style.backgroundColor = '#123'
-  container.style.color = '#abc'
-  container.style.fontFamily = 'Helvetica'
-  container.style.position = 'absolute'
-
-  window.addEventListener 'resize', () ->
-    width = parseInt container.style.width
-    height = parseInt container.style.height
-    container.style.left = (document.body.scrollWidth - width) / 2 + 'px'
-    container.style.top = (document.body.scrollHeight - height) / 2 + 'px'
-
-
-         
-  text = el container, 'h1'
-  text.style.width = '100%'
-  text.style.position = 'absolute'
-  text.style.textAlign = 'center'
-  text.style.bottom = '50%'
-
-  text.innerHTML = 'Simple is hard'
-  document.title = 'Simple is hard'
-
-  spinClass = el container, 'h4' 
-  spinClass.style.width = '100%'
-  spinClass.style.textAlign = 'center'
-  swipeToSpin container, [text, spinClass]
-
-  text.addEventListener 'to spin', (e) ->
-    @className = e.data
-
-  spinClass.addEventListener 'to spin', (e) ->
-    @innerHTML = e.data  
-
-  ask window, 'resize'
-</pre>
-<pre>
-main()
-</pre>
-
 <script src="coffee-script.js"></script>
 <script src="code.js"></script>
 </body>

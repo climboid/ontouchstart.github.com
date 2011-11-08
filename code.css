@@ -10,5 +10,17 @@ pre {
   padding: 1em;
   border: 1px solid black;
   border-radius: 0.5em;
+  font-family: "American Typewriter";
+  font-size: 18px;
   -webkit-transition-duration: 1000ms;
+}
+
+.output {
+  margin : 0.5em;
+  padding : 1em;
+  font-family : Helvetica;
+  font-size : 18px;
+  background-color : #000000;
+  color : #00FF00;
+  border-radius : 0.5em;
 }

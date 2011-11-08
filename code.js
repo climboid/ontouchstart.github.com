@@ -28,7 +28,8 @@ var codeArray = document.getElementsByTagName('pre');
   }
 
   for (var i = 0; i < codeArray.length; i++) {
-    codeArray[i].ontouchstart = code(i);
+    codeArray[i].onclick = code(i);
   }
+
 })();
 
