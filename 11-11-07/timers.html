@@ -27,6 +27,7 @@ window.timer = (limit) =>
 
   $output = el document.body, 'div'
   $output.className = 'output'
+  $output.style.textAlign = 'right'
 
   update = (message) =>
     $output.innerHTML = message
