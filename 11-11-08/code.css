@@ -1,0 +1,26 @@
+* { 
+ -webkit-touch-callout:none;
+ -webkit-user-select:none;
+ -webkit-text-size-adjust:none;
+ -webkit-tap-highlight-color: transparent;
+}
+
+pre {
+  margin: 0.5em;
+  padding: 1em;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  font-family: "Courier New";
+  font-size: 14px;
+  -webkit-transition-duration: 1000ms;
+}
+
+.output {
+  margin : 0.5em;
+  padding : 1em;
+  font-family : "American Typewriter";
+  font-size : 18px;
+  background-color : #000000;
+  color : #00FF00;
+  border-radius : 0.5em;
+}
