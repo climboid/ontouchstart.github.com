@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>sqrt</title>
+</head>
+<body>
+<pre>
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+window.print = (message) ->
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+</pre>
+<pre>
+window.sqrt = (x, margin) -> 
+  goodEnough = (guess) =>
+    guessSquared = guess * guess
+    delta = guessSquared - x
+    return false if delta > margin 
+    return false if delta < - margin
+    return true
+
+  improve = (guess) =>
+    (guess + x / guess) / 2
+
+  sqrtIter = (guess) ->
+    return guess if goodEnough guess
+    sqrtIter improve guess
+
+  sqrtIter 1
+</pre>
+<pre>
+margin = 1
+sqrt2 = Math.sqrt 2
+for i in [1..100]
+  result = sqrt 2, margin
+  error = sqrt2 - result
+  print "sqrt 2, #{margin} = #{result}"  
+  margin = margin / 10
+</pre>
+
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
+</body>
+</html>
+
