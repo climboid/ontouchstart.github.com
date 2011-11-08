@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+window.print = (message) ->
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+</pre>
+<pre>
+remainder = (a, b) ->
+  return a if a < b
+  remainder a-b, b
+window.gcd = (a, b) ->
+  return a if b == 0
+  gcd b, remainder a, b
+</pre>
+<pre>
+for i in [1..10]
+  for j in [1..10]
+    result = gcd i, j
+    print "gcd #{i}, #{j} = #{result}"
+</pre>
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
+</body>
+</html>
