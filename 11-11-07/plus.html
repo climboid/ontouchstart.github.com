@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>plus</title>
+</head>
+<body>
+<pre>
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+window.print = (message) ->
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+</pre>
+<pre>
+increase = (x) -> 
+  return x + 1
+
+decrease = (x) -> 
+  return x - 1
+
+window.plus = (x, y) -> 
+  if x == 0 
+    result = y
+  else
+    result = plus (decrease x),  (increase y)
+  print "plus #{x} + #{y} = #{result}"
+  return result
+</pre>
+<pre>
+plus 10, 10
+</pre>
+
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
+</body>
+</html>
+
