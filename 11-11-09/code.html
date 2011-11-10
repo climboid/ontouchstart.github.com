@@ -6,7 +6,6 @@
 <title>ontouchstart</title>
 </head>
 <body>
-<div id="container">
 <pre>
 el = (parent, tag) ->
   element = document.createElement tag
@@ -18,32 +17,33 @@ window.print = (message) ->
   $output.className = 'output'
   $output.innerHTML = message
 
-window.$input = el document.body, 'textarea'
-$input.style.webkitUserSelect = 'text'
-$input.style.width = '100%'
-$input.style.fontFamily = 'Courier New'
-$input.style.fontSize = '14px'
-$input.style.margin = '0em'
-$input.style.padding = '1em'
-$input.style.marginTop ='0.5em'
-$input.style.marginBottom ='0.5em'
+window.input = (code) -> 
+  $input = el document.body, 'textarea'
+  $input.style.webkitUserSelect = 'text'
+  $input.style.width = '100%'
+  $input.style.fontFamily = 'Courier New'
+  $input.style.fontSize = '14px'
+  $input.style.margin = '0em'
+  $input.style.padding = '1em'
+  $input.style.marginTop ='0.5em'
+  $input.style.marginBottom ='0.5em'
+  $input.value = code
 
-$jsBlock = el document.body, 'pre'
-$jsBlock.ontouchstart = () ->
-  $jsBlock.innerText = CoffeeScript.compile $input.value
+  $jsBlock = el document.body, 'pre'
+  $jsBlock.ontouchstart = () ->
+    $jsBlock.innerText = CoffeeScript.compile $input.value
 
-$jsBlock.ontouchend = () ->
-  js = document.createElement 'script'
-  js.innerText = $jsBlock.innerText
-  document.body.appendChild js
+  $jsBlock.ontouchend = () ->
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
 </pre>
 <pre>
-$input.value = '''
+input '''
 print "Hello, world."
-print "Time is #{new Date()}."
+input 'print "Time is #{new Date()}."'
 '''
 </pre>
-</div>
 <script src="coffee-script.js"></script>
 <script src="code.js"></script>
 </body>
