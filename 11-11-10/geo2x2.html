@@ -21,6 +21,7 @@ window.input = (code) ->
   $input = el document.body, 'textarea'
   $input.style.webkitUserSelect = 'text'
   $input.style.width = '100%'
+  $input.style.height = '70em'
   $input.style.fontFamily = 'Courier New'
   $input.style.fontSize = '14px'
   $input.style.margin = '0em'
@@ -41,8 +42,7 @@ window.input = (code) ->
       document.body.appendChild js
 
       $jsBlock.style.display = 'none'
-</pre>
-<pre>
+
 window.loadJS = (src, cbk, err) ->
   js = document.createElement 'script'
   js.src = src
@@ -51,6 +51,7 @@ window.loadJS = (src, cbk, err) ->
   document.body.appendChild js
 </pre>
 <pre>
+input '''
 window.gmap = (center, w, h, markers) ->
   api = 'https://maps.googleapis.com/maps/api/js?sensor=false'
   container = document.createElement 'div'
@@ -82,9 +83,8 @@ window.gmap = (center, w, h, markers) ->
 
   loadJS "#{api}&callback=gmap.draw", null, null
   return container
-</pre>
-<pre>
-window.geo = (cbk) ->
+
+geo = (cbk) ->
   success = (data) ->
     window.geoCenter = [data.coords.latitude, data.coords.longitude]
     geo2x2()
@@ -106,9 +106,9 @@ geo2x2 = () ->
 
   map = gmap window.geoCenter, 320, 320, markers
   map.style.margin = 'auto'
-</pre>
-<pre>
-input 'geo()'
+
+geo()
+'''
 </pre>
 <script src="coffee-script.js"></script>
 <script src="code.js"></script>
