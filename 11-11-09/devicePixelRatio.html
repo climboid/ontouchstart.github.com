@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+el = (parent, tag) ->
+  element = document.createElement tag
+  parent.appendChild element
+  return element
+
+window.print = (message) ->
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+
+window.input = (code) -> 
+  $input = el document.body, 'textarea'
+  $input.style.webkitUserSelect = 'text'
+  $input.style.width = '100%'
+  $input.style.fontFamily = 'Courier New'
+  $input.style.fontSize = '14px'
+  $input.style.margin = '0em'
+  $input.style.padding = '1em'
+  $input.style.marginTop ='0.5em'
+  $input.style.marginBottom ='0.5em'
+  $input.value = code
+
+  $jsBlock = el document.body, 'pre'
+  $jsBlock.ontouchstart = () ->
+    $jsBlock.innerText = CoffeeScript.compile $input.value
+
+  $jsBlock.ontouchend = () ->
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+</pre>
+<pre>
+input '''
+print "devicePixelRatio = #{devicePixelRatio}"
+'''
+</pre>
+<script src="coffee-script.js"></script>
+<script src="code.js"></script>
+</body>
+</html>
