@@ -1,8 +1,38 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" type="text/css" href="code.css" />
-<style></style>
+<style>
+* { 
+ -webkit-touch-callout:none;
+ -webkit-user-select:none;
+ -webkit-text-size-adjust:none;
+ -webkit-tap-highlight-color: transparent;
+}
+
+pre {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0.5em;
+  padding: 1em;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  font-family: "Courier New";
+  font-size: 14px;
+  -webkit-transition-duration: 1000ms;
+}
+
+.output {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0.5em;
+  padding : 1em;
+  font-family : "American Typewriter";
+  font-size : 18px;
+  background-color : #000000;
+  color : #00FF00;
+  border-radius : 0.5em;
+}
+</style>
 <title>ontouchstart</title>
 </head>
 <body>
@@ -12,16 +42,74 @@ el = (parent, tag) ->
   parent.appendChild element
   return element
 
-print = (message) ->
+window.print = (message) ->
   $output = el document.body, 'div'
   $output.className = 'output'
   $output.innerHTML = message
 
-print "Hello, world."
+window.input = (code) -> 
+  $input = el document.body, 'textarea'
+  $input.style.webkitUserSelect = 'text'
+  $input.style.width = '100%'
+  $input.style.fontFamily = 'Courier New'
+  $input.style.fontSize = '14px'
+  $input.style.margin = '0em'
+  $input.style.padding = '1em'
+  $input.style.marginTop ='0.5em'
+  $input.style.marginBottom ='0.5em'
+  $input.value = code
 
-print "Time is #{new Date()}."
+  $jsBlock = el document.body, 'pre'
+  $jsBlock.ontouchstart = () ->
+    $jsBlock.innerText = CoffeeScript.compile $input.value
+
+  $jsBlock.ontouchend = () ->
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+</pre>
+<pre>
+input '''
+print "Hello, world."
+input 'print "Time is #{new Date()}."'
+'''
 </pre>
 <script src="coffee-script.js"></script>
-<script src="code.js"></script>
+<script>
+(function () {
+var codeArray = document.getElementsByTagName('pre');
+  function loadCode(i) {
+    var code = codeArray[i];
+    var js = document.createElement('script');
+    js.innerText = CoffeeScript.compile(code.innerText);
+
+    code.style.webkitTransitionDelay = i * 100 + 'ms';
+    code.style.padding = '0';
+    code.style.width = '0';
+    code.style.height = '0';
+    
+    code.style.overflow = 'hidden';
+
+    code.addEventListener('webkitTransitionEnd', function () {
+      code.ontouchstart = null;
+      code.style.display = 'none';
+      document.body.appendChild(js);
+    });
+  }
+  
+  function code(i) {
+    return function () {
+      for( var j = 0; j <= i; j++) {
+        loadCode(j);
+      }
+    };
+  }
+
+  for (var i = 0; i < codeArray.length; i++) {
+    codeArray[i].ontouchstart = code(i);
+  }
+
+})();
+</script>
 </body>
 </html>
