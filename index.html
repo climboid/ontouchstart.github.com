@@ -60,13 +60,16 @@ window.input = (code) ->
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
+
   $jsBlock.ontouchstart = () ->
     $jsBlock.innerText = CoffeeScript.compile $input.value
+    $input.style.display = 'none'
 
-  $jsBlock.ontouchend = () ->
-    js = document.createElement 'script'
-    js.innerText = $jsBlock.innerText
-    document.body.appendChild js
+    $jsBlock.ontouchstart = (e) ->
+      js = document.createElement 'script'
+      js.innerText = $jsBlock.innerText
+      document.body.appendChild js
+      $jsBlock.style.display = 'none'
 </pre>
 <pre>
 input '''
