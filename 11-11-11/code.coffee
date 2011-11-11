@@ -1,48 +1,3 @@
-<html>
-<head>
-<meta name="viewport" content="width=device-width" />
-<style>
-* { 
- -webkit-touch-callout:none;
- -webkit-user-select:none;
- -webkit-text-size-adjust:none;
- -webkit-tap-highlight-color: transparent;
-}
-
-pre {
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 0.5em;
-  padding: 1em;
-  border: 1px solid black;
-  border-radius: 0.5em;
-  font-family: "Courier New";
-  font-size: 14px;
-  -webkit-transition-duration: 1000ms;
-}
-
-.output {
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 0.5em;
-  padding : 1em;
-  font-family : "American Typewriter";
-  font-size : 18px;
-  background-color : #000000;
-  color : #00FF00;
-  border-radius : 0.5em;
-}
-</style>
-<title>ontouchstart</title>
-</head>
-<body>
-<pre>
-input '''
-print "Hello, world."
-input 'print "Time is #{new Date()}."'
-'''
-</pre>
-<script type="text/coffeescript">
 window.el = (parent, tag) ->
   element = document.createElement tag
   parent.appendChild element
@@ -109,7 +64,4 @@ code = (i) ->
 
 for i in [0..codeArray.length-1] 
   codeArray[i].ontouchstart = code i
-</script>
-<script tyoe="text/javascript" src="coffee-script.js"></script>
-</body>
-</html>
+
