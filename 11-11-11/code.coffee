@@ -31,6 +31,7 @@ window.input = (code) ->
   
   $jsBlock.ontouchstart = () ->
     $jsBlock.innerText = CoffeeScript.compile $input.value
+    $input.blur()
     $input.style.display = 'none'
 
     $jsBlock.ontouchstart = (e) ->
