@@ -25,6 +25,9 @@ window.input = (code) ->
   $input.style.padding = '1em'
   $input.style.marginTop ='0.5em'
   $input.style.marginBottom ='0.5em'
+  lines = code.split '\n'
+  loc = lines.length
+  $input.rows = loc
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
