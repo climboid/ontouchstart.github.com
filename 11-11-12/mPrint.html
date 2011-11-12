@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+window.mPrint = (obj) ->
+  for own key, value of obj
+    print "[#{key}]"
+    if typeof value is 'object'
+      mPrint value
+    else
+      print value
+</pre>
+<pre>
+code = '''
+  collection = 
+    song: ["do", "re", "mi", "fa", "so"]
+
+    singers: {Jagger: "Rock", Elvis: "Roll"}
+
+    bitlist: [
+      1, 0, 1
+      0, 0, 1
+      1, 1, 0
+    ]
+
+    kids:
+      brother:
+        name: "Max"
+        age:  11
+      sister:
+        name: "Ida"
+        age:  9
+
+mPrint collection
+'''
+input code
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script tyoe="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
