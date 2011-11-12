@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+window.format = (dt) ->
+  hh = Math.floor(dt / 3600)
+  mm = Math.floor(dt / 60) - hh * 60
+  ss = Math.floor(dt) - mm * 60 - hh * 3600
+  hh = "0#{hh}" if hh < 10
+  mm = "0#{mm}" if mm < 10
+  ss = "0#{ss}" if ss < 10
+  return "#{dt.toFixed(2)} [#{hh}:#{mm}:#{ss}]"
+</pre>
+<pre>
+window.timer = (limit) =>
+  $output = el document.body, 'div'
+  $output.className = 'output'
+  $output.style.textAlign = 'right'
+
+  update = (message) =>
+    $output.innerHTML = message
+
+  d0 = new Date
+  dt = 0
+
+  refresh = () =>
+    dt = (limit * 1000 - (new Date() - d0))/1000
+    if dt < 0
+      clearInterval(timer)
+      dt = 0
+    update format dt
+
+  timer = setInterval refresh, 1
+</pre>
+<pre>
+input '''
+document.title = "timers"
+timer 24 * 60 * 60
+timer 12 * 60 * 60
+timer 8 * 60 * 60
+timer 3 * 60 * 60
+timer 1.5 * 60 * 60
+timer 60 * 60
+timer 45 * 60
+timer 30 * 60
+timer 15 * 60
+timer 5 * 60
+timer 60
+timer 30
+timer 10
+'''
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script tyoe="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
