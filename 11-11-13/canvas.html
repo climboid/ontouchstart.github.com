@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <style></style>
+<title>ontouchstart</title>
 </head>
 <body>
 <pre>
@@ -15,13 +16,16 @@ randomColor = () ->
   return "rgba(#{r},#{g},#{b},#{a})"
 
 setCanvas= () ->
+  document.title = "Touch to draw"
   c = el document.body, 'canvas'
   c.width = 1024
   c.height = 1024
-  c.style.background = randomColor()
   ctx = c.getContext '2d'
 
-  document.ontouchstart = (e) ->
+  window.onorientationchange = () ->
+    document.location = c.toDataURL()
+
+  c.ontouchstart = (e) ->   
     ctx.restore()
     ctx.lineWidth = Math.random() * 10
     ctx.strokeStyle = randomColor()
@@ -30,7 +34,7 @@ setCanvas= () ->
     y = e.touches[0].pageY
     ctx.moveTo x, y
 
-  document.ontouchmove = (e) ->
+  c.ontouchmove = (e) ->
     e.preventDefault();
     length = e.touches.length
     x = e.touches[0].pageX
@@ -38,7 +42,8 @@ setCanvas= () ->
     ctx.lineTo x, y
     ctx.stroke()
 
-  document.ontouchend = (e) ->
+  c.ontouchend = (e) ->
+    document.title = "Rotate to save"
     ctx.save()
 
 setCanvas()
