@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+code = '''
+setCanvas = ()->
+ c = el document.body, 'canvas'
+ c.width = 1024
+ c.height = 1024
+ c.style.backgroundColor = 'black'
+ c.style.margin = 0
+ ctx = c.getContext "2d"
+ c.update = () ->
+   ctx.lineTo c.x, c.y
+   ctx.stroke()
+
+ c.ontouchstart = (e) ->
+   c.x = e.touches[0].pageX
+   c.y = e.touches[0].pageY
+   ctx.lineWidth = 1
+   ctx.restore()
+   ctx.strokeStyle = 'blue'
+   ctx.beginPath()
+   ctx.moveTo c.x, c.y
+
+ c.ontouchmove = (e) ->
+   e.preventDefault()
+   c.x = e.touches[0].pageX
+   c.y = e.touches[0].pageY
+   setTimeout c.update, 0
+
+ c.ontouchend = (e) ->
+   ctx.save()
+setCanvas()
+'''
+cs code
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script tyoe="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
