@@ -1,46 +1,46 @@
 <html>
 <head>
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <link rel="stylesheet" type="text/css" href="code.css" />
 <style></style>
-<title>ontouchstart</title>
 </head>
 <body>
 <pre>
-code = '''
-setCanvas = ()->
- c = el document.body, 'canvas'
- c.width = 1024
- c.height = 1024
- c.style.backgroundColor = 'black'
- c.style.margin = 0
- ctx = c.getContext "2d"
- c.update = () ->
-   ctx.lineTo c.x, c.y
-   ctx.stroke()
+cs '''
+setCanvas= () ->
+  c = el document.body, 'canvas'
+  c.width = 1024
+  c.height = 1024
+  c.style.backgroundColor = '#000'
+  ctx = c.getContext("2d")
 
- c.ontouchstart = (e) ->
-   c.x = e.touches[0].pageX
-   c.y = e.touches[0].pageY
-   ctx.lineWidth = 1
-   ctx.restore()
-   ctx.strokeStyle = 'blue'
-   ctx.beginPath()
-   ctx.moveTo c.x, c.y
+  document.ontouchstart = (e) ->
+    x = e.touches[0].pageX
+    y = e.touches[0].pageY
+    r = Math.floor(Math.random() * 255)
+    g = Math.floor(Math.random() * 255)
+    b = Math.floor(Math.random() * 255)
+    ctx.lineWidth = 2
+    ctx.restore()
+    ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',1)'
+    ctx.beginPath()
+    ctx.moveTo x, y
 
- c.ontouchmove = (e) ->
-   e.preventDefault()
-   c.x = e.touches[0].pageX
-   c.y = e.touches[0].pageY
-   setTimeout c.update, 0
+  document.ontouchmove = (e) ->
+    e.preventDefault();
+    x = e.touches[0].pageX
+    y = e.touches[0].pageY
+    ctx.lineTo x, y
+    ctx.stroke()
 
- c.ontouchend = (e) ->
-   ctx.save()
+  document.ontouchend = (e) ->
+    ctx.save()
+
 setCanvas()
 '''
-cs code
 </pre>
 <script type="text/coffeescript" src="code.coffee"></script>
 <script tyoe="text/javascript" src="coffee-script.js"></script>
 </body>
 </html>
+
