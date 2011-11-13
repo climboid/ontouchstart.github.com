@@ -17,17 +17,10 @@ window.print = (message) ->
 
 window.cs = (code) -> 
   $input = el document.body, 'textarea'
-  $input.style.webkitUserSelect = 'text'
-  $input.style.width = '100%'
-  $input.style.fontFamily = 'Courier New'
-  $input.style.fontSize = '14px'
-  $input.style.margin = '0em'
-  $input.style.padding = '1em'
-  $input.style.marginTop ='0.5em'
-  $input.style.marginBottom ='0.5em'
   lines = code.split '\n'
   loc = lines.length
   $input.rows = loc
+  $input.cols = 80
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
@@ -44,17 +37,10 @@ window.cs = (code) ->
 
 window.css = (rule) -> 
   $input = el document.body, 'textarea'
-  $input.style.webkitUserSelect = 'text'
-  $input.style.width = '100%'
-  $input.style.fontFamily = 'Courier New'
-  $input.style.fontSize = '14px'
-  $input.style.margin = '0em'
-  $input.style.padding = '1em'
-  $input.style.marginTop ='0.5em'
-  $input.style.marginBottom ='0.5em'
   lines = rule.split '\n'
   loc = lines.length
   $input.rows = loc
+  $input.cols = 80
   $input.value = rule
   $cssBlock = el document.body, 'pre'
   $cssBlock.innerHTML = '<b>Touch to apply CSS</b>'

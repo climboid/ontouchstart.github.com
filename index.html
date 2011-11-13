@@ -2,32 +2,37 @@
 <head>
 <meta name="viewport" content="width=device-width" />
 <style>
-* { 
+* {
+ margin: 0;
+ padding: 0;
  -webkit-touch-callout:none;
  -webkit-user-select:none;
  -webkit-text-size-adjust:none;
  -webkit-tap-highlight-color: transparent;
 }
 
-pre {
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 0.5em;
+pre, textarea {
+  margin: 1em;
   padding: 1em;
   border: 1px solid black;
   border-radius: 0.5em;
   font-family: "Courier New";
   font-size: 14px;
+}
+
+pre {
   -webkit-transition-duration: 1000ms;
 }
 
+textarea {
+  -webkit-user-select: text;
+}
+
 .output {
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 0.5em;
+  margin: 1em;
   padding : 1em;
   font-family : "American Typewriter";
-  font-size : 18px;
+  font-size : 14px;
   background-color : #000000;
   color : #00FF00;
   border-radius : 0.5em;
@@ -63,17 +68,11 @@ window.print = (message) ->
 
 window.cs = (code) -> 
   $input = el document.body, 'textarea'
-  $input.style.webkitUserSelect = 'text'
-  $input.style.width = '100%'
-  $input.style.fontFamily = 'Courier New'
-  $input.style.fontSize = '14px'
-  $input.style.margin = '0em'
-  $input.style.padding = '1em'
-  $input.style.marginTop ='0.5em'
-  $input.style.marginBottom ='0.5em'
+ 
   lines = code.split '\n'
   loc = lines.length
   $input.rows = loc
+  $input.cols = 80
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
@@ -90,17 +89,10 @@ window.cs = (code) ->
 
 window.css = (rule) -> 
   $input = el document.body, 'textarea'
-  $input.style.webkitUserSelect = 'text'
-  $input.style.width = '100%'
-  $input.style.fontFamily = 'Courier New'
-  $input.style.fontSize = '14px'
-  $input.style.margin = '0em'
-  $input.style.padding = '1em'
-  $input.style.marginTop ='0.5em'
-  $input.style.marginBottom ='0.5em'
   lines = rule.split '\n'
   loc = lines.length
   $input.rows = loc
+  $input.cols = 80
   $input.value = rule
   $cssBlock = el document.body, 'pre'
   $cssBlock.innerHTML = '<b>Touch to apply CSS</b>'
