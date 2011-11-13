@@ -37,9 +37,10 @@ pre {
 </head>
 <body>
 <pre>
-input '''
+cs '''
 print "Hello, world."
-input 'print "Time is #{new Date()}."'
+cs 'print "Time is #{new Date()}."'
+css "body { background: #abc }"
 '''
 </pre>
 <script type="text/coffeescript">
@@ -60,7 +61,7 @@ window.print = (message) ->
   $output.className = 'output'
   $output.innerHTML = message
 
-window.input = (code) -> 
+window.cs = (code) -> 
   $input = el document.body, 'textarea'
   $input.style.webkitUserSelect = 'text'
   $input.style.width = '100%'
@@ -76,18 +77,47 @@ window.input = (code) ->
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
+  $jsBlock.innerHTML = '<b>Touch to run CoffeeScript</b>'
   
   $jsBlock.ontouchstart = () ->
     $jsBlock.innerText = CoffeeScript.compile $input.value
     $input.blur()
     $input.style.display = 'none'
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+    $jsBlock.style.display = 'none'
 
-    $jsBlock.ontouchstart = (e) ->
-      js = document.createElement 'script'
-      js.innerText = $jsBlock.innerText
-      document.body.appendChild js
+window.css = (rule) -> 
+  $input = el document.body, 'textarea'
+  $input.style.webkitUserSelect = 'text'
+  $input.style.width = '100%'
+  $input.style.fontFamily = 'Courier New'
+  $input.style.fontSize = '14px'
+  $input.style.margin = '0em'
+  $input.style.padding = '1em'
+  $input.style.marginTop ='0.5em'
+  $input.style.marginBottom ='0.5em'
+  lines = rule.split '\n'
+  loc = lines.length
+  $input.rows = loc
+  $input.value = rule
+  $cssBlock = el document.body, 'pre'
+  $cssBlock.innerHTML = '<b>Touch to apply CSS</b>'
+  $cssBlock.ontouchstart = () ->
+    $cssBlock.innerText = $input.value
+    $input.blur()
+    $input.style.display = 'none'
+    document.styleSheets[0].insertRule $cssBlock.innerText
+    $cssBlock.style.display = 'none'       
 
-      $jsBlock.style.display = 'none'
+window.mPrint = (obj) ->
+  for own key, value of obj
+    print "[#{key}]"
+    if typeof value is 'object'
+      mPrint value
+    else
+      print value
 
 codeArray = document.getElementsByTagName 'pre'
 loadCode = (i) =>
@@ -113,6 +143,7 @@ code = (i) ->
 
 for i in [0..codeArray.length-1] 
   codeArray[i].ontouchstart = code i
+
 </script>
 <script tyoe="text/javascript" src="coffee-script.js"></script>
 </body>

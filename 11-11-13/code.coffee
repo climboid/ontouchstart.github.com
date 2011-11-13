@@ -31,17 +31,16 @@ window.cs = (code) ->
   $input.value = code
 
   $jsBlock = el document.body, 'pre'
+  $jsBlock.innerHTML = '<b>Touch to run CoffeeScript</b>'
   
   $jsBlock.ontouchstart = () ->
     $jsBlock.innerText = CoffeeScript.compile $input.value
     $input.blur()
     $input.style.display = 'none'
-
-    $jsBlock.ontouchstart = (e) ->
-      js = document.createElement 'script'
-      js.innerText = $jsBlock.innerText
-      document.body.appendChild js
-      $jsBlock.style.display = 'none'
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+    $jsBlock.style.display = 'none'
 
 window.css = (rule) -> 
   $input = el document.body, 'textarea'
@@ -58,13 +57,13 @@ window.css = (rule) ->
   $input.rows = loc
   $input.value = rule
   $cssBlock = el document.body, 'pre'
+  $cssBlock.innerHTML = '<b>Touch to apply CSS</b>'
   $cssBlock.ontouchstart = () ->
     $cssBlock.innerText = $input.value
     $input.blur()
     $input.style.display = 'none'
-    $cssBlock.ontouchstart = () ->
-      document.styleSheets[0].insertRule $cssBlock.innerText
-      $cssBlock.style.display = 'none'       
+    document.styleSheets[0].insertRule $cssBlock.innerText
+    $cssBlock.style.display = 'none'       
 
 window.mPrint = (obj) ->
   for own key, value of obj
