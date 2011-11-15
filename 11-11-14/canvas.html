@@ -9,30 +9,28 @@
 <pre>
 ccLicense()
 cs '''
-randomColor = () ->
-  r = Math.floor (Math.random() * 256)
-  g = Math.floor (Math.random() * 256)
-  b = Math.floor (Math.random() * 256)
-  a = Math.random()
-  return "rgba(#{r},#{g},#{b},#{a})"
-
-setCanvas= () ->
+setCanvas = () ->
   document.title = "Touch to draw within the box"
   c = el document.body, 'canvas'
   c.style.position = 'absolute'
   c.width = 512
   c.height = 512
   c.style.left = (document.body.scrollWidth - 512) / 2
-  c.style.top = 64
-  c.style.border = '1px solid #000'
+  c.style.top = 256
   ctx = c.getContext '2d'
 
-  window.onorientationchange = () ->
-    document.location = c.toDataURL()
+  init = () ->
+    ctx.beginPath()
+    ctx.moveTo 0,0
+    ctx.lineTo 512, 0
+    ctx.lineTo 512, 512
+    ctx.lineTo 0, 512
+    ctx.lineTo 0, 0
+    ctx.stroke()
+    ctx.save()
 
   c.ontouchstart = (e) ->   
     ctx.restore()
-    ctx.strokeStyle = randomColor()
     ctx.beginPath()
     x = e.touches[0].pageX - c.offsetLeft
     y = e.touches[0].pageY - c.offsetTop
@@ -40,7 +38,6 @@ setCanvas= () ->
 
   c.ontouchmove = (e) ->
     e.preventDefault();
-    length = e.touches.length
     x = e.touches[0].pageX - c.offsetLeft
     y = e.touches[0].pageY - c.offsetTop
     ctx.lineTo x, y
@@ -49,6 +46,11 @@ setCanvas= () ->
   c.ontouchend = (e) ->
     document.title = "Rotate to save"
     ctx.save()
+
+  window.onorientationchange = () ->
+    document.location = c.toDataURL()
+
+  init()
 
 setCanvas()
 '''
