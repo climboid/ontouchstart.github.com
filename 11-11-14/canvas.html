@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+ccLicense()
+cs '''
+randomColor = () ->
+  r = Math.floor (Math.random() * 256)
+  g = Math.floor (Math.random() * 256)
+  b = Math.floor (Math.random() * 256)
+  a = Math.random()
+  return "rgba(#{r},#{g},#{b},#{a})"
+
+setCanvas= () ->
+  document.title = "Touch to draw within the box"
+  c = el document.body, 'canvas'
+  c.style.position = 'absolute'
+  c.width = 512
+  c.height = 512
+  c.style.left = (document.body.scrollWidth - 512) / 2
+  c.style.top = 64
+  c.style.border = '1px solid #000'
+  ctx = c.getContext '2d'
+
+  window.onorientationchange = () ->
+    document.location = c.toDataURL()
+
+  c.ontouchstart = (e) ->   
+    ctx.restore()
+    ctx.strokeStyle = randomColor()
+    ctx.beginPath()
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.moveTo x, y
+
+  c.ontouchmove = (e) ->
+    e.preventDefault();
+    length = e.touches.length
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.lineTo x, y
+    ctx.stroke()
+
+  c.ontouchend = (e) ->
+    document.title = "Rotate to save"
+    ctx.save()
+
+setCanvas()
+'''
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script type="text/coffeescript" src="ccLicense.coffee"></script>
+<script tyoe="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
+
