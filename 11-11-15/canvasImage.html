@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style></style>
+<title>ontouchstart</title>
+</head>
+<body>
+<pre>
+ccLicense()
+cs '''
+setCanvas = ->
+  document.title = "Touch to draw on the image"
+  c = el document.body, 'canvas'
+  c.style.position = 'absolute'
+  c.width = 600
+  c.height = 600
+  c.style.left = (document.body.scrollWidth - 600) / 2
+  c.style.top = 256
+  ctx = c.getContext '2d'
+  ctx.strokeStyle = 'yellow'
+ 
+  init = ->
+    img = new Image()
+    img.src = '600px-The_Earth_seen_from_Apollo_17.jpg'
+    img.onload = ->
+      ctx.drawImage img, 0, 0
+
+  c.ontouchstart = (e) ->   
+    ctx.restore()
+    ctx.beginPath()
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.moveTo x, y
+
+  c.ontouchmove = (e) ->
+    e.preventDefault();
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.lineTo x, y
+    ctx.stroke()
+
+  c.ontouchend = (e) ->
+    document.title = "Rotate to save"
+    ctx.save()
+
+  window.onorientationchange = ->
+    document.location = c.toDataURL()
+
+  init()
+
+setCanvas()
+'''
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script type="text/coffeescript" src="ccLicense.coffee"></script>
+<script tyoe="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
+
