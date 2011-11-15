@@ -9,7 +9,7 @@
 <pre>
 ccLicense()
 cs '''
-setCanvas = () ->
+setCanvas = ->
   document.title = "Touch to draw within the box"
   c = el document.body, 'canvas'
   c.style.position = 'absolute'
@@ -19,7 +19,7 @@ setCanvas = () ->
   c.style.top = 256
   ctx = c.getContext '2d'
 
-  init = () ->
+  init = ->
     ctx.beginPath()
     ctx.moveTo 0,0
     ctx.lineTo 512, 0
@@ -47,7 +47,7 @@ setCanvas = () ->
     document.title = "Rotate to save"
     ctx.save()
 
-  window.onorientationchange = () ->
+  window.onorientationchange = ->
     document.location = c.toDataURL()
 
   init()
