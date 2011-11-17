@@ -10,9 +10,9 @@ dot = (x,y) ->
   g = Math.floor (Math.random() * 255)
   b = Math.floor (Math.random() * 255)
   a = Math.random() * 0.5 + 0.5
-  el.style.backgroundColor = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'
-  el.style.left = (x - 5) + 'px'
-  el.style.top = (y - 5) + 'px'
+  el.style.backgroundColor = "rgba(#{r},#{g},#{b},#{a})"
+  el.style.left = "#{x - 5}px"
+  el.style.top = "#{y - 5}px"
   document.body.appendChild el
 
 document.addEventListener 'superTouch', (e) -> 

@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>ontouchstart</title>
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="code.css" />
+<style>
+</style>
+</head>
+<body>
+<pre>
+ccLicense()
+</pre>
+<pre>
+cs '''
+document.ontouchmove = (e) ->
+  e.preventDefault()
+
+window.superTouch = ->
+  superTouchLayer = el document.body, 'iframe'
+  superTouchLayer.style.position = 'absolute'
+  superTouchLayer.style.border = 'none'
+  superTouchLayer.style.width = '1024px'
+  superTouchLayer.style.height = '1024px'
+  superTouchLayer.style.zIndex = '100000'
+  superTouchLayer.src = 'superTouchLayer.html'
+
+  document.title = 'superTouch'
+superTouch()
+
+setCanvas()
+'''
+</pre>
+<script type="text/coffeescript" src="code.coffee"></script>
+<script type="text/coffeescript" src="canvas.coffee"></script>
+<script type="text/coffeescript" src="ccLicense.coffee"></script>
+<script type="text/javascript" src="coffee-script.js"></script>
+</body>
+</html>
