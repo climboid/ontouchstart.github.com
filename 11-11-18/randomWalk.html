@@ -48,16 +48,25 @@ setCanvas = ->
     ctx.lineTo 0, 640
     ctx.lineTo 0, 0
     ctx.stroke()
-    ctx.save()
+    ctx.closePath()
+
     document.body.appendChild c
 
   document.addEventListener 'randomUpdate', (e)->
-    x += e.dx * 10
-    y += e.dy * 10
     if x < 0 or x > 640 or y < 0 or y > 640
       document.location = c.toDataURL()
+    r = Math.floor (Math.random() * 255)
+    g = Math.floor (Math.random() * 255)
+    b = Math.floor (Math.random() * 255)
+    color = "rgb(#{r},#{g},#{b})"
+    ctx.beginPath()
+    ctx.strokeStyle = color
+    ctx.moveTo x,y
+    x += e.dx * 10
+    y += e.dy * 10
     ctx.lineTo x,y
     ctx.stroke()
+    ctx.closePath()
 
   c.ontouchstart = (e) ->
     x = e.touches[0].pageX - c.offsetLeft
