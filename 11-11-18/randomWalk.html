@@ -38,8 +38,12 @@ setCanvas = ->
   c.style.left = (document.body.scrollWidth - 640) / 2
   c.style.top = 128
   ctx = c.getContext '2d'
-  x = 320
-  y = 320
+  x0 = 320
+  y0 = 320
+  x = x0
+  y = y0
+  sumR2 = 0
+  n = 0
   init = ->
     ctx.beginPath()
     ctx.moveTo 0,0
@@ -52,7 +56,7 @@ setCanvas = ->
 
     document.body.appendChild c
 
-  document.addEventListener 'randomUpdate', (e)->
+  document.addEventListener 'stepUpdate', (e)->
     if x < 0 or x > 640 or y < 0 or y > 640
       document.location = c.toDataURL()
     r = Math.floor (Math.random() * 255)
@@ -67,10 +71,23 @@ setCanvas = ->
     ctx.lineTo x,y
     ctx.stroke()
     ctx.closePath()
+    dx = x - x0
+    dy = y - y0
+    sumR2 += dx * dx + dy * dy
+    n++
+
+  document.addEventListener 'rangeUpdate', (e)->
+    range =  Math.sqrt sumR2/n
+    ctx.beginPath()
+    ctx.arc x0, y0, range, 0, Math.PI*2, true
+    ctx.stroke()
+    ctx.closePath()
 
   c.ontouchstart = (e) ->
-    x = e.touches[0].pageX - c.offsetLeft
-    y = e.touches[0].pageY - c.offsetTop
+    x0 = e.touches[0].pageX - c.offsetLeft
+    y0 = e.touches[0].pageY - c.offsetTop
+    x = x0
+    y = y0
     ctx.moveTo x, y
     randomWalk()
     c.ontouchstart  = ->
@@ -80,16 +97,22 @@ setCanvas = ->
 
 randomWalk = ->
   document.title = 'Touch to save'
-  randomUpdate = document.createEvent "Events" 
-  randomUpdate.initEvent 'randomUpdate', false, true
+  stepUpdate = document.createEvent "Events" 
+  stepUpdate.initEvent 'stepUpdate', false, true
 
-  update = ->
-    randomUpdate.dx = Math.random() - 0.5
-    randomUpdate.dy = Math.random() - 0.5
-    document.dispatchEvent randomUpdate
-    
-  setInterval update, 1
-  update()
+  rangeUpdate = document.createEvent "Events" 
+  rangeUpdate.initEvent 'rangeUpdate', false, true
+
+  updateStep = ->
+    stepUpdate.dx = Math.random() - 0.5
+    stepUpdate.dy = Math.random() - 0.5
+    document.dispatchEvent stepUpdate
+
+  updateRange = ->
+    document.dispatchEvent rangeUpdate 
+
+  setInterval updateStep, 10
+  setInterval updateRange, 1000
 
 ccLicense()
 setCanvas()
