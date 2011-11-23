@@ -90,6 +90,8 @@ c.height = 640
 c.style.width = '640px'
 c.style.height = '640px'
 c.style.margin = (document.body.scrollWidth - 640) / 2 + 'px'
+document.body.appendChild c
+
 ctx = c.getContext '2d'
 
 ctx.beginPath()
@@ -100,10 +102,10 @@ ctx.lineTo 0, 640
 ctx.lineTo 0, 0
 ctx.stroke()
 ctx.save()
-document.body.appendChild c
-ctx.font = "20px American Typewriter";
 
+ctx.font = "20px American Typewriter";
 ctx.fillText "Hello, world", 10, 30
+document.title = "Touch to draw within the box"
 
 c.ontouchstart = (e) ->   
   ctx.restore()
