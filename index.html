@@ -67,8 +67,7 @@ window.css = (rule) ->
 css '''
 .output {
   margin: 1em; padding : 1em;
-  font-family: "American Typewriter";
-  font-size: 18px;
+  font: 20px "American Typewriter";
   border-radius: 0.5em;
   color: #00FF00; background: #000000;
 }
@@ -102,7 +101,9 @@ ctx.lineTo 0, 0
 ctx.stroke()
 ctx.save()
 document.body.appendChild c
-document.title = "Touch to draw within the box"
+ctx.font = "20px American Typewriter";
+
+ctx.fillText "Hello, world", 10, 30
 
 c.ontouchstart = (e) ->   
   ctx.restore()
