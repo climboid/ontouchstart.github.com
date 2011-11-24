@@ -23,6 +23,13 @@ pre, textarea {
   -webkit-user-select: text;
 }
 
+.output {
+  margin: 1em; padding : 1em;
+  font: 20px "American Typewriter";
+  border-radius: 0.5em;
+  color: #00FF00; background: #000000;
+}
+
 #license {
   margin: 0;
   padding: 1em;
@@ -36,7 +43,19 @@ pre, textarea {
 <div id="license">
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
+
 <pre>
+cs '''
+print "Hello, world"
+'''
+
+cs '''
+ctx = setCanvas(640, 480)
+ctx.font = "20px American Typewriter";
+ctx.fillText "Hello, world", 10, 30
+'''
+</pre>
+<script type="text/coffeescript">
 window.cs = (code) -> 
   $input = document.createElement 'textarea'
  
@@ -62,75 +81,61 @@ window.cs = (code) ->
 
 window.css = (rule) ->
   document.styleSheets[0].insertRule rule  
-</pre>
-<pre>
-css '''
-.output {
-  margin: 1em; padding : 1em;
-  font: 20px "American Typewriter";
-  border-radius: 0.5em;
-  color: #00FF00; background: #000000;
-}
-'''
 
-cs '''
 window.print = (message) ->
   $output = document.createElement 'div'
   $output.className = 'output'
   $output.innerHTML = message
   document.body.appendChild $output
   return $output
-print "Hello, world"
-'''
 
-cs '''
-c = document.createElement 'canvas'
-c.width = 640
-c.height = 640
-c.style.width = '640px'
-c.style.height = '640px'
-c.style.margin = (document.body.scrollWidth - 640) / 2 + 'px'
-document.body.appendChild c
+window.setCanvas = (w = 640, h = 640) ->
+  c = document.createElement 'canvas'
+  c.width = w
+  c.height = h
+  c.style.width = w + 'px'
+  c.style.height = h + 'px'
+  c.style.margin = '1em'
+  c.style.marginLeft = (document.body.scrollWidth - w) / 2 + 'px'
+  document.body.appendChild c
 
-ctx = c.getContext '2d'
+  ctx = c.getContext '2d'
 
-ctx.beginPath()
-ctx.moveTo 0,0
-ctx.lineTo 640, 0
-ctx.lineTo 640, 640
-ctx.lineTo 0, 640
-ctx.lineTo 0, 0
-ctx.stroke()
-ctx.save()
-
-ctx.font = "20px American Typewriter";
-ctx.fillText "Hello, world", 10, 30
-ctx.fillText "ontouchstart.github.com", 400, 630
-document.title = "Touch to draw within the box"
-
-c.ontouchstart = (e) ->   
-  ctx.restore()
   ctx.beginPath()
-  x = e.touches[0].pageX - c.offsetLeft
-  y = e.touches[0].pageY - c.offsetTop
-  ctx.moveTo x, y
-
-c.ontouchmove = (e) ->
-  e.preventDefault();
-  x = e.touches[0].pageX - c.offsetLeft
-  y = e.touches[0].pageY - c.offsetTop
-  ctx.lineTo x, y
+  ctx.moveTo 0,0
+  ctx.lineTo w, 0
+  ctx.lineTo w, h
+  ctx.lineTo 0, h
+  ctx.lineTo 0, 0
   ctx.stroke()
-
-c.ontouchend = (e) ->
-  document.title = "Rotate to save"
   ctx.save()
 
-window.onorientationchange = ->
-  document.location = c.toDataURL()
-'''
-</pre>
-<script type="text/coffeescript">
+  ctx.font = "12px American Typewriter";
+
+  ctx.fillText "ontouchstart.github.com", w - 150, h - 10
+  document.title = "Single-finger touch to draw, double-finger touch to save"
+
+  c.ontouchstart = (e) ->
+    if e.touches.length == 2
+     document.location = c.toDataURL()  
+    ctx.restore()
+    ctx.beginPath()
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.moveTo x, y
+
+  c.ontouchmove = (e) ->
+    e.preventDefault();
+    x = e.touches[0].pageX - c.offsetLeft
+    y = e.touches[0].pageY - c.offsetTop
+    ctx.lineTo x, y
+    ctx.stroke()
+
+  c.ontouchend = (e) ->
+    ctx.save()
+
+  return ctx
+
 run = ->
   codeArray = document.getElementsByTagName 'pre'
   loadCode = (i) =>
