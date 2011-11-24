@@ -63,6 +63,24 @@ fib = (x) ->
 for i in [0..10]
   print "fib(#{i}) = #{fib(i)}"
 
+
+remainder = (a, b) ->
+  cond [a < b, -> a], [true, -> remainder a-b, b]
+
+gcd = (a, b) ->
+  cond [b == 0, -> a], [true, -> gcd b, remainder a, b]
+
+isPrime = (n) ->
+  conditionArray = []
+  conditionArray.push [n == 2, -> true]
+  for i in [2..n-1]
+    conditionArray.push [((gcd n, i) > 1), -> false]
+  conditionArray.push [true, -> true]
+  cond.apply this, conditionArray
+
+for i in [2..100]
+  print i if isPrime i
+
 abs = (x) ->
   cond [x < 0, -> -x], [true, -> x]
 
