@@ -116,16 +116,18 @@ window.setCanvas = (w = 640, h = 640) ->
   document.title = "Single-finger touch to draw, double-finger touch to save"
 
   c.ontouchstart = (e) ->
-    if e.touches.length == 2
-     document.location = c.toDataURL()  
-    ctx.restore()
-    ctx.beginPath()
-    x = e.touches[0].pageX - c.offsetLeft
-    y = e.touches[0].pageY - c.offsetTop
-    ctx.moveTo x, y
+    if e.touches.length > 1
+      document.location = c.toDataURL() 
+    else
+      ctx.restore()
+      ctx.beginPath()
+      x = e.touches[0].pageX - c.offsetLeft
+      y = e.touches[0].pageY - c.offsetTop
+      ctx.moveTo x, y
 
   c.ontouchmove = (e) ->
     e.preventDefault();
+    return if e.touches.length > 1  
     x = e.touches[0].pageX - c.offsetLeft
     y = e.touches[0].pageY - c.offsetTop
     ctx.lineTo x, y
