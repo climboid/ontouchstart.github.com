@@ -113,7 +113,7 @@ window.setCanvas = (w = 640, h = 640) ->
   ctx.font = "12px American Typewriter";
 
   ctx.fillText "ontouchstart.github.com", w - 150, h - 10
-  document.title = "Single-finger touch to draw, double-finger touch to save"
+  document.title = "Touch to draw within the box"
 
   c.ontouchstart = (e) ->
     if e.touches.length > 1
@@ -134,7 +134,11 @@ window.setCanvas = (w = 640, h = 640) ->
     ctx.stroke()
 
   c.ontouchend = (e) ->
+    document.title = "Rotate to save"
     ctx.save()
+
+  window.onorientationchange = ->
+    document.location = c.toDataURL()
 
   return ctx
 
