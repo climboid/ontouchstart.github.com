@@ -43,28 +43,6 @@ pre, textarea {
 <div id="license">
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
-<pre>
-cs '''
-cond = (x...) -> return arg[1]() for arg in arguments when arg[0]
-
-cond [2 > 3, -> print "2 > 3 is correct"], [3 > 2, -> print "3 > 2 is correct"]
-
-abs = (x) ->
-  cond [x < 0, -> -x], [true, -> x]
-
-print "abs(10) = #{abs(10)}"
-print "abs(0)  = #{abs(0)}"
-print "abs(-10) = #{abs(-10)}"
-
-now = new Date()
-hours = now.getHours()
-
-cond [hours < 12, -> print "Good morning"], 
-     [hours < 18, -> print "Good afternoon"],
-     [true, -> print "Good Evening"]
-
-'''
-</pre>
 <script type="text/coffeescript">
 window.cs = (code) -> 
   $input = document.createElement 'textarea'
@@ -88,44 +66,35 @@ window.cs = (code) ->
     js.innerText = $jsBlock.innerText
     document.body.appendChild js
     $jsBlock.style.display = 'none'
-
-window.css = (rule) ->
-  document.styleSheets[0].insertRule rule  
-
-window.print = (message) ->
+</script>
+<script type="text/coffeescript">
+cs '''
+print = (message) ->
   $output = document.createElement 'div'
   $output.className = 'output'
   $output.innerHTML = message
   document.body.appendChild $output
   return $output
 
-run = ->
-  codeArray = document.getElementsByTagName 'pre'
-  loadCode = (i) =>
-    code = codeArray[i]
-    js = document.createElement 'script'
-    js.innerText = CoffeeScript.compile code.innerText
+cond = (x...) -> return arg[1]() for arg in arguments when arg[0]
 
-    code.style.webkitTransitionDelay = i * 100 + 'ms'
-    code.style.padding = '0'
-    code.style.width = '0'
-    code.style.height = '0'
-    code.style.overflow = 'hidden'
+cond [2 > 3, -> print "2 > 3 is correct"], [3 > 2, -> print "3 > 2 is correct"]
 
-    code.addEventListener 'webkitTransitionEnd', () ->
-      code.ontouchstart = null
-      code.style.display = 'none'
-      document.body.appendChild js
-  
-  code = (i) ->
-    return () =>
-      for j in [0..i]
-        loadCode j
+abs = (x) ->
+  cond [x < 0, -> -x], [true, -> x]
 
-  for i in [0..codeArray.length-1] 
-    codeArray[i].ontouchstart = code i
+print "abs(10) = #{abs(10)}"
+print "abs(0)  = #{abs(0)}"
+print "abs(-10) = #{abs(-10)}"
 
-run()
+now = new Date()
+hours = now.getHours()
+
+cond [hours < 12, -> print "Good morning"], 
+     [hours < 18, -> print "Good afternoon"],
+     [true, -> print "Good Evening"]
+
+'''
 </script>
 <script>
 /**

@@ -43,8 +43,43 @@ pre, textarea {
 <div id="license">
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
-<pre>
+<script type="text/coffeescript">
+window.cs = (code) -> 
+  $input = document.createElement 'textarea'
+ 
+  lines = code.split '\n'
+  loc = lines.length
+  $input.rows = loc
+  $input.cols = 80
+  $input.value = code
+  document.body.appendChild $input
+
+  $jsBlock = document.createElement 'pre'
+  $jsBlock.innerHTML = '[Touch to run CoffeeScript]'
+  document.body.appendChild $jsBlock
+  
+  $jsBlock.ontouchstart = ->
+    $jsBlock.innerText = CoffeeScript.compile $input.value
+    $input.blur()
+    $input.style.display = 'none'
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+    $jsBlock.style.display = 'none'
+
+window.css = (rule) ->
+  document.styleSheets[0].insertRule rule  
+
+</script>
+<script type="text/coffeescript">
 cs '''
+print = (message) ->
+  $output = document.createElement 'div'
+  $output.className = 'output'
+  $output.innerHTML = message
+  document.body.appendChild $output
+  return $output
+
 cond = (x...) -> return arg[1]() for arg in arguments when arg[0]
 
 factorial = (x) ->
@@ -60,7 +95,6 @@ fib = (x) ->
 
 for i in [0..10]
   print "fib(#{i}) = #{fib(i)}"
-
 
 remainder = (a, b) ->
   cond [a < b, -> a], [true, -> remainder a-b, b]
@@ -91,68 +125,6 @@ for n in [1..13]
   print "sqrt(2, 1, #{e}) = #{sqrt 2, 1, e}"
 print "Math.sqrt(2) = #{Math.sqrt 2}"
 '''
-</pre>
-<script type="text/coffeescript">
-window.cs = (code) -> 
-  $input = document.createElement 'textarea'
- 
-  lines = code.split '\n'
-  loc = lines.length
-  $input.rows = loc
-  $input.cols = 80
-  $input.value = code
-  document.body.appendChild $input
-
-  $jsBlock = document.createElement 'pre'
-  $jsBlock.innerHTML = '[Touch to run CoffeeScript]'
-  document.body.appendChild $jsBlock
-  
-  $jsBlock.ontouchstart = ->
-    $jsBlock.innerText = CoffeeScript.compile $input.value
-    $input.blur()
-    $input.style.display = 'none'
-    js = document.createElement 'script'
-    js.innerText = $jsBlock.innerText
-    document.body.appendChild js
-    $jsBlock.style.display = 'none'
-
-window.css = (rule) ->
-  document.styleSheets[0].insertRule rule  
-
-window.print = (message) ->
-  $output = document.createElement 'div'
-  $output.className = 'output'
-  $output.innerHTML = message
-  document.body.appendChild $output
-  return $output
-
-run = ->
-  codeArray = document.getElementsByTagName 'pre'
-  loadCode = (i) =>
-    code = codeArray[i]
-    js = document.createElement 'script'
-    js.innerText = CoffeeScript.compile code.innerText
-
-    code.style.webkitTransitionDelay = i * 100 + 'ms'
-    code.style.padding = '0'
-    code.style.width = '0'
-    code.style.height = '0'
-    code.style.overflow = 'hidden'
-
-    code.addEventListener 'webkitTransitionEnd', () ->
-      code.ontouchstart = null
-      code.style.display = 'none'
-      document.body.appendChild js
-  
-  code = (i) ->
-    return () =>
-      for j in [0..i]
-        loadCode j
-
-  for i in [0..codeArray.length-1] 
-    codeArray[i].ontouchstart = code i
-
-run()
 </script>
 <script>
 /**
