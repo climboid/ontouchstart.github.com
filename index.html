@@ -43,18 +43,6 @@ pre, textarea {
 <div id="license">
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
-
-<pre>
-cs '''
-print "Hello, world"
-'''
-
-cs '''
-ctx = setCanvas(640, 480)
-ctx.font = "20px American Typewriter";
-ctx.fillText "Hello, world", 10, 30
-'''
-</pre>
 <script type="text/coffeescript">
 window.cs = (code) -> 
   $input = document.createElement 'textarea'
@@ -79,17 +67,21 @@ window.cs = (code) ->
     document.body.appendChild js
     $jsBlock.style.display = 'none'
 
-window.css = (rule) ->
-  document.styleSheets[0].insertRule rule  
-
-window.print = (message) ->
+</script>
+<script type="text/coffeescript">
+cs '''
+print = (message) ->
   $output = document.createElement 'div'
   $output.className = 'output'
   $output.innerHTML = message
   document.body.appendChild $output
   return $output
-
-window.setCanvas = (w = 640, h = 640) ->
+print "Hello, world"
+'''
+</script>
+<script type="text/coffeescript">
+cs '''
+setCanvas = (w = 640, h = 640) ->
   c = document.createElement 'canvas'
   c.width = w
   c.height = h
@@ -142,33 +134,10 @@ window.setCanvas = (w = 640, h = 640) ->
 
   return ctx
 
-run = ->
-  codeArray = document.getElementsByTagName 'pre'
-  loadCode = (i) =>
-    code = codeArray[i]
-    js = document.createElement 'script'
-    js.innerText = CoffeeScript.compile code.innerText
-
-    code.style.webkitTransitionDelay = i * 100 + 'ms'
-    code.style.padding = '0'
-    code.style.width = '0'
-    code.style.height = '0'
-    code.style.overflow = 'hidden'
-
-    code.addEventListener 'webkitTransitionEnd', () ->
-      code.ontouchstart = null
-      code.style.display = 'none'
-      document.body.appendChild js
-  
-  code = (i) ->
-    return () =>
-      for j in [0..i]
-        loadCode j
-
-  for i in [0..codeArray.length-1] 
-    codeArray[i].ontouchstart = code i
-
-run()
+ctx = setCanvas(640, 480)
+ctx.font = "20px American Typewriter";
+ctx.fillText "Hello, world", 10, 30
+'''
 </script>
 <script>
 /**
