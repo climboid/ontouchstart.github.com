@@ -11,6 +11,16 @@
  -webkit-text-size-adjust:none;
  -webkit-tap-highlight-color: transparent;
 }
+pre, textarea {
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  font-family: monospace;
+  font-size : 14px;
+  -webkit-transition-duration: 1000ms;
+  -webkit-user-select: text;
+}
 
 #license {
   margin: 0;
@@ -26,6 +36,32 @@
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
 <script type="text/coffeescript">
+window.cs = (code) -> 
+  $input = document.createElement 'textarea'
+ 
+  lines = code.split '\n'
+  loc = lines.length
+  $input.rows = loc
+  $input.cols = 80
+  $input.value = code
+  document.body.appendChild $input
+
+  $jsBlock = document.createElement 'pre'
+  $jsBlock.innerHTML = '[Touch to run CoffeeScript]'
+  document.body.appendChild $jsBlock
+  
+  $jsBlock.ontouchstart = ->
+    $jsBlock.innerText = CoffeeScript.compile $input.value
+    $input.blur()
+    $input.style.display = 'none'
+    js = document.createElement 'script'
+    js.innerText = $jsBlock.innerText
+    document.body.appendChild js
+    $jsBlock.style.display = 'none'
+
+</script>
+<script type="text/coffeescript">
+cs '''
 setCanvas = ->
   c = document.createElement 'canvas'
   c.style.position = 'absolute'
@@ -114,6 +150,7 @@ randomWalk = ->
 setCanvas()
 randomWalk()
 document.title = 'Touch to start another walk'
+'''
 </script>
 <script type="text/javascript">
 /**
