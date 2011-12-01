@@ -1,6 +1,6 @@
 <html>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <head>
-<meta name="viewport" content="width=device-width" />
 <style>
 * {
  margin: 0;
@@ -12,14 +12,22 @@
  -webkit-tap-highlight-color: transparent;
 }
 
-pre, textarea {
-  margin: 1em;
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
   padding: 1em;
   border: 1px solid black;
-  border-radius: 0.5em;
+}
+
+textarea {
   font-family: monospace;
-  font-size : 14px;
-  -webkit-transition-duration: 1000ms;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
   -webkit-user-select: text;
 }
 
@@ -46,6 +54,9 @@ pre, textarea {
 <script type="text/coffeescript">
 window.cs = (code) -> 
   $input = document.createElement 'textarea'
+  $jsBlock = document.createElement 'pre'
+  $jsBlock.innerText= '[Touch here to compile CoffeeScript]'
+  document.body.appendChild $jsBlock
  
   lines = code.split '\n'
   loc = lines.length
@@ -53,19 +64,17 @@ window.cs = (code) ->
   $input.cols = 80
   $input.value = code
   document.body.appendChild $input
-
-  $jsBlock = document.createElement 'pre'
-  $jsBlock.innerHTML = '[Touch to run CoffeeScript]'
-  document.body.appendChild $jsBlock
   
   $jsBlock.ontouchstart = ->
-    $jsBlock.innerText = CoffeeScript.compile $input.value
-    $input.blur()
-    $input.style.display = 'none'
-    js = document.createElement 'script'
-    js.innerText = $jsBlock.innerText
-    document.body.appendChild js
-    $jsBlock.style.display = 'none'
+    $jsBlock.innerText = "/* Touch here to run */ \n"
+    $jsBlock.innerText += CoffeeScript.compile $input.value
+    $jsBlock.ontouchstart = -> 
+      $input.blur()
+      $input.style.display = 'none'
+      js = document.createElement 'script'
+      js.innerText = $jsBlock.innerText
+      document.body.appendChild js
+      $jsBlock.style.display = 'none'
 
 </script>
 <script type="text/coffeescript">
@@ -76,11 +85,9 @@ print = (message) ->
   $output.innerHTML = message
   document.body.appendChild $output
   return $output
+
 print "Hello, world"
-'''
-</script>
-<script type="text/coffeescript">
-cs '''
+
 setCanvas = (w = 640, h = 640) ->
   c = document.createElement 'canvas'
   c.width = w
