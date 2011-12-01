@@ -74,8 +74,15 @@ setCanvas = ->
   y0 = 320
   x = x0
   y = y0
- 
   avoid = {}
+
+  randomColor = ->
+    r = Math.floor (Math.random() * 255)
+    g = Math.floor (Math.random() * 255)
+    b = Math.floor (Math.random() * 255)
+    color = "rgb(#{r},#{g},#{b})"
+    ctx.strokeStyle = color
+
   init = ->
     ctx.beginPath()
     ctx.moveTo 0,0
@@ -85,20 +92,16 @@ setCanvas = ->
     ctx.lineTo 0, 0
     ctx.stroke()
     ctx.closePath()
+    randomColor()
 
     document.body.appendChild c
     window.onorientationchange = ->
       document.location = c.toDataURL()
 
   document.addEventListener 'stepUpdate', (e)->
-    
-    r = Math.floor (Math.random() * 255)
-    g = Math.floor (Math.random() * 255)
-    b = Math.floor (Math.random() * 255)
-    color = "rgb(#{r},#{g},#{b})"
     ctx.beginPath()
     ctx.moveTo x,y
-    ctx.strokeStyle = color
+
     x1 = x + e.dx * 10
     y1 = y + e.dy * 10
 
@@ -119,6 +122,7 @@ setCanvas = ->
     x = Math.round(x0 / 10) * 10
     y = Math.round(y0 / 10) * 10
     ctx.moveTo x, y
+    randomColor()
     
   init()
 
