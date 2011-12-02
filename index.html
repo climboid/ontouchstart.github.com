@@ -25,6 +25,7 @@ textarea {
   font-size: 14px;
   font-weight: bold;
   margin-left: 3.5em;
+  margin-bottom: 3.5em;
   padding: 0.5em;
   border-radius: 0;
   color: #00FF00; background: #000000;
@@ -71,10 +72,11 @@ window.cs = (code) ->
     $jsBlock.ontouchstart = -> 
       $input.blur()
       $input.style.display = 'none'
+      $jsBlock.style.display = 'none'
       js = document.createElement 'script'
       js.innerText = $jsBlock.innerText
       document.body.appendChild js
-      $jsBlock.style.display = 'none'
+
 
 </script>
 <script type="text/coffeescript">
