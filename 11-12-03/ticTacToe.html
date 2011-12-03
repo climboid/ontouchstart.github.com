@@ -97,7 +97,7 @@ setBoard = (w = 600, h = 600) ->
   c.appendChild canvas
 
   ctx = canvas.getContext '2d'
-
+  ctx.lineWidth = 1
   ctx.beginPath()
   ctx.moveTo w/3 ,0
   ctx.lineTo w/3, h
@@ -116,8 +116,6 @@ setBoard = (w = 600, h = 600) ->
   ctx.font = "12px American Typewriter";
 
   ctx.fillText "ontouchstart.github.com", w - 150, h - 10
-  document.title = "Touch to draw within the box"
-
 
   canvas.ontouchstart = (e) ->
     if e.touches.length > 1
@@ -138,7 +136,6 @@ setBoard = (w = 600, h = 600) ->
     ctx.stroke()
 
   canvas.ontouchend = (e) ->
-    document.title = "Rotate to save"
     ctx.save()
 
   window.onorientationchange = ->
@@ -160,6 +157,9 @@ setBoard = (w = 600, h = 600) ->
       tileArray.push tile
       tile.ontouchstart = ->
         @style.display = 'none'
+        ctx.save()
+        ctx.lineWidth = 25
+        ctx.lineCap = 'round'
         ctx.beginPath()
         if even              
           ctx.arc @x, @y, w/9, 0, Math.PI*2, true
@@ -171,6 +171,7 @@ setBoard = (w = 600, h = 600) ->
           ctx.lineTo @x + w/9, @y - w/9
           even = true
         ctx.stroke()
+        ctx.restore()
       c.appendChild tile
 
   return ctx
