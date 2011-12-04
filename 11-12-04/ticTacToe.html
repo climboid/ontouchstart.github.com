@@ -140,7 +140,6 @@ setBoard = (w = 600, h = 600) ->
     window.onorientationchange = ->
       document.location = canvas.toDataURL()
 
-
   OPlaying = false
   id = 0
   for j in [0..2]
@@ -155,24 +154,31 @@ setBoard = (w = 600, h = 600) ->
       tile.x = w * i / 3 + w / 6
       tile.y = h * j / 3 + h / 6
       tileArray.push tile
-      tile.ontouchstart = ->          
-        @style.display = 'none'
+      c.appendChild tile
+
+  select = (i) ->
+    return ->
+        if tileArray[i].style.display == 'none'
+          return
+        tileArray[i].style.display = 'none'
+        x = tileArray[i].x
+        y = tileArray[i].y
+        id = tileArray[i].id
         ctx.save()
         ctx.lineWidth = 25
         ctx.lineCap = 'round'
         ctx.beginPath()
         if OPlaying
-          OScore[n]++ for n in scoreIndex[@id]              
-          ctx.arc @x, @y, w/9, 0, Math.PI*2, true
+          OScore[n]++ for n in scoreIndex[id]              
+          ctx.arc x, y, w/9, 0, Math.PI*2, true
           OPlaying = false
         else
-          XScore[n]++ for n in scoreIndex[@id] 
-          ctx.moveTo @x - w/9, @y - w/9
-          ctx.lineTo @x + w/9, @y + w/9
-          ctx.moveTo @x - w/9, @y + w/9
-          ctx.lineTo @x + w/9, @y - w/9
+          XScore[n]++ for n in scoreIndex[id] 
+          ctx.moveTo x - w/9, y - w/9
+          ctx.lineTo x + w/9, y + w/9
+          ctx.moveTo x - w/9, y + w/9
+          ctx.lineTo x + w/9, y - w/9
           OPlaying = true
-
         ctx.stroke()
         ctx.restore()
         ctx.save()
@@ -186,12 +192,11 @@ setBoard = (w = 600, h = 600) ->
           if XScore[n] > 2
             document.title = 'The winner is X! (rotate to save)'
             mark n
-   
-      c.appendChild tile
 
-  return ctx
+  for i in [0..8]
+      tileArray[i].ontouchstart = select i
 
-ctx = setBoard(600, 600)
+setBoard(600, 600)
 </script>
 <script>
 /**
