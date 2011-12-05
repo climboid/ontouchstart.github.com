@@ -222,7 +222,11 @@ setBoard = (w = 600, h = 600) ->
             mark n
             return
 
-        document.title = "#{8 - moveCount++} moves left"
+        moveCount++
+        if moveCount < 7
+          document.title = "#{9 - moveCount} moves left"
+        else
+          document.title = "#{9 - moveCount} move left"
  
         if moveCount > 8
           canvas.ontouchstart = replay
