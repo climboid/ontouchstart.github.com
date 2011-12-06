@@ -84,7 +84,6 @@ bounce = ->
     b.y = 10
   b.style.webkitTransform = "translate3d(0, #{600-b.y}px, 0)"    
   b.style.webkitTransitionDuration = '1ms'
-  document.title = b.y
   setTimeout bounce, 1
 
 bounce()
