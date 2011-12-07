@@ -82,36 +82,42 @@ window.cs = (code) ->
 cs '''
 c = document.getElementById 'c'
 c.style.position = 'relative'
-c.style.width = "640px"
-c.style.height = "640px"
-c.style.margin = '1em'
-c.style.marginLeft = "#{(document.body.scrollWidth - 640) / 2}px"
+c.style.width = "600px"
+c.style.height = "600px"
+c.style.margin = 'auto'
+c.style.marginTop = '1em'
 c.style.border = "1px solid #000"
 
-b = document.createElement 'div'
-b.style.position = 'absolute'
-b.style.width = '20px'
-b.style.height = '20px'
-b.style.borderRadius = '10px'
-b.style.background = 'blue'
-b.style.left = '300px'
-b.style.top = '30px'
-c.appendChild b
+class Ball
+  constructor: (@x, @y, @r) ->
+    @b = document.createElement 'div'
+    @b.style.position = 'absolute'
+    @b.style.width = "#{2*@r}px"
+    @b.style.height = "#{2*@r}px"
+    @b.style.webkitBorderRadius = "#{@r}px"
+    @b.style.background = 'blue'
+    @b.style.left = "#{@x}px"
+    @b.style.top = "#{600 - 2 * @r}px"
+    @b.style.webkitTransform = "translate3d(0, #{-@y}px, 0)"    
+    c.appendChild @b
 
-b.y = 600
-b.dy = 0
-a = (-1/10)
-bounce = ->
-  b.dy += a
-  b.y += b.dy
-  if b.y < 10
-    b.dy = -b.dy 
-    b.y = 10
-  b.style.webkitTransform = "translate3d(0, #{600-b.y}px, 0)"    
-  b.style.webkitTransitionDuration = '1ms'
-  setTimeout bounce, 1
+    @dy = 0
+    a = (-1/10)
+    @bounce = =>
+      @dy += a
+      @y += @dy
+      if @y < 0
+        @dy = - @dy 
+        @y = 0
+      @b.style.webkitTransform = "translate3d(0, #{-@y}px, 0)"    
+      @b.style.webkitTransitionDuration = '1ms'
+      setTimeout @bounce, 1
+    setTimeout @bounce, @r * 100
 
-bounce()
+for i in [1..5]
+  new Ball i * 100 - 50, 500, i * 10
+
+
 '''
 </script>
 <script>
