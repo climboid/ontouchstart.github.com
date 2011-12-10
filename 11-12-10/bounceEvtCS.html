@@ -150,6 +150,7 @@ class Container
       @border()
 
     shrinkLoop = setInterval @shrink, 100
+
     document.addEventListener 'ball', (e) =>
       if e.x < -@w + e.r
         bounceEvt.dx = -1
@@ -179,13 +180,15 @@ class Container
         bounceEvt.ball = e.ball
         document.dispatchEvent bounceEvt
 
-container = new Container 300, 300
+    document.addEventListener 'bounce', (e) -> 
+      e.ball.x = e.x if e.dx < 0
+      e.ball.dx = e.dx * e.ball.dx
+      e.ball.y = e.y if e.dy < 0
+      e.ball.dy = e.dy * e.ball.dy
+
+new Container 300, 300
 new Ball 0, 0, 30, 20 * Math.random() - 10 , 20 * Math.random() - 10
-document.addEventListener 'bounce', (e) -> 
-    e.ball.x = e.x if e.dx < 0
-    e.ball.dx = e.dx * e.ball.dx
-    e.ball.y = e.y if e.dy < 0
-    e.ball.dy = e.dy * e.ball.dy
+
 
 '''
 </script>
