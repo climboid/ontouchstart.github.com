@@ -52,8 +52,33 @@ textarea {
 <div id="license">
 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">ontouchstart</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 </div>
-<a href="indexCS.html"><button style="margin:5px">CoffeeScript</button></a>
 <script type="text/coffeescript">
+window.cs = (code) -> 
+  $input = document.createElement 'textarea'
+  $jsBlock = document.createElement 'pre'
+  $jsBlock.innerText= '[Touch here to compile CoffeeScript]'
+  document.body.appendChild $jsBlock
+ 
+  lines = code.split '\n'
+  loc = lines.length
+  $input.rows = loc
+  $input.cols = 80
+  $input.value = code
+  document.body.appendChild $input
+  
+  $jsBlock.ontouchstart = ->
+    $jsBlock.innerText = "/* Touch here to run */ \n"
+    $jsBlock.innerText += CoffeeScript.compile $input.value
+    $jsBlock.ontouchstart = -> 
+      $input.blur()
+      $input.style.display = 'none'
+      $jsBlock.style.display = 'none'
+      js = document.createElement 'script'
+      js.innerText = $jsBlock.innerText
+      document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
 print = (message) ->
   $output = document.createElement 'div'
   $output.className = 'output'
@@ -81,11 +106,12 @@ setCanvas = (w = 640, h = 640) ->
   ctx.lineTo w, h
   ctx.lineTo 0, h
   ctx.lineTo 0, 0
-  ctx.stroke()
+  ctx.fillStyle = "#abc"
+  ctx.fill()
   ctx.save()
 
-  ctx.font = "12px American Typewriter";
-
+  ctx.font = "12px American Typewriter"
+  ctx.fillStyle = "#123"
   ctx.fillText "ontouchstart.github.com", w - 150, h - 10
   document.title = "Touch to draw within the box"
 
@@ -117,8 +143,10 @@ setCanvas = (w = 640, h = 640) ->
   return ctx
 
 ctx = setCanvas(640, 480)
-ctx.font = "20px American Typewriter";
-ctx.fillText "Hello, world", 10, 30
+ctx.font = "44px American Typewriter"
+ctx.fillStyle = "#321"
+ctx.fillText "Hello, world", 10, 40
+'''
 </script>
 <script type="text/javascript" src="coffee-script-1.2.js"></script>
 </body>
