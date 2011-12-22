@@ -1,0 +1,212 @@
+<html>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<head>
+<style>
+* {
+ margin: 0;
+ padding: 0;
+ text-decoration: none;
+ -webkit-touch-callout:none;
+ -webkit-user-select:none;
+ -webkit-text-size-adjust:none;
+ -webkit-tap-highlight-color: transparent;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid black;
+}
+
+textarea {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  margin-bottom: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
+  -webkit-user-select: text;
+}
+
+.output {
+  margin: 1em; padding : 1em;
+  font: 20px "American Typewriter";
+  border-radius: 0.5em;
+  color: #00FF00; background: #000000;
+}
+
+#license {
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 1em;
+  font-family: Helvetica;
+  border-bottom: 2px solid #123;
+}
+</style>
+<title>ontouchstart</title>
+</head>
+<body>
+<div id="license">
+<a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+</div>
+<script type="text/coffeescript">
+window.cs = (code) ->
+  if document.location.search is '?source'
+    $input = document.createElement 'textarea'
+    document.body.appendChild $input
+    $jsBlock = document.createElement 'pre'
+    $jsBlock.innerText= '[Touch here to compile CoffeeScript]'
+    document.body.appendChild $jsBlock
+ 
+    lines = code.split '\n'
+    loc = lines.length
+    $input.rows = loc
+    $input.cols = 80
+    $input.value = code  
+  
+    $jsBlock.ontouchstart = ->
+      $jsBlock.innerText = "/* Touch here to run */ \n"
+      $jsBlock.innerText += CoffeeScript.compile $input.value
+      $jsBlock.ontouchstart = -> 
+        $input.blur()
+        $input.style.display = 'none'
+        $jsBlock.style.display = 'none'
+        js = document.createElement 'script'
+        js.innerText = $jsBlock.innerText
+        document.body.appendChild js
+  else
+    js = document.createElement 'script'
+    js.innerText = CoffeeScript.compile code
+    document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
+c = document.createElement 'div'
+c.style.position = 'relative'
+c.style.width = '600px'
+c.style.height = '600px'
+c.style.margin = 'auto'
+c.style.border = '1px solid #000'
+document.body.appendChild c
+
+c.ontouchstart = (e) ->
+  e.preventDefault()
+
+collision = document.createEvent "Events" 
+collision.initEvent 'collision', false, true
+
+motion = document.createEvent "Events" 
+motion.initEvent 'motion', false, true
+
+randomColor = ->
+  r = Math.floor(Math.random() * 256)
+  g = Math.floor(Math.random() * 256)
+  b = Math.floor(Math.random() * 256)
+  "rgb(#{r}, #{g}, #{b})"
+
+class Ball
+  constructor: (@x=0, @y=0, @r=30, @dx=0, @dy=0) ->
+ 
+    @b = document.createElement 'div'
+    @b.style.position = 'absolute'
+    @b.style.width = "#{2*@r}px"
+    @b.style.height = "#{2*@r}px"
+    @b.style.webkitBorderRadius = "#{@r}px"
+
+    @b.style.background = randomColor()
+    @b.style.left = "#{300 - @r}px"
+    @b.style.top = "#{300 - @r}px"
+    @b.style.webkitTransform = "translate3d(#{@x}px, #{-@y}px, 0)"    
+    c.appendChild @b
+
+    @b.addEventListener 'collision', (e) =>
+      @dx += e.dx
+      @dy += e.dy
+    
+    move = =>
+      motion.ball = @
+      document.dispatchEvent motion
+      @y += @dy
+      @x += @dx
+
+      @b.style.webkitTransform = "translate3d(#{@x}px, #{-@y}px, 0)"    
+      @b.style.webkitTransitionDuration = '1ms'
+      @moveStep = setTimeout move, 1
+
+    @b.ontouchstart = (e) =>
+      clearTimeout @moveStep
+      x0 = e.touches[0].pageX
+      y0 = e.touches[0].pageY
+      t0 = new Date()
+      dx = 0
+
+      @b.ontouchmove = (e) =>
+        dx = e.touches[0].pageX - x0
+        dy = e.touches[0].pageY - y0
+        @b.style.webkitTransform = "translate3d(#{@x + dx }px, #{-@y + dy}px, 0)"    
+      @b.ontouchend = (e) =>
+        t = new Date()
+        @dx = 10 * dx / (t - t0)
+        @dy = - 10 * dy / (t - t0)
+        @x += dx
+        @y -= dy
+        move()       
+
+class Walls
+  constructor: (@w=300, @h=300) ->
+    @wall = document.createElement 'div'
+    @wall.style.position = 'absolute'
+    @wall.style.background = '#fff'
+    @wall.style.width = "#{2*@w}px"
+    @wall.style.height = "#{2*@h}px"
+    @wall.style.left = "#{300-@w}px"
+    @wall.style.top = "#{300-@h}px"
+    c.appendChild @wall
+    c.style.background = '#000'
+
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.x < -@w + ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        ball.b.dispatchEvent collision     
+
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.x > @w - ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        ball.b.dispatchEvent collision
+  
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.y < -@h + ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        ball.b.dispatchEvent collision
+
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.y > @h -  ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        ball.b.dispatchEvent collision
+
+new Walls
+for i in [1..10] 
+  new Ball
+
+'''
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
