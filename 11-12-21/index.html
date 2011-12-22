@@ -53,7 +53,6 @@ textarea {
 <body>
 <div id="license">
 <a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
-
 </div>
 <script type="text/coffeescript">
 window.cs = (code) ->
@@ -98,11 +97,11 @@ document.body.appendChild c
 c.ontouchstart = (e) ->
   e.preventDefault()
 
-bounceEvt = document.createEvent "Events" 
-bounceEvt.initEvent 'bounce', false, true
+collision = document.createEvent "Events" 
+collision.initEvent 'collision', false, true
 
-ballEvt = document.createEvent "Events" 
-ballEvt.initEvent 'ball', false, true
+motion = document.createEvent "Events" 
+motion.initEvent 'motion', false, true
 
 class Ball
   constructor: (@x=0, @y=0, @r=30, @dx=0, @dy=0) ->
@@ -118,13 +117,10 @@ class Ball
     c.appendChild @b
     
     move = =>
+      motion.ball = @
+      document.dispatchEvent motion
       @y += @dy
       @x += @dx
-      ballEvt.x = @x
-      ballEvt.y = @y
-      ballEvt.r = @r
-      ballEvt.ball = @
-      document.dispatchEvent ballEvt            
 
       @b.style.webkitTransform = "translate3d(#{@x}px, #{-@y}px, 0)"    
       @b.style.webkitTransitionDuration = '1ms'
@@ -161,40 +157,35 @@ class Container
     c.appendChild @wall
     c.style.background = '#000'
 
-    document.addEventListener 'ball', (e) =>
-      if e.x < -@w + e.r
-        bounceEvt.dx = -1
-        bounceEvt.x = -@w + e.r
-        bounceEvt.dy = 1
-        bounceEvt.ball = e.ball
-        document.dispatchEvent bounceEvt     
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.x < -@w + ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        document.dispatchEvent collision     
 
-      if e.x > @w - e.r
-        bounceEvt.dx = -1
-        bounceEvt.x = @w - e.r
-        bounceEvt.dy = 1
-        bounceEvt.ball = e.ball
-        document.dispatchEvent bounceEvt
+      if ball.x > @w - ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        document.dispatchEvent collision
   
-      if e.y < -@h + e.r
-        bounceEvt.dy = -1
-        bounceEvt.y = -@h + e.r
-        bounceEvt.dx = 1
-        bounceEvt.ball = e.ball
-        document.dispatchEvent bounceEvt
+      if ball.y < -@h + ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        document.dispatchEvent collision
 
-      if e.y > @h -  e.r
-        bounceEvt.dy = -1
-        bounceEvt.y = @h - e.r
-        bounceEvt.dx = 1
-        bounceEvt.ball = e.ball
-        document.dispatchEvent bounceEvt
+      if ball.y > @h -  ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        document.dispatchEvent collision
 
-    document.addEventListener 'bounce', (e) -> 
-      e.ball.x = e.x if e.dx < 0
-      e.ball.dx = e.dx * e.ball.dx
-      e.ball.y = e.y if e.dy < 0
-      e.ball.dy = e.dy * e.ball.dy
+    document.addEventListener 'collision', (e) ->
+      e.ball.dx += e.dx
+      e.ball.dy += e.dy
 
 new Container 
 new Ball
