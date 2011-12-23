@@ -82,7 +82,7 @@ window.cs = (code) ->
         document.body.appendChild js
   else
     js = document.createElement 'script'
-    js.innerText = CoffeeScript.compile code
+    js.innerHTML = CoffeeScript.compile code
     document.body.appendChild js
 </script>
 <script type="text/coffeescript">
