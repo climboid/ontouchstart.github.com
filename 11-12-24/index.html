@@ -1,0 +1,234 @@
+<html>
+<head>
+<meta name="viewport" content="width=768,initial-scale=1.0,minmun-scale=1.0,maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<style>
+* {
+ margin: 0;
+ padding: 0;
+ text-decoration: none;
+ -webkit-touch-callout:none;
+ -webkit-user-select:none;
+ -webkit-text-size-adjust:none;
+ -webkit-tap-highlight-color: transparent;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid black;
+}
+
+textarea {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  margin-bottom: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
+  -webkit-user-select: text;
+}
+
+.output {
+  margin: 1em; padding : 1em;
+  font: 20px "American Typewriter";
+  border-radius: 0.5em;
+  color: #00FF00; background: #000000;
+}
+
+#license {
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 1em;
+  font-family: Helvetica;
+  border-bottom: 2px solid #123;
+}
+</style>
+<title>Xmas Tree</title>
+</head>
+<body>
+<div id="license">
+<a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+</div>
+<script type="text/coffeescript">
+window.cs = (code) ->
+  if document.location.search is '?source'
+    $input = document.createElement 'textarea'
+    document.body.appendChild $input
+    $jsBlock = document.createElement 'pre'
+    $jsBlock.innerText= '[Touch here to compile CoffeeScript]'
+    document.body.appendChild $jsBlock
+ 
+    lines = code.split '\n'
+    loc = lines.length
+    $input.rows = loc
+    $input.cols = 80
+    $input.value = code  
+  
+    $jsBlock.ontouchstart = ->
+      $jsBlock.innerText = "/* Touch here to run */ \n"
+      $jsBlock.innerText += CoffeeScript.compile $input.value
+      $jsBlock.ontouchstart = -> 
+        $input.blur()
+        $input.style.display = 'none'
+        $jsBlock.style.display = 'none'
+        js = document.createElement 'script'
+        js.innerText = $jsBlock.innerText
+        document.body.appendChild js
+  else
+    js = document.createElement 'script'
+    js.innerHTML = CoffeeScript.compile code
+    document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
+width = 768
+height = 1024
+size = 128
+sensitivity = size / 20
+
+I = width / size
+J = height / size
+
+container = document.createElement 'div' 
+document.body.appendChild container
+container.style.border = '1px solid black'
+container.style.width = "#{width}px"
+container.style.height = "#{height}px"
+container.style.position = 'relative'
+container.style.margin = 'auto'
+container.style.marginTop = '0'
+container.ontouchmove = (e) -> e.preventDefault()
+
+class Piece
+  constructor: (@x, @y) ->
+    @element = document.createElement 'div'
+    @s = @element.style
+    @s.position = 'absolute'
+    @s.width = "#{size}px"
+    @s.height = "#{size}px"
+    @s.backgroundImage = 'url(tree.jpg)'
+    @s.backgroundPosition = (width - x) + 'px ' + (height - y) + 'px';
+
+    @s.webkitTransitionDuration = '1000ms'
+    @s.webkitTransform = 'translate(' + this.x + 'px,' + this.y + 'px) rotate(0)'
+    @locked = true
+    container.appendChild @element
+
+  toLocation: (x,y,deg) ->
+    @s.webkitTransform = "translate(#{x}px,#{y}px) rotate(#{deg}deg)"    
+
+puzzle = []
+init = ->
+  for i in [0..I - 1]
+    puzzle[i] = []
+    for j in [0..J - 1]
+      puzzle[i][j] = new Piece (i * size), (j* size)
+
+time = 0
+timer = ->
+  document.title = time++
+timerInterval = null
+
+shuffle = ->
+  for i in [0..I - 1]
+    for j in [0..J - 1]
+      x = Math.random() * (width-size)
+      y = Math.random() * (height-size)
+      deg =  Math.random() * 360
+      piece = puzzle[i][j]
+      piece.toLocation x,y,deg
+      draggable piece
+  timerInterval = setInterval timer, 1000
+
+email = ->
+  toAddress = 'ontouchstart@gmail.com'
+  puzzleURL = 'ontouchstart.github.com/11-12-24'
+  body = """
+I finished Xmas Tree puzzle ( http://#{puzzleURL} ) in #{time} seconds. :)
+"""
+  emailURL = "mailto:#{toAddress}?subject=Xmas Tree Puzzle&body=#{body}"
+  document.location = emailURL
+
+score = 0
+win_score = I * J
+win = ->
+  clearInterval timerInterval
+  for i in [0..I-1]
+    for j in [0..J-1]
+      puzzle[i][j].s.opacity = 1
+  setTimeout email, 3000
+
+maxZ = 100
+draggable = (piece) ->
+  obj = piece.element
+  obj.style.zIndex = maxZ++
+
+  obj.ontouchstart = (e) ->    
+    return if e.touches.length > 1
+    return if obj.style.opacity == '0.5'         
+    return if x == piece.x && y == piece.y
+    e.stopPropagation()
+    obj.style.webkitTransitionDuration = 0
+    obj.style.webkitTransitionDelay = 0
+    transformString = e.target.style.webkitTransform
+    translateString = transformString.split('translate')[1].split('(')[1].split(')')[0]
+    x0 = translateString.split(',')[0].split('px')[0]
+    y0 = translateString.split(',')[1].split('px')[0]
+    x = x0
+    y = y0
+
+    offSetX = e.touches[0].pageX - x0
+    offSetY = e.touches[0].pageY - y0
+    
+    obj.style.zIndex = maxZ++
+
+    obj.ontouchmove = (e) ->
+      return if obj.style.opacity == '0.5'
+      return if x == piece.x && y == piece.y
+      e.stopPropagation()      
+      e.preventDefault()
+      x = e.touches[0].pageX - offSetX
+      y = e.touches[0].pageY - offSetY
+
+      if Math.abs(x-piece.x) < sensitivity && Math.abs(y-piece.y) < sensitivity 
+        x = piece.x
+        y = piece.y
+        obj.style.opacity = '0.5'
+        obj.style.zIndex = '1'
+        score++
+              
+      obj.style.webkitTransform = "translate3d(#{x}px,#{y}px,0)"
+
+    obj.ontouchend = (e) ->
+      win() if score == win_score
+ 
+init()
+
+
+if window.navigator.standalone
+
+  confirm "Touch to start when you are ready to play"
+  container.ontouchstart = ->
+    do shuffle
+    container.ontouchstart = null
+else
+  confirm "Please install this app by adding it to Home Screen"
+
+document.getElementById('license').style.display = 'none'
+
+
+
+
+'''
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
