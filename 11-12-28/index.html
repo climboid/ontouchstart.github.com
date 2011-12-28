@@ -1,0 +1,94 @@
+<html>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<head>
+<style>
+* {
+ margin: 0;
+ padding: 0;
+ text-decoration: none;
+ -webkit-touch-callout:none;
+ -webkit-user-select:none;
+ -webkit-text-size-adjust:none;
+ -webkit-tap-highlight-color: transparent;
+}
+
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid black;
+}
+
+textarea {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  margin-bottom: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
+  -webkit-user-select: text;
+}
+
+.output {
+  margin: 1em; padding : 1em;
+  font: 20px "American Typewriter";
+  border-radius: 0.5em;
+  color: #00FF00; background: #000000;
+}
+
+#license {
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 1em;
+  font-family: Helvetica;
+  border-bottom: 2px solid #123;
+}
+</style>
+<title>ontouchstart</title>
+</head>
+<body>
+<div id="license">
+<a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+
+</div>
+<script type="text/coffeescript">
+window.cs = (code) ->
+    $input = document.createElement 'textarea'
+    document.body.appendChild $input
+    $jsBlock = document.createElement 'pre'
+    $jsBlock.innerText= '[Touch here to compile CoffeeScript]'
+    document.body.appendChild $jsBlock
+ 
+    lines = code.split '\n'
+    loc = lines.length
+    $input.rows = loc
+    $input.cols = 80
+    $input.value = code  
+  
+    $input.onkeypress = (e)->
+       $input.rows = ++loc if e.keyCode is 13
+
+    $jsBlock.ontouchstart = ->
+      $jsBlock.innerText = "/* Touch here to run */ \n"
+      $jsBlock.innerText += CoffeeScript.compile $input.value
+      $jsBlock.ontouchstart = -> 
+        $input.blur()
+        $input.style.display = 'none'
+        $jsBlock.style.display = 'none'
+        js = document.createElement 'script'
+        js.innerText = $jsBlock.innerText
+        document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
+confirm "Hello, world"
+# type return to add a new line
+'''
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
