@@ -58,8 +58,11 @@
 <script type="text/coffeescript">
 window.cs = (code) ->
   codeKey = document.location.host + document.location.pathname + 'code'
-  codeValue = localStorage.getItem codeKey
-  codeValue = code if codeValue.length < 1
+  codeValue = code
+  try 
+    codeValue = localStorage.getItem codeKey
+    codeValue = code if codeValue.length < 1
+
   localStorage.setItem codeKey, codeValue
 
   if document.location.search is '?source'
