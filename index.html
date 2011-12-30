@@ -62,6 +62,8 @@ window.cs = (code) ->
   try 
     codeValue = localStorage.getItem codeKey
     codeValue = code if codeValue.length < 1
+  catch err
+    codeValue = code
 
   localStorage.setItem codeKey, codeValue
 
