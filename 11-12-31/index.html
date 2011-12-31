@@ -1,0 +1,181 @@
+<html>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        -webkit-text-size-adjust:none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      pre {
+        font-family: monospace;
+        font-size: 14px;
+        margin: 3.5em;
+        margin-top: 0;
+        padding: 1em;
+        border: 1px solid black;
+      }
+
+      textarea {
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 3.5em;
+        margin-bottom: 3.5em;
+        padding: 0.5em;
+        border-radius: 0;
+        color: #00FF00; background: #000000;
+        -webkit-user-select: text;
+      }
+
+      .output {
+        margin: 1em; padding : 1em;
+        font: 20px "American Typewriter";
+        border-radius: 0.5em;
+        color: #00FF00; background: #000000;
+      }
+
+      #license {
+        margin: 0;
+        margin-bottom: 1em;
+        padding: 1em;
+        font-family: Helvetica;
+        border-bottom: 2px solid #123;
+      }
+    </style>
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <div id="license">
+      <a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+    </div>
+<script type="text/coffeescript">
+window.cs = (code) ->
+  codeKey = document.location.host + document.location.pathname + 'code'
+  codeValue = code
+  try 
+    codeValue = localStorage.getItem codeKey
+    codeValue = code if codeValue.length < 1
+  catch err
+    codeValue = code
+
+  localStorage.setItem codeKey, codeValue
+
+  if document.location.search is '?source'
+    $reset = document.createElement 'pre'
+    $reset.innerHTML = '[Touch to reset CoffeeScript to default]'
+    document.body.appendChild $reset
+
+    $input = document.createElement 'textarea'
+    $input.style.style = 'block'
+    document.body.appendChild $input
+
+    $jsBlock = document.createElement 'pre'
+    $jsBlock.innerText = '[Touch to compile CoffeeScript]'
+    document.body.appendChild $jsBlock
+ 
+    updateInput = -> 
+      lines = codeValue.split '\n'
+      loc = lines.length
+      $input.rows = loc
+      $input.cols = 80
+      $input.value = codeValue
+
+    $reset.ontouchstart = ->
+      codeValue = code
+      do updateInput
+
+    $jsBlock.ontouchstart = (e) ->
+      localStorage.setItem codeKey, $input.value
+      $jsBlock.innerText = "/* Touch here to run JavaScript */ \n"
+      $jsBlock.innerText += CoffeeScript.compile $input.value
+      $jsBlock.ontouchstart = -> 
+        do $input.blur
+        $input.style.display = 'none'
+        $reset.style.display = 'none'
+        $jsBlock.style.display = 'none'
+        js = document.createElement 'script'
+        js.innerText = $jsBlock.innerText
+        document.body.appendChild js
+    do updateInput
+  else
+    js = document.createElement 'script'
+    js.innerHTML = CoffeeScript.compile codeValue
+    document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
+css = (rule) ->
+  document.styleSheets[0].insertRule rule
+
+div = (id, parent) ->
+  el = document.createElement 'div'
+  el.id = id
+  parent.appendChild el
+  return el
+
+bind = (el, evt, cb) ->
+  el.addEventListener evt, cb
+
+next = (el, cb) ->
+  bind el, 'webkitTransitionEnd', cb
+
+frameCount = 12
+x = []
+y = []
+imgURL = 'http://upload.wikimedia.org/wikipedia/commons/7/73/The_Horse_in_Motion.jpg'
+    
+container = div 'container', document.body
+
+css """
+#container { 
+  position: relative; 
+  margin:auto;
+  background-image:url(#{imgURL});
+  width:385px;
+  height:250px;
+  background-position:-4px -20px;
+}
+"""
+
+for i in [0..frameCount]
+  x[i] = -380 * (i % 4) - 4
+  y[i] = -240 * parseInt(i / 4) - 20
+
+for i in [0..frameCount]
+  css """
+    #container.frame-#{i}:after {
+      content:'';
+      position: absolute;
+      background-image:url(#{imgURL});
+      width:385px;
+      height:250px;
+      background-position:#{x[i]}px #{y[i]}px;
+   }
+"""
+
+action = -> 
+  i = 0
+  frameLoop = setInterval -> 
+      frame = i % frameCount
+      container.className = "frame-#{frame}"
+      i++
+    , 1000 / 24
+    
+  container.ontouchstart = ->
+    clearInterval frameLoop
+    container.ontouchstart = action 
+
+container.ontouchstart = action
+
+
+'''
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
