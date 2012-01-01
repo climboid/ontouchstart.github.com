@@ -86,6 +86,8 @@ window.cs = (code) ->
       $input.rows = loc
       $input.cols = 80
       $input.value = codeValue
+      $input.onkeypress = (e)->        
+        @rows++ if e.keyCode is 13
 
     $reset.ontouchstart = ->
       codeValue = code
@@ -175,6 +177,14 @@ ctx = setCanvas 640, 480
 ctx.font = "44px American Typewriter"
 ctx.fillStyle = "#321"
 ctx.fillText "Hello, world", 10, 40
+
+inspect = ->
+  for k,v of @
+    print k
+    print v
+
+inspect.apply navigator
+inspect.apply window
 '''
 </script>
 <script type="text/javascript" src="coffee-script-1.2.js"></script>
