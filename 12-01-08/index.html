@@ -1,0 +1,206 @@
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        -webkit-touch-callout:none;
+        -webkit-user-select:none;
+        -webkit-text-size-adjust:none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      pre {
+        font-family: monospace;
+        font-size: 14px;
+        margin: 3.5em;
+        margin-top: 0;
+        padding: 1em;
+        border: 1px solid black;
+      }
+
+      textarea {
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 3.5em;
+        margin-bottom: 3.5em;
+        padding: 0.5em;
+        border-radius: 0;
+        color: #00FF00; background: #000000;
+        -webkit-user-select: text;
+      }
+
+      .output {
+        margin: 1em; padding : 1em;
+        font: 20px "American Typewriter";
+        border-radius: 0.5em;
+        color: #00FF00; background: #000000;
+      }
+
+      #license {
+        margin: 0;
+        margin-bottom: 1em;
+        padding: 1em;
+        font-family: Helvetica;
+        border-bottom: 2px solid #123;
+      }
+    </style>
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <div id="license">
+      <a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+</div>
+<script type="text/coffeescript">
+window.cs = (code) ->
+  codeKey = document.location.host + document.location.pathname + 'code'
+  codeValue = code
+  try 
+    codeValue = localStorage.getItem codeKey
+    codeValue = code if codeValue.length < 1
+  catch err
+    codeValue = code
+
+  localStorage.setItem codeKey, codeValue
+
+  if document.location.search is '?source'
+    $reset = document.createElement 'pre'
+    $reset.innerHTML = '[Touch to reset CoffeeScript to default]'
+    document.body.appendChild $reset
+
+    $input = document.createElement 'textarea'
+    $input.style.style = 'block'
+    document.body.appendChild $input
+
+    $jsBlock = document.createElement 'pre'
+    $jsBlock.innerText = '[Touch to compile CoffeeScript]'
+    document.body.appendChild $jsBlock
+ 
+    updateInput = -> 
+      lines = codeValue.split '\n'
+      loc = lines.length
+      $input.rows = loc
+      $input.cols = 80
+      $input.value = codeValue
+      $input.onkeypress = (e)->        
+        @rows++ if e.keyCode is 13
+
+    $reset.ontouchstart = ->
+      codeValue = code
+      do updateInput
+
+    $jsBlock.ontouchstart = (e) ->
+      localStorage.setItem codeKey, $input.value
+      $jsBlock.innerText = "/* Touch here to run JavaScript */ \n"
+      $jsBlock.innerText += CoffeeScript.compile $input.value
+      $jsBlock.ontouchstart = -> 
+        do $input.blur
+        $input.style.display = 'none'
+        $reset.style.display = 'none'
+        $jsBlock.style.display = 'none'
+        js = document.createElement 'script'
+        js.innerText = $jsBlock.innerText
+        document.body.appendChild js
+    do updateInput
+  else
+    js = document.createElement 'script'
+    js.innerHTML = CoffeeScript.compile codeValue
+    document.body.appendChild js
+</script>
+<script type="text/coffeescript">
+cs '''
+drawEvt = document.createEvent "Events" 
+drawEvt.initEvent 'draw', false, true
+
+class Canvas
+  constructor: (@w,@h,@x,@y) ->
+    c = document.createElement 'canvas'
+    c.width = @w
+    c.height = @h
+    c.style.position = 'absolute'
+    c.style.width = "#{@w}px"
+    c.style.height = "#{@h}px"
+    c.style.left = "#{@x}px"
+    c.style.top = "#{@y}px"
+
+    document.body.appendChild c
+
+    @ctx = c.getContext '2d'
+    do @ctx.beginPath
+    @ctx.moveTo 0,0
+    @ctx.lineTo @w, 0
+    @ctx.lineTo @w, @h
+    @ctx.lineTo 0, @h
+    @ctx.lineTo 0, 0
+    do @ctx.stroke
+    do @ctx.save
+
+  drawSegment: (s) ->
+    x1 = s.p1.x + @w/2
+    x2 = s.p2.x + @w/2
+    y1 = -s.p1.y + @h/2
+    y2 = -s.p2.y + @h/2
+
+    do @ctx.beginPath
+    @ctx.moveTo x1,y1
+    @ctx.lineTo x2,y2
+    do @ctx.stroke
+    do @ctx.save
+
+  drawPoint: (p) ->
+    r = 5
+    x = p.x + @w/2
+    y = - p.y + @h/2
+    do @ctx.beginPath
+    @ctx.arc x, y, r, 0, Math.PI*2, true
+    do @ctx.fill
+    do @ctx.save
+
+class Point
+  constructor: (@x, @y) ->
+    document.addEventListener 'draw', (e) => 
+       e.canvas.drawPoint @
+    console.log @
+
+  toString: ->
+    return "(#{@x},#{@y})"
+
+class Segment
+  constructor: (@p1, @p2) ->
+    document.addEventListener 'draw', (e) => 
+       e.canvas.drawSegment @
+    console.log @
+
+  toString: ->
+    return "#{@p1}---#{@p2}"
+
+class Plot
+  constructor: (@f, @range)->
+    for x in @range
+      new Point x, @f x
+
+p1 = new Point 0, 0
+p2 = new Point 400, 0
+p3 = new Point 400, 300
+
+p12 = new Segment p1, p2
+p23 = new Segment p2, p3
+p31 = new Segment p3, p1
+
+p = new Plot ((x) -> 300 * Math.sin(x / 400 * Math.PI)), [-400..400]
+
+c = new Canvas 900,800,30,100
+drawEvt.canvas = c
+document.dispatchEvent drawEvt
+
+
+'''
+ 
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
+
+
