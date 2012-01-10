@@ -90,52 +90,55 @@ window.cs = (code) ->
     container.appendChild resetButton
 
     jsBlock = document.createElement 'pre'
-    jsBlock.innerText = '[Compile CoffeeScript]'
+    jsBlock.innerHTML = '[Compile CoffeeScript]'
     container.appendChild jsBlock
  
-    updateInput = -> 
+    updateInput = ->
       lines = codeValue.split '\n'
       loc = lines.length
       input.rows = loc
       input.cols = 80
       input.value = codeValue
-      input.onkeypress = (e)->        
+      input.onkeypress = (e)->
         @rows++ if e.keyCode is 13
 
     reset = ->
       codeValue = code
       do updateInput
 
-    if touchUI 
+    if touchUI
       resetButton.ontouchstart = reset
-    else 
+    else
       resetButton.onclick = reset
 
     compile = ->
       localStorage.setItem codeKey, input.value
-      jsBlock.innerText = "/* Run JavaScript */ \n"
-      jsBlock.innerText += CoffeeScript.compile input.value
-      run = -> 
+      jsBlock.innerHTML = "/* Run JavaScript */ \n" # for Firefox
+      jsBlock.innerHTML += CoffeeScript.compile input.value # for Firefox
+
+      jsBlock.innerText = "/* Run JavaScript */ \n" # for code 
+      jsBlock.innerText += CoffeeScript.compile input.value # for code
+
+      run = ->
         do input.blur
-        js = document.createElement 'script'
-        js.innerText = jsBlock.innerText
-        document.body.appendChild js
         container.style.display = 'none'
+        eval jsBlock.innerText
+
       if touchUI
         jsBlock.ontouchstart = run
       else
         jsBlock.onclick = run
-    do updateInput
+        
     if touchUI
       jsBlock.ontouchstart = compile
     else
       jsBlock.onclick = compile
 
+    do updateInput
     document.body.appendChild container
+
   else
-    js = document.createElement 'script'
-    js.innerHTML = CoffeeScript.compile codeValue
-    document.body.appendChild js
+    eval CoffeeScript.compile codeValue
 
 document.body.appendChild license
 </script>
@@ -181,27 +184,45 @@ setCanvas = (w = 640, h = 640) ->
   ctx.fillStyle = "#123"
   ctx.fillText "ontouchstart.github.com", w - 150, h - 10
 
-  c.ontouchstart = (e) ->
-    if e.touches.length > 1
-      document.location = do c.toDataURL
-      return
-    else
-      do ctx.restore
-      do ctx.beginPath
+  if touchUI
+    c.ontouchstart = (e) ->
+      if e.touches.length > 1
+        document.location = do c.toDataURL
+        return
+      else
+        do ctx.restore
+        do ctx.beginPath
+        x = e.touches[0].pageX - c.offsetLeft - c.parentNode.offsetLeft
+        y = e.touches[0].pageY - c.offsetTop - c.parentNode.offsetTop
+        ctx.moveTo x, y
+
+    c.ontouchmove = (e) ->
+      do e.preventDefault
       x = e.touches[0].pageX - c.offsetLeft - c.parentNode.offsetLeft
       y = e.touches[0].pageY - c.offsetTop - c.parentNode.offsetTop
+      ctx.lineTo x, y
+      do ctx.stroke
+
+    c.ontouchend = (e) ->
+      do ctx.save
+  else
+    c.onmousedown = (e) ->
+      do ctx.restore
+      do ctx.beginPath
+      x = e.pageX - c.offsetLeft - c.parentNode.offsetLeft
+      y = e.pageY - c.offsetTop - c.parentNode.offsetTop
       ctx.moveTo x, y
 
-  c.ontouchmove = (e) ->
-    do e.preventDefault
-    x = e.touches[0].pageX - c.offsetLeft - c.parentNode.offsetLeft
-    y = e.touches[0].pageY - c.offsetTop - c.parentNode.offsetTop
-    ctx.lineTo x, y
-    do ctx.stroke
+      c.onmousemove = (e) ->
+        x = e.pageX - c.offsetLeft - c.parentNode.offsetLeft
+        y = e.pageY - c.offsetTop - c.parentNode.offsetTop
+        ctx.lineTo x, y
+        do ctx.stroke
 
-  c.ontouchend = (e) ->
-    do ctx.save
-
+      c.onmouseup = (e) ->
+        console.log 'mouseup'
+        c.onmousemove = null
+        do ctx.save
   return ctx
 
 ctx = setCanvas 640, 480
