@@ -3,79 +3,64 @@
     <title>ontouchstart</title>
   </head>
   <body>
+<script type="text/javascript">
+window.touchUI = ('ontouchstart' in window)? true : false;
+</script>
 <script type="text/coffeescript">
-do ->
-  styleTag = document.createElement 'style'
-  document.head.appendChild styleTag
-  document.styleSheets[0].insertRule '''
-        * {
-        margin: 0;
-        padding: 0;
-        text-decoration: none;
-        -webkit-touch-callout:none;
-        -webkit-user-select:none;
-        -webkit-text-size-adjust:none;
-        -webkit-tap-highlight-color: transparent;
-      }
-'''
-  document.styleSheets[0].insertRule '''
-      pre {
-        font-family: monospace;
-        font-size: 14px;
-        margin: 3.5em;
-        margin-top: 0;
-        padding: 1em;
-        border: 1px solid black;
-      }
-'''
-  document.styleSheets[0].insertRule '''
-      textarea {
-        font-family: monospace;
-        font-size: 14px;
-        font-weight: bold;
-        margin-left: 3.5em;
-        margin-bottom: 3.5em;
-        padding: 0.5em;
-        border-radius: 0;
-        color: #00FF00; background: #000000;
-        -webkit-user-select: text;
-      }
+license = document.createElement 'div'
+license.style.margin = '0'
+license.style.marginBottom = '1em'
+license.style.padding = '1em'
+license.style.borderBottom = '2px solid #123'
+license.style.fontFamily = 'Helvetica'
+
+license.innerHTML = '''
+<a href="?source">CoffeeScript code</a> 
+by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a>
+is licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
 '''
 
-  document.styleSheets[0].insertRule '''
-      .output {
-        margin: 1em; padding : 1em;
-        font: 20px "American Typewriter";
-        border-radius: 0.5em;
-        color: #00FF00; background: #000000;
-      }
+styleTag = document.createElement 'style'
+document.head.appendChild styleTag
+
+document.styleSheets[0].insertRule '''
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  text-decoration: none;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -webkit-text-size-adjust:none;
+  -webkit-tap-highlight-color: transparent;
+}
 '''
 
-do ->
-  licenseDiv = document.createElement 'div'
-  licenseDiv.id = 'license'
-  licenseDiv.innerHTML = '''
-      <a href="?source">CoffeeScript code</a> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+document.styleSheets[0].insertRule '''
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid black;
+ }
 '''
 
-  document.styleSheets[0].insertRule '''
-      #license {
-        margin: 0;
-        margin-bottom: 1em;
-        padding: 1em;
-        font-family: Helvetica;
-        border-bottom: 2px solid #123;
-      }
+document.styleSheets[0].insertRule '''
+textarea {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  margin-bottom: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
+  -webkit-user-select: text;
+}
 '''
-  document.body.appendChild licenseDiv
-
-do ->
-  window.cDiv = document.createElement 'div'
-  window.cDiv.style.position = 'relative'
-  window.cDiv.style.with = '100%'
-  window.cDiv.style.height = '100%'
-  window.cDiv.style.margin = 'auto'
-  document.body.appendChild window.cDiv
 
 window.cs = (code) ->
   codeKey = document.location.host + document.location.pathname + 'code'
@@ -89,17 +74,23 @@ window.cs = (code) ->
   localStorage.setItem codeKey, codeValue
 
   if document.location.search is '?source'
-    reset = document.createElement 'pre'
-    reset.innerHTML = '[Touch to reset CoffeeScript to default]'
-    cDiv.appendChild reset
+    container = document.createElement 'div'
+    container.style.position = 'relative'
+    container.style.width = '100%'
+    container.style.height = '100%'
+    container.style.margin = 'auto'
+    resetButton = document.createElement 'button'
+    resetButton.innerHTML = 'Reset CoffeeScript to default'
+    resetButton.style.marginBottom = '1em'
+    container.appendChild resetButton
 
     input = document.createElement 'textarea'
     input.style.style = 'block'
-    cDiv.appendChild input
+    container.appendChild input
 
     jsBlock = document.createElement 'pre'
-    jsBlock.innerText = '[Touch to compile CoffeeScript]'
-    cDiv.appendChild jsBlock
+    jsBlock.innerText = '[Compile CoffeeScript]'
+    container.appendChild jsBlock
  
     updateInput = -> 
       lines = codeValue.split '\n'
@@ -110,36 +101,55 @@ window.cs = (code) ->
       input.onkeypress = (e)->        
         @rows++ if e.keyCode is 13
 
-    reset.ontouchstart = ->
+    reset = ->
       codeValue = code
       do updateInput
 
-    jsBlock.ontouchstart = (e) ->
+    if touchUI 
+      resetButton.ontouchstart = reset
+    else 
+      resetButton.onclick = reset
+
+    compile = ->
       localStorage.setItem codeKey, input.value
-      jsBlock.innerText = "/* Touch here to run JavaScript */ \n"
+      jsBlock.innerText = "/* JavaScript */ \n"
       jsBlock.innerText += CoffeeScript.compile input.value
-      jsBlock.ontouchstart = -> 
+      run = -> 
         do input.blur
-        input.style.display = 'none'
-        reset.style.display = 'none'
-        jsBlock.style.display = 'none'
         js = document.createElement 'script'
         js.innerText = jsBlock.innerText
         document.body.appendChild js
+        container.style.display = 'none'
+      if touchUI
+        jsBlock.ontouchstart = run
+      else
+        jsBlock.onclick = run
     do updateInput
+    if touchUI
+      jsBlock.ontouchstart = compile
+    else
+      jsBlock.onclick = compile
+
+    document.body.appendChild container
   else
     js = document.createElement 'script'
     js.innerHTML = CoffeeScript.compile codeValue
     document.body.appendChild js
+
+document.body.appendChild license
 </script>
 
 <script type="text/coffeescript">
 cs '''
 print = (message) ->
   output = document.createElement 'div'
-  output.className = 'output'
+  output.style.margin = '1em'
+  output.style.padding = '0.5em'
+  output.style.borderRadius = '0.5em'
+  output.style.fontFamily = 'American Typewriter'
+  output.style.border = '1px solid #123'
   output.innerHTML = message
-  cDiv.appendChild output
+  document.body.appendChild output
   return output
 
 print "Hello, world"
@@ -152,7 +162,7 @@ setCanvas = (w = 640, h = 640) ->
   c.style.height = "#{h}px"
   c.style.margin = '1em'
   c.style.marginLeft = "#{(document.body.scrollWidth - w) / 2}px"
-  cDiv.appendChild c
+  document.body.appendChild c
 
   ctx = c.getContext '2d'
 
@@ -191,7 +201,6 @@ setCanvas = (w = 640, h = 640) ->
 
   c.ontouchend = (e) ->
     document.title = "Two finger touch to save"
-
     do ctx.save
 
   return ctx
@@ -203,8 +212,7 @@ ctx.fillText "Hello, world", 10, 40
 
 inspect = ->
   for k,v of @
-    print k
-    print v
+    print "[#{k}] : #{v}"
 
 inspect.apply navigator
 inspect.apply document
