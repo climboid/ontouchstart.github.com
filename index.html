@@ -23,8 +23,9 @@ is licensed under a
 
 styleTag = document.createElement 'style'
 document.head.appendChild styleTag
+ss = document.styleSheets[0]
 
-document.styleSheets[0].insertRule '''
+ss.insertRule '''
 * {
   margin: 0;
   padding: 0;
@@ -35,9 +36,9 @@ document.styleSheets[0].insertRule '''
   -webkit-text-size-adjust:none;
   -webkit-tap-highlight-color: transparent;
 }
-'''
+''', ss.cssRules.length
 
-document.styleSheets[0].insertRule '''
+ss.insertRule '''
 pre {
   font-family: monospace;
   font-size: 14px;
@@ -46,9 +47,9 @@ pre {
   padding: 1em;
   border: 1px solid black;
  }
-'''
+''', ss.cssRules.length
 
-document.styleSheets[0].insertRule '''
+ss.insertRule '''
 textarea {
   font-family: monospace;
   font-size: 14px;
@@ -60,7 +61,7 @@ textarea {
   color: #00FF00; background: #000000;
   -webkit-user-select: text;
 }
-'''
+''', ss.cssRules.length
 
 window.cs = (code) ->
   codeKey = document.location.host + document.location.pathname + 'code'
@@ -79,14 +80,14 @@ window.cs = (code) ->
     container.style.width = '100%'
     container.style.height = '100%'
     container.style.margin = 'auto'
-    resetButton = document.createElement 'button'
-    resetButton.innerHTML = 'Reset CoffeeScript to default'
-    resetButton.style.marginBottom = '1em'
-    container.appendChild resetButton
 
     input = document.createElement 'textarea'
     input.style.style = 'block'
     container.appendChild input
+
+    resetButton = document.createElement 'pre'
+    resetButton.innerHTML = '[Reset CoffeeScript]'
+    container.appendChild resetButton
 
     jsBlock = document.createElement 'pre'
     jsBlock.innerText = '[Compile CoffeeScript]'
@@ -112,7 +113,7 @@ window.cs = (code) ->
 
     compile = ->
       localStorage.setItem codeKey, input.value
-      jsBlock.innerText = "/* JavaScript */ \n"
+      jsBlock.innerText = "/* Run JavaScript */ \n"
       jsBlock.innerText += CoffeeScript.compile input.value
       run = -> 
         do input.blur
@@ -179,7 +180,6 @@ setCanvas = (w = 640, h = 640) ->
   ctx.font = "12px American Typewriter"
   ctx.fillStyle = "#123"
   ctx.fillText "ontouchstart.github.com", w - 150, h - 10
-  document.title = "Touch to draw within the box"
 
   c.ontouchstart = (e) ->
     if e.touches.length > 1
@@ -200,7 +200,6 @@ setCanvas = (w = 640, h = 640) ->
     do ctx.stroke
 
   c.ontouchend = (e) ->
-    document.title = "Two finger touch to save"
     do ctx.save
 
   return ctx
