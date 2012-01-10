@@ -220,7 +220,6 @@ setCanvas = (w = 640, h = 640) ->
         do ctx.stroke
 
       c.onmouseup = (e) ->
-        console.log 'mouseup'
         c.onmousemove = null
         do ctx.save
   return ctx
