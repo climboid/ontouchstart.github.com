@@ -156,8 +156,6 @@ print = (message) ->
   document.body.appendChild output
   return output
 
-print "Hello, world"
-
 setCanvas = (w = 640, h = 640) ->
   c = document.createElement 'canvas'
   c.width = w
@@ -187,7 +185,7 @@ setCanvas = (w = 640, h = 640) ->
   if touchUI
     c.ontouchstart = (e) ->
       if e.touches.length > 1
-        document.location = do c.toDataURL
+        window.open do c.toDataURL
         return
       else
         do ctx.restore
@@ -203,9 +201,11 @@ setCanvas = (w = 640, h = 640) ->
       ctx.lineTo x, y
       do ctx.stroke
 
-    c.ontouchend = (e) ->
+    c.ontouchend = ->
       do ctx.save
   else
+    c.ondblclick = ->
+      window.open do c.toDataURL
     c.onmousedown = (e) ->
       do ctx.restore
       do ctx.beginPath
@@ -219,15 +219,12 @@ setCanvas = (w = 640, h = 640) ->
         ctx.lineTo x, y
         do ctx.stroke
 
-      c.onmouseup = (e) ->
+      c.onmouseup = ->
         c.onmousemove = null
         do ctx.save
   return ctx
 
-ctx = setCanvas 640, 480
-ctx.font = "44px American Typewriter"
-ctx.fillStyle = "#321"
-ctx.fillText "Hello, world", 10, 40
+ctx = setCanvas 640, 640
 
 inspect = ->
   for k,v of @
