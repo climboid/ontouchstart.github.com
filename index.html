@@ -81,13 +81,13 @@ window.cs = (code) ->
     container.style.height = '100%'
     container.style.margin = 'auto'
 
+    reset = document.createElement 'pre'
+    reset.innerHTML = '[Reset CoffeeScript]'
+    container.appendChild reset
+
     input = document.createElement 'textarea'
     input.style.style = 'block'
     container.appendChild input
-
-    resetButton = document.createElement 'pre'
-    resetButton.innerHTML = '[Reset CoffeeScript]'
-    container.appendChild resetButton
 
     jsBlock = document.createElement 'pre'
     jsBlock.innerHTML = '[Compile CoffeeScript]'
@@ -102,16 +102,17 @@ window.cs = (code) ->
       input.onkeypress = (e)->
         @rows++ if e.keyCode is 13
 
-    reset = ->
+    resetCode = ->
       codeValue = code
       do updateInput
 
     if touchUI
-      resetButton.ontouchstart = reset
+      reset.ontouchstart = resetCode
     else
-      resetButton.onclick = reset
+      reset.onclick = resetCode
 
     compile = ->
+      reset.style.display = 'none'
       localStorage.setItem codeKey, input.value
       jsBlock.innerHTML = "/* Run JavaScript */ \n" # for Firefox
       jsBlock.innerHTML += CoffeeScript.compile input.value # for Firefox
