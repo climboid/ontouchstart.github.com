@@ -97,7 +97,7 @@ window.cs = (code) ->
       lines = codeValue.split '\n'
       loc = lines.length
       input.rows = loc
-      input.cols = 80
+      input.cols = 100
       input.value = codeValue
       input.onkeypress = (e)->
         @rows++ if e.keyCode is 13
