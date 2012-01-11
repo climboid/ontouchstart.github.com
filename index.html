@@ -185,8 +185,8 @@ setCanvas = (w = 640, h = 640) ->
   if touchUI
     c.ontouchstart = (e) ->
       if e.touches.length > 1
+        do ctx.save
         window.open do c.toDataURL
-        return
       else
         do ctx.restore
         do ctx.beginPath
@@ -205,6 +205,7 @@ setCanvas = (w = 640, h = 640) ->
       do ctx.save
   else
     c.ondblclick = ->
+      do ctx.save
       window.open do c.toDataURL
     c.onmousedown = (e) ->
       do ctx.restore
