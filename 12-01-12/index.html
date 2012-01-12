@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <title>ontouchstart</title>
+  </head>
+  <body>
+<script type="text/javascript">
+window.touchUI = ('ontouchstart' in window)? true : false;
+</script>
+<script type="text/coffeescript">
+license = document.createElement 'div'
+license.style.margin = '0'
+license.style.marginBottom = '1em'
+license.style.padding = '1em'
+license.style.borderBottom = '2px solid #123'
+license.style.fontFamily = 'Helvetica'
+
+license.innerHTML = '''
+<a href="?source">CoffeeScript code</a> 
+by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/ontouchstart/ontouchstart.github.com" property="cc:attributionName" rel="cc:attributionURL">Sam Liu</a>
+is licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.
+'''
+
+styleTag = document.createElement 'style'
+document.head.appendChild styleTag
+ss = document.styleSheets[0]
+
+ss.insertRule '''
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  text-decoration: none;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -webkit-text-size-adjust:none;
+  -webkit-tap-highlight-color: transparent;
+}
+''', ss.cssRules.length
+
+ss.insertRule '''
+pre {
+  font-family: monospace;
+  font-size: 14px;
+  margin: 3.5em;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid black;
+ }
+''', ss.cssRules.length
+
+ss.insertRule '''
+textarea {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 3.5em;
+  margin-bottom: 3.5em;
+  padding: 0.5em;
+  border-radius: 0;
+  color: #00FF00; background: #000000;
+  -webkit-user-select: text;
+}
+''', ss.cssRules.length
+
+window.cs = (code) ->
+  codeKey = document.location.host + document.location.pathname + 'code'
+  codeValue = code
+  try 
+    codeValue = localStorage.getItem codeKey
+    codeValue = code if codeValue.length < 1
+  catch err
+    codeValue = code
+
+  localStorage.setItem codeKey, codeValue
+
+  if document.location.search is '?source'
+    container = document.createElement 'div'
+    container.style.position = 'relative'
+    container.style.width = '100%'
+    container.style.height = '100%'
+    container.style.margin = 'auto'
+
+    reset = document.createElement 'pre'
+    reset.innerHTML = '[Reset CoffeeScript]'
+    container.appendChild reset
+
+    input = document.createElement 'textarea'
+    input.style.style = 'block'
+    container.appendChild input
+
+    jsBlock = document.createElement 'pre'
+    jsBlock.innerHTML = '[Compile CoffeeScript]'
+    container.appendChild jsBlock
+ 
+    updateInput = ->
+      lines = codeValue.split '\n'
+      loc = lines.length
+      input.rows = loc
+      input.cols = 100
+      input.value = codeValue
+      input.onkeypress = (e)->
+        @rows++ if e.keyCode is 13
+
+    resetCode = ->
+      codeValue = code
+      do updateInput
+
+    if touchUI
+      reset.ontouchstart = resetCode
+    else
+      reset.onclick = resetCode
+
+    compile = ->
+      reset.style.display = 'none'
+      localStorage.setItem codeKey, input.value
+      jsBlock.innerHTML = "/* Run JavaScript */ \n" # for Firefox
+      jsBlock.innerHTML += CoffeeScript.compile input.value # for Firefox
+
+      jsBlock.innerText = "/* Run JavaScript */ \n" # for code 
+      jsBlock.innerText += CoffeeScript.compile input.value # for code
+
+      run = ->
+        do input.blur
+        container.style.display = 'none'
+        eval jsBlock.innerText
+
+      if touchUI
+        jsBlock.ontouchstart = run
+      else
+        jsBlock.onclick = run
+        
+    if touchUI
+      jsBlock.ontouchstart = compile
+    else
+      jsBlock.onclick = compile
+
+    do updateInput
+    document.body.appendChild container
+
+  else
+    eval CoffeeScript.compile codeValue
+
+document.body.appendChild license
+</script>
+
+<script type="text/coffeescript">
+cs '''
+print = (message) ->
+  output = document.createElement 'div'
+  output.style.margin = '1em'
+  output.style.padding = '0.5em'
+  output.style.borderRadius = '0.5em'
+  output.style.fontFamily = 'American Typewriter'
+  output.style.border = '1px solid #123'
+  output.innerHTML = message
+  document.body.appendChild output
+  return output
+
+
+inspect = ->
+  for k,v of @
+    print "[#{k}] : #{v}"
+
+code =  """
+do -> 
+  hi = ->
+    alert 'hi'
+  do hi
+try
+  do hi
+catch err
+  console.log err
+"""
+
+inspect.apply CoffeeScript.tokens code
+print CoffeeScript.compile code
+eval CoffeeScript.compile code
+CoffeeScript.eval code
+'''
+</script>
+<script type="text/javascript" src="../coffee-script-1.2.js"></script>
+</body>
+</html>
+
