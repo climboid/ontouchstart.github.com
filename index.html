@@ -7,6 +7,7 @@
 window.touchUI = ('ontouchstart' in window)? true : false;
 </script>
 <script type="text/coffeescript">
+window.touchUI = window.hasOwnProperty 'ontouchstart'
 license = document.createElement 'div'
 license.style.margin = '0'
 license.style.marginBottom = '1em'
@@ -109,7 +110,7 @@ window.cs = (code) ->
     if touchUI
       reset.ontouchstart = resetCode
     else
-      reset.onclick = resetCode
+      reset.onmousedown = resetCode
 
     compile = ->
       reset.style.display = 'none'
@@ -128,12 +129,12 @@ window.cs = (code) ->
       if touchUI
         jsBlock.ontouchstart = run
       else
-        jsBlock.onclick = run
+        jsBlock.onmousedown = run
         
     if touchUI
       jsBlock.ontouchstart = compile
     else
-      jsBlock.onclick = compile
+      jsBlock.onmousedown = compile
 
     do updateInput
     document.body.appendChild container
@@ -144,8 +145,12 @@ window.cs = (code) ->
 document.body.appendChild license
 
 sourceLink = document.getElementById 'source'
-sourceLink.ontouchstart = ->
-  document.location = '?source'
+if touchUI
+  sourceLink.ontouchstart = ->
+    document.location = '?source'
+else
+  sourceLink.onmousedown = ->
+    document.location = '?source'
 </script>
 
 <script type="text/coffeescript">
