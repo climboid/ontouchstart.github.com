@@ -1,0 +1,51 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+print = (message) ->
+  output = document.createElement 'div'
+  output.style.margin = '4em'
+  output.style.padding = '0.5em'
+  output.style.borderRadius = '0.5em'
+  output.style.fontFamily = 'American Typewriter'
+  output.style.border = '1px solid #123'
+  output.innerHTML = message
+  document.body.appendChild output
+  return output
+
+cond = (x...) -> return do arg[1] for arg in arguments when arg[0]
+
+plus = (n, m) ->
+  cond [m == 0, -> n], 
+       [m < 0, -> (plus --n, ++m)], 
+       [m > 0, -> (plus ++n, --m)]
+
+print plus
+
+print "(plus #{n}, #{m}) = #{plus n, m}" for n in [-3,-2,-1,0,1,2,3] for m in [-3,-2,-1,0,1,2,3]
+
+print """
+(plus 1, (plus 2, (plus 3, (plus 4, 5)))) = #{(plus 1, (plus 2, (plus 3, (plus 4, 5))))}
+"""
+
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

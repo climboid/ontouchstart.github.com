@@ -1,0 +1,110 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+print = (message) ->
+  $output = document.createElement 'div'
+  $output.innerHTML = message
+  $output.style.marginLeft = '4em'
+  document.body.appendChild $output
+  return $output
+
+drawEvt = document.createEvent "Events" 
+drawEvt.initEvent 'draw', false, true
+
+class Canvas
+  constructor: (@w,@h,@x,@y) ->
+    c = document.createElement 'canvas'
+    c.width = @w
+    c.height = @h
+    c.style.position = 'absolute'
+    c.style.width = "#{@w}px"
+    c.style.height = "#{@h}px"
+    c.style.left = "#{@x}px"
+    c.style.top = "#{@y}px"
+
+    document.body.appendChild c
+
+    @ctx = c.getContext '2d'
+    do @ctx.beginPath
+    @ctx.moveTo 0,0
+    @ctx.lineTo @w, 0
+    @ctx.lineTo @w, @h
+    @ctx.lineTo 0, @h
+    @ctx.lineTo 0, 0
+    do @ctx.stroke
+    do @ctx.save
+
+  drawSegment: (s) ->
+    x1 = s.p1.x + @w/2
+    x2 = s.p2.x + @w/2
+    y1 = -s.p1.y + @h/2
+    y2 = -s.p2.y + @h/2
+
+    do @ctx.beginPath
+    @ctx.moveTo x1,y1
+    @ctx.lineTo x2,y2
+    do @ctx.stroke
+    do @ctx.save
+
+  drawPoint: (p) ->
+    r = 10
+    x = p.x + @w/2
+    y = - p.y + @h/2
+    do @ctx.beginPath
+    @ctx.arc x, y, r, 0, Math.PI*2, true
+    do @ctx.fill
+    do @ctx.save
+
+class Point
+  constructor: (@x, @y) ->
+    document.addEventListener 'draw', (e) => 
+       e.canvas.drawPoint @
+
+  toString: ->
+    return "(#{@x},#{@y})"
+
+class Segment
+  constructor: (@p1, @p2) ->
+    document.addEventListener 'draw', (e) => 
+       e.canvas.drawSegment @
+
+  toString: ->
+    return "#{@p1}---#{@p2}"
+
+p1 = new Point -200, -200
+p2 = new Point 200, -200
+p3 = new Point 200, 100
+
+p12 = new Segment p1, p2
+p23 = new Segment p2, p3
+p31 = new Segment p3, p1
+
+print p12
+print p23
+print p31
+
+c = new Canvas 640,480,200,100
+drawEvt.canvas = c
+document.dispatchEvent drawEvt
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

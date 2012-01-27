@@ -1,0 +1,156 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>CSTalk</title>
+    <style>
+      * { 
+        margin: 0; 
+        padding: 0; 
+        text-decoration: none; 
+        -webkit-touch-callout:none; 
+        -webkit-user-select:none; 
+        -webkit-text-size-adjust:none; 
+        -webkit-tap-highlight-color: transparent; 
+        -webkit-backface-visibility: hidden; 
+        -webkit-transform: translate3d(0,0,0);
+      }
+
+      #author {
+         position: absolute;
+         top: 0;
+         left: 0;
+         font: 18px Helvetica;
+         color: #ccc;
+         padding: 0.5em; 
+         padding-top: 2em; 
+         text-align: left;
+      }
+
+      #title {
+         position: relative;
+         margin: auto;
+         width: 90%;
+         font: 18px Helvetica;
+         color: #ccc;
+         padding: 0.5em;
+         padding-top: 2em;          
+         text-align: center;
+         border-bottom: 1px solid #123;
+      }
+
+      #date {
+         position: absolute;
+         right:0;
+         top: 0;
+         font: 18px Helvetica;
+         color: #ccc;
+         padding: 0.5em;
+         padding-top: 2em;          
+         text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+<div id="title">
+<div id="author">Sam Liu</div>
+Don't try this at work &mdash; Adventures in the land of CoffeeScript
+<div id="date">2012/01/26</div>
+</div>
+<script type="text/javascript">
+window.touchUI = 'ontouchstart' in window
+</script>
+<script type="text/coffeescript">
+content = document.createElement 'iframe'
+content.id = 'content'
+content.width = '100%'
+content.height = '100%'
+content.frameborder = '0'
+content.style.width = "100%"
+content.style.height = "100%"
+content.style.position = 'absolute'
+content.style.top = '80px'
+
+content.style.background = '#FFF'
+content.style.border = 'none'
+content.style.webkitTransitionDuration = '1000ms'
+content.style.webkitTransform = 'translate3d(0,0,0)'
+content.style.opacity = 1
+
+contentArray = ['coffee-script/index.html']
+contentArray.push 'confirm.html'
+contentArray.push 'printMessage.html'
+
+contentArray.push 'divHi.html'
+contentArray.push 'canvasHi.html'
+contentArray.push 'svgHi.html'
+
+contentArray.push 'clocks.html'
+
+contentArray.push 'inspectNavigator.html'
+contentArray.push 'inspectDocument.html'
+
+contentArray.push 'cond.html'
+contentArray.push 'abs.html'
+contentArray.push 'plus.html'
+contentArray.push 'plusSteps.html'
+contentArray.push 'factorial.html'
+contentArray.push 'factorialSteps.html'
+contentArray.push 'factorialIterate.html'
+contentArray.push 'factorialIterateSteps.html'
+contentArray.push 'gcd.html'
+contentArray.push 'prime.html'
+contentArray.push 'sqrt.html'
+contentArray.push 'triangle.html'
+
+contentArray.push 'geo2x2.html'
+contentArray.push 'tilt.html'
+
+contentArray.push 'blueMarble3x3.html'
+contentArray.push 'blueMarble10x10.html'
+
+contentArray.push 'bounce.html'
+contentArray.push 'bounce10.html'
+
+contentArray.push 'cubicBezierTrail.html'
+
+contentArray.push 'dragCubicBezier.html'
+contentArray.push 'ticTacToe.html'
+
+id = 0
+content.src = contentArray[id]
+previous = ->
+  content.style.opacity = 0
+  id--
+  id = contentArray.length - 1 if id < 0
+  setTimeout (->
+    content.src = contentArray[id] + '?' +  Math.floor(Math.random() * 1000)
+    content.onload = ->
+      content.style.opacity = 1
+  ), 1000
+  
+next = ->
+  content.style.opacity = 0
+  id++
+  id = 0 if id > contentArray.length - 1
+  setTimeout (->
+    content.src = contentArray[id] + '?' + Math.floor(Math.random() * 1000)
+    content.onload = ->
+      content.style.opacity = 1
+  ), 1000
+
+if window.touchUI
+  document.body.ontouchstart = (e) ->
+    do next if e.touches[0].pageX > document.body.scrollWidth / 2
+    do previous if e.touches[0].pageX < document.body.scrollWidth / 2
+else
+  document.body.onmousedown = (e) ->
+    do next if e.pageX > document.body.scrollWidth / 2
+    do previous if e.pageX < document.body.scrollWidth / 2
+
+document.body.appendChild content
+</script>
+<script type="text/javascript" src="coffee-script/extras/coffee-script.js"></script>
+</body>
+</html>

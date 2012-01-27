@@ -1,0 +1,216 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+R = 100
+width = 2 * R
+height = 2 * R
+PI = Math.PI
+cos = Math.cos
+sin = Math.sin
+
+SVGns = "http://www.w3.org/2000/svg"
+
+hourHand = document.createElementNS SVGns, 'path'
+minuteHand = document.createElementNS SVGns, 'path'
+secondHand = document.createElementNS SVGns, 'path'
+
+dClock = document.createElement 'pre'
+dClock.style.fontSize = '20px'
+dClock.style.margin = '1em'
+dClock.style.textAlign = 'center'
+dClock.style.display = 'inline'
+
+canvasClock = document.createElement 'canvas'
+canvasClock.width = width
+canvasClock.height = height
+
+SVGClock = document.createElementNS SVGns, 'svg'
+SVGClock.setAttribute 'width', width
+SVGClock.setAttribute 'height', height
+
+SVGClockFace = -> 
+  SVGLabel = []
+  textLabel = []
+  r = 0.8 * R
+  for i in [0..11]
+    angle = PI * i / 6
+    angle = PI/2 - angle;
+    x = r * cos(angle) + R
+    y = -r * sin(angle) + R 
+    SVGLabel[i] = document.createElementNS SVGns, 'text'
+    SVGLabel[i].setAttribute 'x', x
+    SVGLabel[i].setAttribute 'y', y
+    SVGLabel[i].setAttribute 'stroke', 'black'
+    SVGLabel[i].setAttribute 'fill', 'black'
+    SVGLabel[i].setAttribute 'font-size', 20
+    SVGLabel[i].setAttribute 'font-family', 'cursive'
+    SVGLabel[i].setAttribute 'text-anchor', 'middle'
+    SVGLabel[i].setAttribute 'dominant-baseline', 'central'
+    if i == 0  
+      textLabel[i] = document.createTextNode '12'
+    else 
+      textLabel[i] = document.createTextNode i.toString()
+    SVGLabel[i].appendChild textLabel[i]
+    SVGClock.appendChild SVGLabel[i]
+
+  hourHand.setAttribute 'stroke', 'black'
+  hourHand.setAttribute 'stroke-width', 3
+
+  minuteHand.setAttribute 'stroke', 'black'
+  minuteHand.setAttribute 'stroke-width', 2
+
+  secondHand.setAttribute 'stroke', 'red'
+
+  SVGClock.appendChild hourHand
+  SVGClock.appendChild minuteHand
+  SVGClock.appendChild secondHand
+
+do SVGClockFace
+
+canvasClockFace = ->
+  context = canvasClock.getContext '2d'
+  context.clearRect 0,0,width, height
+  context.textAlign = 'center'
+  context.textBaseline = 'middle'
+  context.font = 'bold 20px cursive'
+  r = 0.8 * R
+  for i in [0..12]
+    angle = PI * i / 6
+    angle = PI/2 - angle 
+    x = r * cos(angle) + R
+    y = -r * sin(angle) + R 
+    label = i
+    if i == 0 
+      label = '12' 
+    else 
+      label = do i.toString
+    context.strokeStyle = '#000000'
+    do context.beginPath
+    context.fillText label, x, y
+    do context.closePath
+    do context.stroke
+
+update = (hours, minutes, seconds) -> 
+  do canvasClockFace
+  context = canvasClock.getContext '2d'
+  hours = hours - 12 if hours > 11
+  context.strokeStyle = '#000000'
+  context.lineWidth = 3
+  do context.beginPath
+  context.moveTo R, R
+  angle = PI * hours / 6 + PI * minutes / 360
+  angle = PI/2 - angle
+  r = 0.4 * R
+  x = r * cos(angle) + R
+  y = -r * sin(angle) + R 
+  context.lineTo x,y
+  do context.closePath
+  do context.stroke
+
+  d = 'M' + R + ',' + R
+  d += 'L' + x + ',' + y
+  hourHand.setAttribute 'd', d
+
+  context.strokeStyle = '#000000'
+  context.lineWidth = 2
+  do context.beginPath
+  context.moveTo R, R
+  angle = PI / 2 - PI * minutes / 30 
+  r = 0.6 * R
+  x = r * cos(angle) + R
+  y = -r * sin(angle) + R 
+  context.lineTo x,y
+  do context.closePath
+  do context.stroke
+
+  d = 'M' + R + ',' + R
+  d += 'L' + x + ',' + y
+  minuteHand.setAttribute 'd', d
+
+  context.strokeStyle = '#FF0000'
+  context.lineWidth = 1
+  do context.beginPath
+  context.moveTo R,R
+  angle = PI / 2 - PI * seconds / 30 
+  r = 0.6 * R
+  x = r * cos(angle) + R
+  y = -r * sin(angle) + R 
+  context.lineTo x, y
+  do context.closePath
+  do context.stroke
+
+  d = 'M' + R + ',' + R
+  d += 'L' + x + ',' + y
+  secondHand.setAttribute 'd', d
+
+
+pad = (value) ->
+  return '0' + value if value < 10
+  return value
+
+tick = ->
+  localTime = new Date
+  localHours = do localTime.getHours
+  localMinutes = do localTime.getMinutes
+  localSeconds = do localTime.getSeconds
+  dClock.innerHTML = (pad localHours) + ' : '
+  dClock.innerHTML += (pad localMinutes) + ' : '
+  dClock.innerHTML += pad localSeconds
+  update localHours, localMinutes, localSeconds
+
+canvasLabel = document.createElement 'span'
+canvasLabel.innerHTML = 'CANVAS'
+
+canvasPanel = document.createElement 'div'
+canvasPanel.style.display = 'inline'
+canvasPanel.appendChild canvasLabel
+canvasPanel.appendChild canvasClock
+
+SVGLabel = document.createElement 'span'
+SVGLabel.innerHTML = 'SVG'
+SVGLabel.textAlign = 'center'
+
+SVGPanel = document.createElement 'div'
+SVGPanel.style.display = 'inline'
+SVGPanel.appendChild SVGClock
+SVGPanel.appendChild SVGLabel
+
+container = document.createElement 'div'
+
+container.appendChild canvasPanel
+container.appendChild dClock
+container.appendChild SVGPanel
+
+container.style.border = '1px solid'
+container.style.clear = 'both'
+container.style.width = '700px'
+container.style.padding = '1em'
+container.style.margin = '20px'
+container.style.marginLeft = 'auto'
+container.style.marginRight = 'auto'
+
+document.body.appendChild container
+setInterval tick, 10
+
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

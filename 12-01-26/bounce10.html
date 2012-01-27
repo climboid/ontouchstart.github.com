@@ -1,0 +1,134 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+c = document.createElement 'div'
+c.style.position = 'relative'
+c.style.width = '600px'
+c.style.height = '600px'
+c.style.margin = 'auto'
+c.style.border = '1px solid #000'
+document.body.appendChild c
+
+c.ontouchstart = (e) ->
+  e.preventDefault()
+
+collision = document.createEvent "Events" 
+collision.initEvent 'collision', false, true
+
+motion = document.createEvent "Events" 
+motion.initEvent 'motion', false, true
+
+class Ball
+  constructor: (@x=0, @y=0, @r=30, @dx=0, @dy=0) ->
+    @b = document.createElement 'div'
+    @b.style.position = 'absolute'
+    @b.style.width = "#{2*@r}px"
+    @b.style.height = "#{2*@r}px"
+    @b.style.webkitBorderRadius = "#{@r}px"
+    @b.style.background = 'blue'
+    @b.style.left = "#{300 - @r}px"
+    @b.style.top = "#{300 - @r}px"
+    @b.style.webkitTransform = "translate3d(#{@x}px, #{-@y}px, 0)"    
+    c.appendChild @b
+    
+    move = =>
+      motion.ball = @
+      document.dispatchEvent motion
+      @y += @dy
+      @x += @dx
+
+      @b.style.webkitTransform = "translate3d(#{@x}px, #{-@y}px, 0)"    
+      @b.style.webkitTransitionDuration = '1ms'
+      @moveStep = setTimeout move, 1
+
+    @b.ontouchstart = (e) =>
+      clearTimeout @moveStep
+      x0 = e.touches[0].pageX
+      y0 = e.touches[0].pageY
+      t0 = new Date()
+      dx = 0
+
+      @b.ontouchmove = (e) =>
+        dx = e.touches[0].pageX - x0
+        dy = e.touches[0].pageY - y0
+        @b.style.webkitTransform = "translate3d(#{@x + dx }px, #{-@y + dy}px, 0)"    
+      @b.ontouchend = (e) =>
+        t = new Date()
+        @dx = 10 * dx / (t - t0)
+        @dy = - 10 * dy / (t - t0)
+        @x += dx
+        @y -= dy
+        move()       
+
+class Container
+  constructor: (@w=300, @h=300) ->
+    @wall = document.createElement 'div'
+    @wall.style.position = 'absolute'
+    @wall.style.background = '#fff'
+    @wall.style.width = "#{2*@w}px"
+    @wall.style.height = "#{2*@h}px"
+    @wall.style.left = "#{300-@w}px"
+    @wall.style.top = "#{300-@h}px"
+    c.appendChild @wall
+    c.style.background = '#000'
+
+    document.addEventListener 'motion', (e) =>
+      ball = e.ball
+      if ball.x < -@w + ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        document.dispatchEvent collision     
+
+      if ball.x > @w - ball.r
+        collision.dx = - ball.dx * 2
+        collision.dy = 0
+        collision.ball = ball
+        document.dispatchEvent collision
+  
+      if ball.y < -@h + ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        document.dispatchEvent collision
+
+      if ball.y > @h -  ball.r
+        collision.dy = - ball.dy * 2
+        collision.dx = 0
+        collision.ball = ball
+        document.dispatchEvent collision
+
+    document.addEventListener 'collision', (e) ->
+      e.ball.dx += e.dx
+      e.ball.dy += e.dy
+
+new Container
+for i in [1..10]
+  new Ball
+</pre>
+<script>
+document.getElementById('code').onclick = function () {
+  this.style.display = 'none';
+  eval(top.window.CoffeeScript.compile(this.innerText));
+}
+</script>
+</body>
+</html>

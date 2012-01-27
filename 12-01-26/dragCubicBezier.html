@@ -1,0 +1,168 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+css = (rule) ->
+    document.styleSheets[0].insertRule rule
+
+ns = 'http://www.w3.org/2000/svg'
+svg = document.createElementNS ns, 'svg'
+svg.style.margin = '50px'
+svg.width = 640
+svg.height = 640
+svg.style.height = '640px'
+document.body.appendChild svg
+svg.ontouchmove = (e)->
+ do e.preventDefault
+
+x1 = 0.85
+y1 = 0.10
+x2 = 0.25
+y2 = 0.90
+
+p = [[0,500], [500 * x1 , 500 - 500 * y1], [500 * x2 , 500 - 500 * y2],[500,0]]
+path03 = document.createElementNS ns, 'path'
+path03.setAttribute 'stroke', 'blue'
+path03.setAttribute 'fill', 'none'
+path03.setAttribute 'd',"M#{p[0][0]},#{p[0][1]}C#{p[1][0]},#{p[1][1]},#{p[2][0]},#{p[2][1]},#{p[3][0]},#{p[3][1]}"
+svg.appendChild path03
+
+path01 = document.createElementNS ns, 'path'
+path01.setAttribute 'stroke', 'green'
+path01.setAttribute 'fill', 'none'
+path01.setAttribute 'd',"M#{p[0][0]},#{p[0][1]}L#{p[1][0]},#{p[1][1]}"
+svg.appendChild path01
+
+path12 = document.createElementNS ns, 'path'
+path12.setAttribute 'stroke', 'green'
+path12.setAttribute 'fill', 'none'
+path12.setAttribute 'd', "M#{p[1][0]},#{p[1][1]}L#{p[2][0]},#{p[2][1]}"
+svg.appendChild path12
+
+path23 = document.createElementNS ns, 'path'
+path23.setAttribute 'stroke', 'green'
+path23.setAttribute 'fill', 'none'
+path23.setAttribute 'd', "M#{p[2][0]},#{p[2][1]}L#{p[3][0]},#{p[3][1]}"
+svg.appendChild path23
+
+x2t = (x) ->
+  for i in [0..500]
+    t = i / 500
+    if  p[0][0]*(1-t)*(1-t)*(1-t)+p[1][0]*(1-t)*(1-t)*t*3+p[2][0]*(1-t)*t*t*3+p[3][0]*t*t*t > x
+      return t
+  return 0
+
+bezierTiming = ''
+animationTiming = ''
+transitinoTiming = ''
+round = (x) ->
+  return Math.round(x * 100) / 100
+
+update = ->
+  path03.setAttribute 'd',"M#{p[0][0]},#{p[0][1]}C#{p[1][0]},#{p[1][1]},#{p[2][0]},#{p[2][1]},#{p[3][0]},#{p[3][1]}"
+  path01.setAttribute 'd',"M#{p[0][0]},#{p[0][1]}L#{p[1][0]},#{p[1][1]}"
+  path12.setAttribute 'd',"M#{p[1][0]},#{p[1][1]}L#{p[2][0]},#{p[2][1]}"
+  path23.setAttribute 'd',"M#{p[2][0]},#{p[2][1]}L#{p[3][0]},#{p[3][1]}"
+  bezierTiming="cubic-bezier(#{round p[1][0]/500},#{round 1-p[1][1]/500},#{round p[2][0]/500},#{round 1-p[2][1]/500})"
+  animationTiming = "-webkit-animation-timing-function: #{bezierTiming};"
+  transitionTiming = "-webkit-transition-timing-function: #{bezierTiming};"
+  testBox.style.webkitAnimationTimingFunction = "#{bezierTiming}"
+
+anchor = []
+
+for i in [0..3]
+  anchor[i] = document.createElement 'div'
+  anchor[i].style.position = 'absolute'
+  anchor[i].style.width = '45px'
+  anchor[i].style.height = '45px'
+  anchor[i].style.border = '1px solid red'
+  anchor[i].x = p[i][0] - 22
+  anchor[i].y = p[i][1] - 22
+  anchor[i].update = ->
+    @style.left = "#{@x + 50}px"
+    @style.top = "#{@y + 50}px"
+  anchor[i].update()
+document.body.appendChild anchor[1]
+document.body.appendChild anchor[2]
+
+drag = (el, i) ->
+  do (i) ->
+    el.ontouchstart = (e) ->
+      return if e.touches[0].length > 1
+      testBox.style.webkitAnimationName = ''
+      testBox.style.webkitTransform = 'translate3d(0, 500px, 0) rotate(0) scale(1)'
+      testBox.style.opacity = 0
+      x0 = e.touches[0].pageX
+      y0 = e.touches[0].pageY
+      x00 = @x
+      y00 = @y
+      px00 = p[i][0]
+      py00 = p[i][1]
+      @ontouchmove = (e) ->
+        do e.preventDefault
+        return if e.touches[0].length > 1
+        dx = e.touches[0].pageX - x0
+        dy = e.touches[0].pageY - y0
+        @x = x00 + dx
+        @y = y00 + dy
+        p[i][0] = px00 + dx
+        p[i][1] = py00 + dy
+        @update()
+        update()
+      @ontouchend = (e) ->
+        @ontouchmove = null
+        testBox.style.webkitAnimationName = 'test-animation'
+
+for i in [1..2]
+  drag anchor[i], i
+
+testBox = document.createElement 'div'
+testBox.style.position = 'absolute'
+testBox.style.left = '700px'
+testBox.style.top = '50px'
+testBox.style.width = '50px'
+testBox.style.height = '50px'
+testBox.style.backgroundColor = 'red'
+testBox.style.webkitAnimationName = 'test-animation'
+testBox.style.webkitAnimationDirection = 'alternate'
+document.body.appendChild testBox
+
+css """
+  @-webkit-keyframes test-animation {
+     0% { 
+       -webkit-transform: translate3d(0, 500px, 0) rotate(0) scale(1); 
+       opacity: 0;
+     }
+     100% { 
+       -webkit-transform: translate3d(0, 0px, 0) rotate(360deg) scale(2);
+       opacity: 1;
+     }
+   }
+"""
+
+testBox.style.webkitAnimationName = 'test-animation'
+testBox.style.webkitAnimationDuration = '5000ms'
+testBox.style.webkitAnimationIterationCount = 'infinite'
+
+do update
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

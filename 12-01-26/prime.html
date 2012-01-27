@@ -1,0 +1,55 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+print = (message) ->
+  output = document.createElement 'div'
+  output.style.margin = '4em'
+  output.style.padding = '0.5em'
+  output.style.borderRadius = '0.5em'
+  output.style.fontFamily = 'American Typewriter'
+  output.style.border = '1px solid #123'
+  output.innerHTML = message
+  document.body.appendChild output
+  return output
+
+cond = (x...) -> return do arg[1] for arg in arguments when arg[0]
+
+remainder = (a, b) ->
+  cond [a < b, -> a], [true, -> remainder a-b, b]
+
+gcd = (a, b) ->
+  cond [b == 0, -> a], [true, -> gcd b, remainder a, b]
+
+isPrime = (n) ->
+  conditionArray = []
+  conditionArray.push [n == 2, -> true]
+  for i in [2..n-1]
+    conditionArray.push [((gcd n, i) > 1), -> false]
+  conditionArray.push [true, -> true]
+  cond.apply this, conditionArray
+
+for i in [2..100]
+  print i if isPrime i
+
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

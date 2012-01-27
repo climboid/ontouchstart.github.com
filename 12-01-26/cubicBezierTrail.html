@@ -1,0 +1,101 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+w = 600
+h = 600
+c = document.createElement 'div'
+c.width = w
+c.height = h
+c.style.position = 'absolute'
+c.style.width = "#{w}px"
+c.style.height = "#{h}px"
+
+c.style.left= "#{(document.body.scrollWidth - w) / 2}px"
+c.style.top= '40px'
+document.body.appendChild c
+
+ns = 'http://www.w3.org/2000/svg'
+svgTrail = document.createElementNS ns, 'svg'
+svgTrail.width = 600
+svgTrail.height = 600
+svgTrail.style.width = '600px'
+svgTrail.style.height = '600px'
+svgTrail.style.position = 'absolute'
+c.appendChild svgTrail
+
+bezierCurve = (name, x0, y0, x1, y1, x2, y2, x3, y3) ->
+  rule = '@-webkit-keyframes ' + name  + ' {'
+  for p in [0..100]
+    t = p / 100
+    x = (1-t)*(1-t)*(1-t)*x0 + 3*(1-t)*(1-t)*t*x1 + 3*(1-t)*t*t*x2 + t*t*t*x3
+    y = (1-t)*(1-t)*(1-t)*y0 + 3*(1-t)*(1-t)*t*y1 + 3*(1-t)*t*t*y2 + t*t*t*y3
+    rule += "#{p}% { -webkit-transform: translate3d(#{x}px,#{y}px,0) rotate(#{t*180}deg) }"       
+  rule += '}'
+  document.styleSheets[0].insertRule rule
+
+  svgTrailPath = document.createElementNS ns, 'path'
+  svgTrailPath.setAttribute 'stroke', 'green'
+  svgTrailPath.setAttribute 'fill', 'none'
+  svgTrailPath.setAttribute 'd', 'M'+x0+','+y0+'C'+x1+','+y1+','+x2+','+y2+','+x3+','+y3
+  svgTrail.appendChild svgTrailPath
+   
+svgBezierTrail = ->
+  svg = document.createElementNS ns, 'svg'
+  svg.width = 60
+  svg.height = 60
+  svg.style.width = '60px'
+  svg.style.height = '60px'
+  svg.style.left = '-30px'
+  svg.style.top = '-30px'
+  svg.style.border = 'none'
+  svg.style.position = 'absolute'
+  c.appendChild svg
+
+  path = document.createElementNS ns, 'path'
+  path.setAttribute 'fill', 'green'
+  path.setAttribute 'd', 'M0,0C60,0,0,60,60,60C60,0,0,60,0,0z'
+  svg.appendChild path
+
+  bezierCurve 'forward', 0, 0, 600, 0, 0, 600, 600, 600
+  bezierCurve 'backward', 600, 600, 600, 0, 0, 600, 0, 0
+ 
+  svg.style.webkitAnimationIterationCount = 1
+  svg.style.webkitAnimationDuration = '4000ms'
+  svg.style.webkitAnimationTimingFunction = 'linear'
+  svg.style.webkitAnimationFillMode = 'both'
+
+  forward = -> 
+    svg.removeEventListener 'webkitAnimationEnd', forward
+    svg.addEventListener 'webkitAnimationEnd', backward
+    svg.style.webkitAnimationName = 'forward'
+
+  backward = ->
+    svg.removeEventListener 'webkitAnimationEnd', backward
+    svg.addEventListener 'webkitAnimationEnd', forward
+    svg.style.webkitAnimationName = 'backward'
+
+  do forward
+
+do svgBezierTrail
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

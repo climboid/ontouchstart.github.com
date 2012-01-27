@@ -1,0 +1,54 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+w = 640
+h = 480
+SVGns = "http://www.w3.org/2000/svg"
+
+c = document.createElementNS SVGns, 'svg'
+c.setAttribute 'width', w
+c.setAttribute 'height', h
+
+c.style.width = "#{w}px"
+c.style.height = "#{h}px"
+c.style.background = '#abc'
+
+c.style.marginLeft= "#{(document.body.scrollWidth - w) / 2}px"
+c.style.marginTop= "#{(document.body.scrollHeight - h) / 2}px"
+
+hi = document.createElementNS SVGns, 'text'
+hi.setAttribute 'x', 320
+hi.setAttribute 'y', 380
+hi.setAttribute 'stroke', '#123'
+hi.setAttribute 'fill', '#123'
+hi.setAttribute 'font-size', 400
+hi.setAttribute 'font-family', 'American Typewriter'
+hi.setAttribute 'text-anchor', 'middle'
+label = document.createTextNode 'Hi'
+hi.appendChild label
+c.appendChild hi
+
+
+document.body.appendChild c
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

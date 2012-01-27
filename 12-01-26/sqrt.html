@@ -1,0 +1,49 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+print = (message) ->
+  output = document.createElement 'div'
+  output.style.margin = '4em'
+  output.style.padding = '0.5em'
+  output.style.borderRadius = '0.5em'
+  output.style.fontFamily = 'American Typewriter'
+  output.style.border = '1px solid #123'
+  output.innerHTML = message
+  document.body.appendChild output
+  return output
+
+cond = (x...) -> return do arg[1] for arg in arguments when arg[0]
+
+abs = (x) ->
+  cond [x < 0, -> -x], [true, -> x]
+
+sqrt = (a, x, e) ->
+  cond [(abs (x * x - a)) < e, -> x], [true, -> sqrt a, (x + a/x)/2, e]
+
+e = 10
+for n in [1..13]
+  e = e/10
+  print "sqrt(2, 1, #{e}) = #{sqrt 2, 1, e}"
+print "Math.sqrt(2) = #{Math.sqrt 2}"
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

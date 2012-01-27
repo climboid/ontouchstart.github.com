@@ -1,0 +1,88 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+window.loadJS = (src, cbk, err) ->
+  js = document.createElement 'script'
+  js.src = src
+  js.onload = cbk
+  js.onerror = err
+  document.body.appendChild js
+
+window.gmap = (center, w, h, markers) ->
+  api = 'https://maps.googleapis.com/maps/api/js?sensor=true'
+  container = document.createElement 'div'
+  container.style.width = w + "px"
+  container.style.height = h + "px"
+
+  map = (container) ->
+    latLng = new google.maps.LatLng center[0], center[1]
+    options = 
+      zoom: 13
+      center: latLng
+      disableDefaultUI: true
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    
+    m = new google.maps.Map container, options
+    markerArray = []
+    markerArray.push new google.maps.Marker {position: latLng}   
+
+    for i in [0..markers.length-1]
+      markerLatLng = new google.maps.LatLng markers[i][0], markers[i][1]
+      markerArray.push new google.maps.Marker {position: markerLatLng}
+    
+    for i in [0..markerArray.length-1]
+      markerArray[i].setMap m
+
+  window.gmap.draw = ->
+     map container 
+     document.body.appendChild container
+
+  loadJS "#{api}&callback=gmap.draw", null, null
+  return container
+
+geo = (cbk) ->
+  success = (data) ->
+    window.geoCenter = [data.coords.latitude, data.coords.longitude]
+    do geo2x2
+
+  error = ->
+    console.log 'geo error'
+
+  if navigator.geolocation
+    navigator.geolocation.getCurrentPosition success, error 
+
+geo2x2 = ->
+  lat = window.geoCenter[0]
+  lng = window.geoCenter[1]
+  document.title = "Location (#{lat},#{lng})"
+  markers = []
+  for i in [-1..1]
+    for j in [-1..1]
+      markers.push [lat + (i / 69), lng + (j / 53)]
+
+  map = gmap window.geoCenter, 600, 600, markers
+  map.style.margin = 'auto'
+
+do geo
+</pre>
+<script src="load.js"></script>
+</body>
+</html>

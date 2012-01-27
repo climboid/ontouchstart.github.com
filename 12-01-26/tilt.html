@@ -1,0 +1,60 @@
+<html>
+<head>
+<style>
+  * {
+    margin: 0;
+    padding: 0; 
+    text-decoration: none; 
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -webkit-text-size-adjust:none; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  #code {
+    margin: 4em;
+    padding: 1em;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+<pre id="code">
+document.body.style.webkitTransformStyle = 'preserve-3d'
+document.body.style.webkitPerspective = 500
+
+square = (color) ->
+  el = document.createElement 'div'
+  el.style.position = 'absolute'
+  el.style.width = '100px'
+  el.style.height = '100px'
+  el.style.background = color
+  el.style.left= "#{(document.body.scrollWidth - 100) / 2}px"
+  el.style.top = "#{(document.body.scrollHeight - 100) / 2}px"
+  document.body.appendChild el
+  return el
+
+redSquare = square 'rgba(255, 0, 0, 0.5)'
+greenSquare = square 'rgba(0, 255, 0, 0.5)'
+blueSquare = square 'rgba(0, 0, 255, 0.5)'
+
+aX = 0
+aY = 0
+aZ = 0
+filter = 0.5
+sensitivity = 20
+
+window.addEventListener 'devicemotion', (e) ->                        
+  aX = e.accelerationIncludingGravity.x * filter + aX * (1.0 - filter)
+  aY = e.accelerationIncludingGravity.y * filter + aY * (1.0 - filter)
+  aZ = e.accelerationIncludingGravity.z * filter + aZ * (1.0 - filter)
+  x =  sensitivity * aX
+  y =  sensitivity * aY 
+  z = sensitivity * aZ
+  redSquare.style.webkitTransform = 'translate3d(' + y + 'px,' + x + 'px,' + (-200 + z) + 'px)'
+  greenSquare.style.webkitTransform = 'translate3d(' + y + 'px,' + x + 'px,' + z + 'px)'
+  blueSquare.style.webkitTransform = 'translate3d(' + y + 'px,' + x + 'px,' + (200 + z) + 'px)'
+
+</pre>
+<script src="load.js"></script>
+</body>
+</html>
