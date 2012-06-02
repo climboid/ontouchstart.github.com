@@ -3,22 +3,28 @@
 
 <script>
 (function () {
-  var xhr = new XMLHttpRequest();
+
+  function load (fn) {
+    var xhr = new XMLHttpRequest();
   
-  xhr.responseType = "document";
-  xhr.open("get", "cup.xml");
-  xhr.onreadystatechange = function () {
-    console.log(xhr.readyState);
-    var headers = xhr.getAllResponseHeaders();
-    console.log(JSON.stringify(headers));  
-    if(xhr.readyState === 4) {
-      var svg = xhr.responseXML.getElementsByTagName('svg')[0].cloneNode(true);   
-      document.body.appendChild(svg);
-      console.log(document.body.lastChild);
-    }
-  };
-  console.log(xhr);
-  xhr.send();
+    xhr.responseType = "document";
+    xhr.open("get", fn);
+    xhr.onreadystatechange = function () {
+      console.log(xhr.readyState);
+      var headers = xhr.getAllResponseHeaders();
+      console.log(JSON.stringify(headers));  
+      if(xhr.readyState === 4) {
+        var svg = xhr.responseXML.getElementsByTagName('svg')[0].cloneNode(true);   
+        document.body.appendChild(svg);
+        console.log(document.body.lastChild);
+      }
+    };
+    console.log(xhr);
+    xhr.send();
+  }
+
+load('cup.xml');
+load('cup.svg');
 })();
 </script>
 </body>
