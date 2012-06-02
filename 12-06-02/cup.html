@@ -7,8 +7,7 @@
   function load (fn, type, cb) {
     var xhr = new XMLHttpRequest();
     var src = fn + "." + type;
-  
-    xhr.responseType = "document";
+
     xhr.open("get", src);
     xhr.onreadystatechange = function () {
       var headers = xhr.getAllResponseHeaders();

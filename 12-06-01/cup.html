@@ -6,8 +6,6 @@
 
   function load (fn) {
     var xhr = new XMLHttpRequest();
-  
-    xhr.responseType = "document";
     xhr.open("get", fn);
     xhr.onreadystatechange = function () {
       console.log(xhr.readyState);
