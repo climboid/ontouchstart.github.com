@@ -1,0 +1,54 @@
+<html>
+<body>
+Source:
+<a href="http://purl.org/net/2008,frankbruder/article/SVGFonts-usage">
+http://purl.org/net/2008,frankbruder/article/SVGFonts-usage
+</a>
+<p>
+<script>
+(function () {
+
+  function load (fn, type, cb) {
+    var xhr = new XMLHttpRequest();
+    var src = fn + "." + type;
+  
+    xhr.responseType = "document";
+    xhr.open("get", src);
+    xhr.onreadystatechange = function () {
+      var headers = xhr.getAllResponseHeaders();
+      console.log(JSON.stringify(headers));  
+      if(xhr.readyState === 4) {
+        try {
+          var svg = xhr.responseXML.getElementsByTagName('svg')[0].cloneNode(true);
+          try {
+            document.body.appendChild(svg);
+            console.log("svg loaded");
+            var h1 = document.createElement('h1');
+            h1.innerHTML = src;
+            document.body.appendChild(h1);
+            var js = document.createElement('script');
+            js.src = fn + ".js";
+            document.body.appendChild(js);
+            js.onload = cb;
+          }
+          catch (err) {             
+             console.log("err");
+          }
+        }
+        catch (err) {
+           console.log(err);
+        }
+      }
+    };
+    console.log(xhr);
+    xhr.send();
+  }
+
+load('TomsonTalks', 'xml', function () {
+    load('TomsonTalks', 'svg');
+  });
+
+})();
+</script>
+</body>
+</html>
