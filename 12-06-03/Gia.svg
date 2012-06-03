@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 75">
+<title>Gia</title>
+<defs>
+<font id="Gia" horiz-adv-x="591">
+ <font-face font-family="Gia" units-per-em="1000"/>
+<missing-glyph d="M40 40 H551 V551 H40 V40 z M70 70 V521 H521 V70 H70z"/>
+
+<glyph unicode="a" glyph-name="a" horiz-adv-x="469" d="M40 126q106 233 136 345a48 55 -127 0 0 98 -3q73 -152 149 -348a34 51 -158 0 0 -63 -25q-23 54 -48 112c-48 21 -113 10 -175 -16q-18 -35 -43 -87a29 53 -26 0 0 -55 22zm117 126c27 -3 75 8 129 31q-28 62 -62 123q-33 -80 -67 -154z"/>
+ 
+<glyph unicode="G" glyph-name="G" horiz-adv-x="499" d="M337 339a25 39 -87 0 1 -27 -47c54 -12 85 -28 82 -60s-57 -105 -141 -106s-178 52 -155 127s74 143 131 175s132 40 140 6a23 33 -7 1 1 39 38c-23 30 -87 48 -165 26s-174 -88 -204 -216s45 -215 194 -221s221 96 224 145s-27 116 -118 133z"/>
+
+<glyph unicode="i" glyph-name="i" horiz-adv-x="145" d="M37 75c-9 95 -8 296 3 385a25 31 -80 0 0 62 0c-9 -99 -12 -283 1 -371a27 45 -48 0 0 -66 -14z"/>
+
+</font>
+
+</defs>
+<g>
+   <text font-family="Gia" font-size="128" x="110" y="30" text-anchor="middle">Gia</text>
+</g>
+
+</svg>
