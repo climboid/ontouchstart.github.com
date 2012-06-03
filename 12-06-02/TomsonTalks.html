@@ -1,4 +1,14 @@
 <html>
+<head>
+<style>
+@font-face { 
+  font-family: TomsonTalks; 
+  src: url(TomsonTalks.svg#TomsonTalks) format("svg");
+}
+
+body {font: 1em "TomsonTalks"; }
+</style>
+</head>
 <body>
 Source:
 <a href="http://purl.org/net/2008,frankbruder/article/SVGFonts-usage">
@@ -7,7 +17,6 @@ http://purl.org/net/2008,frankbruder/article/SVGFonts-usage
 <p>
 <script>
 (function () {
-
   function load (fn, type, cb) {
     var xhr = new XMLHttpRequest();
     var src = fn + "." + type;
