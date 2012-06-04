@@ -3,7 +3,7 @@
 <style>
 @font-face { 
   font-family: Gia; 
-  src: url(Gia.svg#Gia) format("svg");
+  src: url(GiaFont.svg#Gia) format("svg");
 }
 
 body { text-align: center; }
@@ -27,13 +27,12 @@ body { text-align: center; }
           var svg = xhr.responseXML.getElementsByTagName('svg')[0].cloneNode(true);
           try {
             document.body.appendChild(svg);
-            svg.onclick = function () {
-              svg.style.display = 'none';            
-              var js = document.createElement('script');
-              js.src = fn + ".js";
-              document.body.appendChild(js);
-              js.onload = cb;
-            };
+            console.log("svg loaded");
+
+            var js = document.createElement('script');
+            js.src = fn + ".js";
+            document.body.appendChild(js);
+            js.onload = cb;
           }
           catch (err) {             
              console.log("err");
