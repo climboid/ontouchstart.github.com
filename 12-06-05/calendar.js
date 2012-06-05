@@ -19,12 +19,12 @@
     }
     console.log("last day = " + limit);
     if(limit + offset > 35) {
-       dateList[35+6].setAttribute('font-size', '12');
-       setDate(35, (35-offset) + '/' + limit);
+       dateList[35].setAttribute('font-size', '12');
+       setDate(29, (29-offset) + '/' + limit);
        if(limit + offset > 36) {
-         dateList[34+6].setAttribute('font-size', '12');
-         setDate(34, (35-offset) + '/' + (limit-1));
-         setDate(35, (36-offset) + '/' + limit);
+         dateList[36].setAttribute('font-size', '12');
+         setDate(29, (29-offset) + '/' + (limit-1));
+         setDate(30, (30-offset) + '/' + limit);
        }
     }
   }
