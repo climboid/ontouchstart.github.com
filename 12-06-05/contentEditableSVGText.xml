@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300">
+<g>
+  <text font-family="Helvetica" font-size="64" x="40" y="100" fill="white" stroke="blue">Content Editable SVG Text</text>
+  <text font-family="American Typewriter" font-size="32" x="40" y="200">Click on the text to edit</text>
+</g>
+</svg>
