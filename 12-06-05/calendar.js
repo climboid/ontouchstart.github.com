@@ -2,10 +2,14 @@
   var svg = document.getElementsByTagName('svg')[0];
   svg.style.border = '1px solid';
 
-  function setMonth(svg, offset, limit) {
+  var today = new Date();
+  function setMonth(svg, offset, limit, month) {
     var dateList = svg.getElementsByTagName('text');
     function setDate(i, date) {
-      dateList[i+6].firstChild.nodeValue = date;    
+      dateList[i+6].firstChild.nodeValue = date;
+      if(date == today.getDate() && month == today.getMonth()) {
+        dateList[i+6].setAttribute('text-decoration', 'underline');
+      }    
     }
  
     for(var i = 1; i < 36; i++) {
@@ -51,7 +55,7 @@
     document.body.appendChild(h1);
     console.log(h1.innerHTML);
     var cell = svg.cloneNode(true);
-    setMonth(cell, offset, lastDayThisMonth);
+    setMonth(cell, offset, lastDayThisMonth, month);
     document.body.appendChild(cell);
   }
 
