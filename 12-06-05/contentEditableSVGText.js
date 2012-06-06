@@ -10,13 +10,14 @@
     document.body.appendChild(text.input);
     text.input.style.display = 'block';
     text.input.value = text.firstChild.nodeValue;
-
+    text.input.focus();
     text.onclick = function () {
       if(text.input.style.display == 'block') {
          text.input.style.display = 'none';
       }
       else {
          text.input.style.display = 'block';
+         text.input.focus();
       }
     }
 
