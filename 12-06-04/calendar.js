@@ -2,14 +2,14 @@
   var svg = document.getElementsByTagName('svg')[0];
   svg.style.border = '1px solid';
 
-  function setMonth(svg, offset, limit) {
-    var dateList = svg.getElementsByTagName('text');
+  function setMonth(svg, offset, limit, month) {
+    var dateList = svg.getElementsByClassName('date');
     function setDate(i, date) {
-      dateList[i+6].firstChild.nodeValue = date;    
+      dateList[i].firstChild.nodeValue = date;
     }
  
-    for(var i = 1; i < 36; i++) {
-      var date = i - offset;
+    for(var i = 0; i < 35; i++) {
+      var date = i - offset + 1;
       if(date < 1 || date > limit) {
         setDate(i, '');
       }
@@ -17,14 +17,14 @@
         setDate(i, date);
       }
     }
-    console.log(limit + offset);
+    console.log("last day = " + limit);
     if(limit + offset > 35) {
-       dateList[35].setAttribute('font-size', '12');
-       setDate(29, (29-offset) + '/' + limit);
+       dateList[28].setAttribute('font-size', '12');
+       setDate(28, (29-offset) + '/' + limit);
        if(limit + offset > 36) {
-         dateList[36].setAttribute('font-size', '12');
-         setDate(29, (29-offset) + '/' + (limit-1));
-         setDate(30, (30-offset) + '/' + limit);
+         dateList[29].setAttribute('font-size', '12');
+         setDate(28, (29-offset) + '/' + (limit-1));
+         setDate(29, (30-offset) + '/' + limit);
        }
     }
   }

@@ -4,16 +4,16 @@
 
   var today = new Date();
   function setMonth(svg, offset, limit, month) {
-    var dateList = svg.getElementsByTagName('text');
+    var dateList = svg.getElementsByClassName('date');
     function setDate(i, date) {
-      dateList[i+6].firstChild.nodeValue = date;
+      dateList[i].firstChild.nodeValue = date;
       if(date == today.getDate() && month == today.getMonth()) {
-        dateList[i+6].setAttribute('text-decoration', 'underline');
+        dateList[i].setAttribute('text-decoration', 'underline');
       }    
     }
  
-    for(var i = 1; i < 36; i++) {
-      var date = i - offset;
+    for(var i = 0; i < 35; i++) {
+      var date = i - offset + 1;
       if(date < 1 || date > limit) {
         setDate(i, '');
       }
@@ -23,12 +23,12 @@
     }
     console.log("last day = " + limit);
     if(limit + offset > 35) {
-       dateList[35].setAttribute('font-size', '12');
-       setDate(29, (29-offset) + '/' + limit);
+       dateList[28].setAttribute('font-size', '12');
+       setDate(28, (29-offset) + '/' + limit);
        if(limit + offset > 36) {
-         dateList[36].setAttribute('font-size', '12');
-         setDate(29, (29-offset) + '/' + (limit-1));
-         setDate(30, (30-offset) + '/' + limit);
+         dateList[29].setAttribute('font-size', '12');
+         setDate(28, (29-offset) + '/' + (limit-1));
+         setDate(29, (30-offset) + '/' + limit);
        }
     }
   }
@@ -45,7 +45,7 @@
       var firstDayNextMonth = new Date(year+1, 0, 1);
     }
     
-    lastDayThisMonth = Math.floor( (firstDayNextMonth - firstDayThisMonth)/oneDay );
+    lastDayThisMonth = Math.round( (firstDayNextMonth - firstDayThisMonth)/oneDay );
     
     var offset = firstDayThisMonth.getDay();
     
