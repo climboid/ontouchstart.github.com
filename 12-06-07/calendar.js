@@ -65,7 +65,7 @@
     cell.className = 'cell';
     cell.style.width = '600px';
     cell.style.border = '1px solid';
-    cell.style.margin = '1em';
+    cell.style.margin = '2em';
     cell.appendChild(h1);
 
     cell.appendChild(calendarCell);

@@ -3,10 +3,5 @@
 <title>entryList</title>
 <defs>
 </defs>
-<g>
-  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="90"><tspan>1</tspan><tspan class="entry" dx='10'>first entry</tspan></text>
-  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="130"><tspan>2</tspan><tspan class="entry" dx='10'>second entry</tspan></text>
-  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="170"><tspan>3</tspan><tspan class="entry" dx='10'>third entry</tspan></text>
-</g>
-
+<g><text class="date" font-family="Helvetica" font-size="18" dx="20" dy="90"><tspan>1</tspan><tspan class="entry" dx='10'>First entry</tspan></text><text class="date" font-family="Helvetica" font-size="18" dx="20" dy="130"><tspan>2</tspan><tspan class="entry" dx='10'>Second entry</tspan></text><text class="date" font-family="Helvetica" font-size="18" dx="20" dy="170"><tspan>3</tspan><tspan class="entry" dx='10'>Third entry</tspan></text></g>
 </svg>
