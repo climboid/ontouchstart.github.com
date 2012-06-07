@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+<title>entryList</title>
+<defs>
+</defs>
+<g>
+  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="90"><tspan>1</tspan><tspan class="entry" dx='10'>first entry</tspan></text>
+  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="130"><tspan>2</tspan><tspan class="entry" dx='10'>second entry</tspan></text>
+  <text class="date" font-family="Helvetica" font-size="18" dx="20" dy="170"><tspan>3</tspan><tspan class="entry" dx='10'>third entry</tspan></text>
+</g>
+
+</svg>

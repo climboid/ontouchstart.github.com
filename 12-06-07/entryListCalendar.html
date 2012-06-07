@@ -1,0 +1,49 @@
+<html>
+<head>
+<style>
+</style>
+</head>
+<body>
+
+<script>
+(function () {
+  function load (fn) {
+    var xhr = new XMLHttpRequest();
+    var src = fn + '.xml';
+  
+    xhr.open("get", src);
+    xhr.onreadystatechange = function () {
+      var headers = xhr.getAllResponseHeaders();
+      console.log(JSON.stringify(headers));  
+      if(xhr.readyState === 4) {
+        try {
+          var svg = xhr.responseXML.getElementsByTagName('svg')[0].cloneNode(true);          
+          try {            
+            svg.id = fn + 'SVG';
+            svg.style.display = 'none';
+            document.body.appendChild(svg);
+
+            var js = document.createElement('script');
+            js.src = fn + ".js";
+            document.body.appendChild(js);
+          }
+          catch (err) {             
+             console.log("err");
+          }
+        }
+        catch (err) {
+           console.log(err);
+        }
+      }
+    };
+    console.log(xhr);
+    xhr.send();
+  }
+
+load('calendar');
+load('entryList');
+
+})();
+</script>
+</body>
+</html>
