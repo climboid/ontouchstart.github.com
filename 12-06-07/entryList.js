@@ -38,18 +38,21 @@
   document.body.appendChild(input);
   for(var i = 0; i < cellList.length; i++) {
     var entryListCell = entryListSVG.cloneNode(true);
-    
-    var entryList = entryListCell.childNodes[5].childNodes;
-    for(var j = 0; j < entryList.length; j++) {
-      console.log(j + entryList[j]);
-      entryList[j].lastChild.onclick = edit;
-    }
-
     entryListCell.style.display = 'inline';
     entryListCell.style.marginTop = '-300px';
     
     cellList[i].appendChild(entryListCell);
     cellList[i].childNodes[1].style.display = 'inline';
     cellList[i].childNodes[1].style.marginLeft = '300px';
+
+    
+    var entryList = entryListCell.childNodes[5].childNodes;
+    for(var j = 0; j < entryList.length; j++) {
+      console.log(j + entryList[j]);
+      console.log(cellList[i].month);
+      entryList[j].lastChild.firstChild.nodeValue += (' of ' + cellList[i].month);
+      entryList[j].lastChild.onclick = edit;
+    }
+
   }
 })();
