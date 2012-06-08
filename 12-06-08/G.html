@@ -8,10 +8,9 @@
 <script>
 (function () {
   var xhr = new XMLHttpRequest();
-  var parser = new DOMParser();
   var xml = document.location.href.replace('.html', '.xml');
   var js = document.location.href.replace('.html', '.js');
-  
+  document.title = document.location.href;  
   xhr.onreadystatechange = function () {
     if(xhr.readyState === 4) {
       try {
