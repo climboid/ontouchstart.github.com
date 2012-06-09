@@ -11,7 +11,14 @@
   var Gpath = G.getElementsByTagName('glyph')[0].getAttribute('d');
  
   container.ontouchstart = function () {
-    this.getElementsByTagName('path')[0].setAttribute('d', Gpath);
+    var path = this.getElementsByTagName('path')[0];    
+    path.setAttribute('d', Gpath);
+    console.log('update path to ' + path.getAttribute('d'));
+    this.ontouchstart = function() {
+      path.parentNode.setAttribute('transform', 'translate(0, 300) scale(1,-1)');
+      console.log('flip');
+      this.ontouchstart = null;
+    }
   }
   
 })();
