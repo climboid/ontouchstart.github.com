@@ -25,8 +25,11 @@
     this.ontouchstart = function() {
       path.parentNode.setAttribute('transform', 'translate(0, 300) scale(1,-1)');
       console.log('flip');
-      this.ontouchstart = null;
-      G.style.display = 'block';
+      this.ontouchstart = function () {
+        G.style.display = 'block';
+        this.ontouchstart = null;
+
+      }
     }
   }
   
