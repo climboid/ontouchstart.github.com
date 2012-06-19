@@ -1,0 +1,41 @@
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-git.js"></script>
+</head>
+<body>
+<h1>
+jQuery Study
+</h1>
+<dl id="output"></dl>
+<script>
+function log(k, v) {
+/*
+  var $dt= $('<dt/>'),
+      $dd = $('<dd/>');
+  $('#output').append($dt).append(k);
+  $('#output').append($dd).append(JSON.stringify(v));
+*/
+  var dt = document.createElement('dt');
+  var dd = document.createElement('dd');
+  var pre = document.createElement('pre');
+  var output = document.getElementById('output');
+  output.appendChild(dt);
+  output.appendChild(dd);
+  dd.appendChild(pre)
+  dt.innerHTML = k;
+  if(typeof v === 'function') {
+    pre.innerHTML = v;
+  }
+  else {
+    pre.innerHTML = JSON.stringify(v).replace("}", "}\n");
+  }
+}
+
+log('jQuery', jQuery);
+log('jQuery.fn', jQuery.fn);
+log('jQuery.fn.init', jQuery.fn.init);
+log('jQuery.extend', jQuery.extend);
+log('jQuery.ready', jQuery.ready);
+</script>
+</body>
+</html>
