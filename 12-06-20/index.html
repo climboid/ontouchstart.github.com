@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<style>
+</style>
+</head>
+<body>
+<div id="output"></div>
+
+<script>
+var srcRoot = document.location.href.replace("/index.html", '/');
+
+function inspect(node, output) {
+  if (node.tagName) { 
+    var dt = document.createElement('dt');
+    dt.innerHTML = node.tagName;
+    var dd = document.createElement('dd');
+    dd.style.border = '1px solid';
+    dd.style.padding = '3px';
+    output.appendChild(dt);
+    output.appendChild(dd);
+  
+    var attrList = node.attributes;
+    if (attrList) {
+      var ul = document.createElement('ul');
+      dd.appendChild(ul);  
+      for(var i = 0; i < attrList.length; i++) {
+          var li = document.createElement('li'); 
+          li.innerHTML = attrList[i].nodeName + ' : ' + attrList[i].nodeValue;
+          ul.appendChild(li);
+      }
+    }
+    for(var i = 0; i < node.childNodes.length; i++) {
+      inspect(node.childNodes[i], dd);
+    }
+  }
+  if (node.nodeValue) {
+     var pre = document.createElement('pre');
+     pre.innerHTML = node.nodeValue;
+     pre.style.background = '#FFFF00';
+     output.appendChild(pre);
+  }
+}
+
+function loadXML(fn) {
+  var xhr = new XMLHttpRequest();
+  var xml = srcRoot + fn + '.xml';
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4) {
+      try {
+        var headers = xhr.getAllResponseHeaders();
+        console.log(JSON.stringify(headers));
+        var parser = new DOMParser();
+        var dom = parser.parseFromString(xhr.responseText, 'text/xml');
+
+        var root = dom.getElementsByTagName('svg')[0];
+        document.body.appendChild(root.cloneNode(true));
+
+        var a = document.createElement('a');
+        a.href = xml;
+        a.innerHTML = xml;
+        a.style.display = 'block';
+        a.style.margin = '1em';
+        document.body.appendChild(a);
+        
+        inspect(root, document.body);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  xhr.open("get", xml);
+  xhr.send();
+}
+loadXML('GiaDrawing');
+loadXML('GiaFonts');
+</script>
+</body>
+</html>
