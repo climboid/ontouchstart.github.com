@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+</style>
+</head>
+<body>
+<div id="output"></div>
+
+<script>
+var srcRoot = document.location.href.replace("/index.html", '/');
+
+function inspectAndBind(node, output) {
+  if (node.tagName) {
+    var dt = document.createElement('dt');
+    dt.innerHTML = node.tagName;
+    var dd = document.createElement('dd');
+    dd.style.border = '1px solid';
+    dd.style.padding = '3px';
+    output.appendChild(dt);
+    output.appendChild(dd);
+  
+    var attrList = node.attributes;
+    if (attrList) {
+      var ul = document.createElement('ul');
+      dd.appendChild(ul);  
+      for(var i = 0; i < attrList.length; i++) {
+          var li = document.createElement('li');
+          var attr = attrList[i];
+          li.innerHTML = attr.nodeName + ' : ';
+          var textArea = document.createElement('textarea');
+          textArea.value = attr.nodeValue;
+          textArea.style.background = '#FFFF00';
+          textArea.style.border = 'none';
+          textArea.style.width = '100%';
+
+          textArea.onchange = function () {
+            attr.nodeValue = textArea.value;
+          }
+          li.appendChild(textArea);
+          ul.appendChild(li);
+      }
+    }
+    for(var i = 0; i < node.childNodes.length; i++) {
+      inspectAndBind(node.childNodes[i], dd);
+    }
+  }
+  if (node.nodeValue) {
+     var textArea = document.createElement('textarea');
+     textArea.value = node.nodeValue;
+     textArea.style.background = '#FFFF00';
+     textArea.style.border = 'none';
+     textArea.style.width = '100%';
+     textArea.onchange = function () {
+       node.nodeValue = textArea.value;
+     }
+     output.appendChild(textArea);
+  }
+}
+
+function loadXML(fn) {
+  var xhr = new XMLHttpRequest();
+  var xml = srcRoot + fn + '.xml';
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4) {
+      try {
+        var headers = xhr.getAllResponseHeaders();
+        console.log(JSON.stringify(headers));
+        var parser = new DOMParser();
+        var dom = parser.parseFromString(xhr.responseText, 'text/xml');
+
+        var root = dom.getElementsByTagName('svg')[0].cloneNode(true);
+        document.body.appendChild(root);
+
+        var a = document.createElement('a');
+        a.href = xml;
+        a.innerHTML = xml;
+        a.style.display = 'block';
+        a.style.margin = '1em';
+        document.body.appendChild(a);
+        
+        inspectAndBind(root, document.body);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  xhr.open("get", xml);
+  xhr.send();
+}
+loadXML('Abstract_Tree_Vector_Art');
+</script>
+</body>
+</html>
