@@ -95,7 +95,8 @@ function loadXML(fn) {
         var dom = parser.parseFromString(xhr.responseText, 'text/xml');
 
         var root = dom.getElementsByTagName('svg')[0].cloneNode(true);
-        root.style.border = '1px solid',
+        root.style.border = '1px solid';
+        root.style.width = '100%';
         document.body.appendChild(root);
 
         var a = document.createElement('a');
@@ -104,7 +105,7 @@ function loadXML(fn) {
         a.style.display = 'block';
         a.style.margin = '1em';
         document.body.appendChild(a);        
-//        inspectAndBind(root, document.body);
+        inspectAndBind(root, document.body);
         setInterval(function() {
           randomColor(root);
         }, 300);
