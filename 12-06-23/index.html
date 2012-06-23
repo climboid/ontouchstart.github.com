@@ -9,8 +9,32 @@
 
 <script>
 var srcRoot = document.location.href.replace("/index.html", '/');
+function randomFil () {
+  return 'fil' + Math.floor(Math.random() * 15);
+}
+
+function randomStr () {
+  return 'str' + Math.floor(Math.random() * 5);
+}
+
+function randomColor(node) {
+  if (node.tagName) {
+    if(node.tagName === 'path') {
+      for(var i = 0; i < node.attributes.length; i++) {        
+        attr = node.attributes[i];
+        if(attr.nodeName === 'class') {
+            attr.nodeValue = randomFil() + ' ' + randomStr();
+        }
+      }
+    }
+    for(var i = 0; i < node.childNodes.length; i++) {
+      randomColor(node.childNodes[i]);
+    }
+  }
+}
 
 function inspectAndBind(node, output) {
+
   if (node.tagName) {
     var dt = document.createElement('dt');
     dt.innerHTML = node.tagName;
@@ -79,9 +103,11 @@ function loadXML(fn) {
         a.innerHTML = xml;
         a.style.display = 'block';
         a.style.margin = '1em';
-        document.body.appendChild(a);
-        
-        inspectAndBind(root, document.body);
+        document.body.appendChild(a);        
+//        inspectAndBind(root, document.body);
+        setInterval(function() {
+          randomColor(root);
+        }, 300);
       }
       catch (err) {
         console.log(err);
