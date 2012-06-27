@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<style>
+* {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+</style>
+</head>
+<body>
+<div id="output"></div>
+
+<script>
+var srcRoot = document.location.href.replace("/index.html", '/');
+
+var selectedClass = false;
+function colorPicker(node) {
+  if (node.tagName) {
+    if(node.tagName === 'path') {
+      node.ontouchend = function(e) {
+        e.preventDefault();
+      };
+      node.ontouchstart = function () {
+        var p = node.parentNode;
+        if(p.getAttribute('id') !== 'color-pattern-1') {
+          if(selectedClass) {
+            node.setAttribute('class', selectedClass);
+          }
+        }
+        else {
+          for(var i = 0; i < p.childNodes.length; i++) {
+            if(p.childNodes[i].tagName && p.childNodes[i].tagName === 'path') {
+              p.childNodes[i].setAttribute('opacity', '1');
+            }
+          }
+          node.setAttribute('opacity', '0');
+          selectedClass = node.getAttribute('class');
+        }
+      };
+    }
+    else {
+      for(var i = 0; i < node.childNodes.length; i++) {
+        colorPicker(node.childNodes[i]);
+      }
+    }
+  }
+}
+
+function loadXML(fn) {
+  var xhr = new XMLHttpRequest();
+  var xml = srcRoot + fn + '.svg';
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4) {
+      try {
+        var headers = xhr.getAllResponseHeaders();
+        console.log(JSON.stringify(headers));
+        var parser = new DOMParser();
+        var dom = parser.parseFromString(xhr.responseText, 'text/xml');
+
+        var root = dom.getElementsByTagName('svg')[0].cloneNode(true);
+        root.style.border = '1px solid';
+        root.style.width = '100%';
+        document.body.appendChild(root);
+
+        var a = document.createElement('a');
+        a.href = xml;
+        a.innerHTML = xml;
+        a.style.display = 'block';
+        a.style.margin = '1em';
+        document.body.appendChild(a);
+        colorPicker(root);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  xhr.open("get", xml);
+  xhr.send();
+}
+loadXML('color-blanket');
+</script>
+</body>
+</html>
