@@ -2,13 +2,13 @@ window.loadXML = (fn) ->
   srcRoot = document.location.href.replace '/index.html', '/'
   xhr = new XMLHttpRequest
   xml = "#{srcRoot}#{fn}"
-  console.log xml
+  
   xhr.onreadystatechange = ->
     if xhr.readyState is 4
       try
         parser = new DOMParser
         dom = parser.parseFromString xhr.responseText, 'text/xml'
-
+        console.log dom
         root = (dom.getElementsByTagName 'svg')[0].cloneNode true
         root.style.border = '1px solid'
         root.style.width = '100%'

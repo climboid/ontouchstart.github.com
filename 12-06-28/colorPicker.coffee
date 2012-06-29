@@ -7,6 +7,7 @@ window.colorPicker = (node) ->
   
       node.ontouchstart = (e) ->
         p = node.parentNode
+        console.log (p.getAttribute 'id')
         if (p.getAttribute 'id') isnt 'color-pattern-1'
           if window.selectedClass
             node.setAttribute 'class', selectedClass
@@ -16,6 +17,7 @@ window.colorPicker = (node) ->
               child.setAttribute 'opacity', '1'
           node.setAttribute 'opacity', '0'
           window.selectedClass = node.getAttribute 'class'
+        console.log window.selectedClass
     else
       for child in node.childNodes
         colorPicker child
