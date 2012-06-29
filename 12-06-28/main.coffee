@@ -1,0 +1,1 @@
+loadXML 'color-blanket.svg'
