@@ -20,16 +20,38 @@ linkify = (text) ->
 addDiv = (text, parent) ->
   div = document.createElement 'div'
   div.innerHTML = text
+  div.style.display = 'none'
+  div.style.opacity = '0'
   parent.appendChild div
+  return div
+
+show = (el, duration, delay) ->
+  el.style.webkitTransitionDuration = "#{duration}ms"
+  el.style.webkitTransitionDelay = "#{delay}ms"
+  el.style.display = 'block'
+  setTimeout ->  
+               el.style.opacity = '1'
+             , delay
 
 window.load_event = (data) ->
-  addDiv (linkify data.results[0].event_url), document.body
-  addDiv data.results[0].description, document.body
+  show (addDiv (linkify data.results[0].event_url), document.body), 0, 0
+  show (addDiv data.results[0].description, document.body), 0, 0
 
 window.load_comments = (data) ->
-  for item in data.results
+  readButton = addDiv """
+<button>
+Read comments
+</button>
+""", document.body
+
+  show readButton, 0, 0
+
+  comments = {}
+  t = []
+  for item in data.results.reverse()
+    t.push item.time
     dateTime = new Date item.time
-    addDiv """
+    comments["#{item.time}"] = addDiv """
 <h4>
 #{item.member_name}
 </h4>
@@ -37,7 +59,16 @@ window.load_comments = (data) ->
 <blockquote>
 #{linkify item.comment}
 </blockquote>
-""", document.body
+""", document.body  
+  minT = t[0]
+  maxT = t[t.length - 1]
+
+  showComments = ->
+    readButton.style.display = 'none'
+    for own k, v of comments  
+      show v, 100, 10000 * (k - minT) / (maxT - minT)
+
+  readButton.onclick = showComments
 
 loadJsonp = (api, cb) ->
   script = document.createElement 'script'
