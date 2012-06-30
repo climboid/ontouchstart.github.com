@@ -5,32 +5,21 @@ comments_api = 'http://api.meetup.com/2/event_comments/?event_id=60476932&order=
 addDiv = (text, parent) ->
   div = document.createElement 'div'
   div.innerHTML = text
-  div.style.display = 'none'
-  div.style.opacity = '0'
+  div.style.opacity = 0
   parent.appendChild div
   return div
 
-show = (el, duration, delay) ->
-  el.style.webkitTransitionDuration = "#{duration}ms"
-  el.style.webkitTransitionDelay = "#{delay}ms"
-  el.style.display = 'block'
-  setTimeout ->  
-               el.style.opacity = '1'
-             , delay
+show = (el, delay) ->
+  if delay > 0
+    setTimeout (-> el.style.opacity = 1), delay
+  else
+    el.style.opacity = 1
 
 window.load_event = (data) ->
-  show (addDiv (linkify data.results[0].event_url), document.body), 0, 0
-  show (addDiv data.results[0].description, document.body), 0, 0
+  show (addDiv (linkify data.results[0].event_url), document.body)
+  show (addDiv data.results[0].description, document.body)
 
-window.load_comments = (data) ->
-  readButton = addDiv """
-<button>
-Read comments
-</button>
-""", document.body
-
-  show readButton, 0, 0
-
+window.load_comments = (data) ->  
   comments = {}
   tList = []
   for item in data.results.reverse()
@@ -51,19 +40,15 @@ Read comments
   progress = (t) ->
     return (t - minT) / (maxT - minT)
 
-  showComments = ->
-    readButton.style.display = 'none'
-    k0 = minT
-    for own k, v of comments
-      show (addDiv """
+  k0 = minT
+  for own k, v of comments
+    show (addDiv """
 <div style="width:#{(progress k0) * 100}%; height:5px; background:#0000cc;"></div>
 <div style="width:#{(progress k) * 100}%; height:5px; background:#00cc00;"></div>
 <div style="width:100%; height:5px; background:#cc0000;"></div>
-""", v), 0, 0
-      show v, 100, 10000 * (progress k)
-      k0 = k
-
-  readButton.onclick = showComments
+""", v), 0
+    show v, 60 * 1000 * (progress k)
+    k0 = k
 
 loadJsonp = (api, cb) ->
   script = document.createElement 'script'
@@ -72,6 +57,21 @@ loadJsonp = (api, cb) ->
   document.body.appendChild script
 
 loadJsonp event_api, ->
-  loadJsonp comments_api, ->
-    document.title = 'Battle of the Braces'
+  document.title = 'Battle of the Braces'
+
+  show (commentsButton = addDiv """
+<button>
+Read comments
+</button>
+""", document.body)
+
+  commentsButton.onclick = ->
+    this.style.display = 'none'
+    show (addDiv """
+<h1>
+Comments
+</h1>
+""", document.body)
+    loadJsonp comments_api, ->
+      console.log 'Done'
 
