@@ -47,9 +47,9 @@ Read comments
   show readButton, 0, 0
 
   comments = {}
-  t = []
+  tList = []
   for item in data.results.reverse()
-    t.push item.time
+    tList.push item.time
     dateTime = new Date item.time
     comments["#{item.time}"] = addDiv """
 <h4>
@@ -60,13 +60,23 @@ Read comments
 #{linkify item.comment}
 </blockquote>
 """, document.body  
-  minT = t[0]
-  maxT = t[t.length - 1]
+  minT = tList[0]
+  maxT = tList[tList.length - 1]
+
+  progress = (t) ->
+    return (t - minT) / (maxT - minT)
 
   showComments = ->
     readButton.style.display = 'none'
-    for own k, v of comments  
-      show v, 100, 10000 * (k - minT) / (maxT - minT)
+    k0 = minT
+    for own k, v of comments
+      show (addDiv """
+<div style="width:#{(progress k0) * 100}%; height:5px; background:#0000cc;"></div>
+<div style="width:#{(progress k) * 100}%; height:5px; background:#00cc00;"></div>
+<div style="width:100%; height:5px; background:#cc0000;"></div>
+""", v), 0, 0
+      show v, 100, 10000 * (progress k)
+      k0 = k
 
   readButton.onclick = showComments
 
