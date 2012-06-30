@@ -40,10 +40,10 @@ Read comments
 <h4>
 #{item.member_name}
 </h4>
-#{dateTime}
 <blockquote>
 #{linkify item.comment}
 </blockquote>
+<div style="color:#00cc00;font:10px monospace;">#{dateTime}</div>
 """, document.body  
   minT = tList[0]
   maxT = tList[tList.length - 1]
