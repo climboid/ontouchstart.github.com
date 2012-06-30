@@ -2,21 +2,6 @@ event_api = 'http://api.meetup.com/2/events/?status=upcoming&event_id=60476932&o
 
 comments_api = 'http://api.meetup.com/2/event_comments/?event_id=60476932&order=time&show_diffs=True&desc=True&offset=0&format=json&page=200&sig_id=13137081&sig=2a251953648acd1adff446b63eb17c7fdd38374c&callback=load_comments'
 
-addLink = (url) ->
-  """
-<a href="#{url}">#{url}</a>
-"""
-
-linkify = (text) ->
-  output = ''
-  for token in text.split /\s+/g
-    if token.match /^(http|https):\/\//
-      output += addLink token
-    else
-      output += token
-    output += ' '
-  return output
-
 addDiv = (text, parent) ->
   div = document.createElement 'div'
   div.innerHTML = text
