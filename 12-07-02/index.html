@@ -1,0 +1,62 @@
+<html>
+<head>
+<style>
+</style>
+<body>
+<script>
+function svgEl (parent, tag) {
+  var ns = "http://www.w3.org/2000/svg";
+  var el = document.createElementNS(ns, tag);
+  parent.appendChild(el);
+  return el;
+};
+
+var root = svgEl(document.body, 'svg');
+root.setAttribute('width', 600);
+root.setAttribute('height', 500);
+root.setAttribute('viewbox', '0 0 600 500');
+
+root.style.width = '100%';
+root.style.border = '1px solid';
+
+function plot(p, x, y, t) {
+  setTimeout(function () {
+    var d;
+    d = p.getAttribute('d');
+    d += ' L ' + x + ' ' + (500-y);
+    p.setAttribute('d', d);
+  }, t);     
+}
+
+function project (vx, vy) {
+  var path = svgEl(root, 'path');
+  path.setAttribute('stroke', 'rgb(255,0,0)');
+  path.setAttribute('fill', 'none');
+  path.setAttribute('d', 'M 0 500');
+
+  var x = 0;
+  var y = 0;
+  var t = 0;
+
+  var g = 1;
+  var dt = 50;
+
+  while (y >= 0) {
+    t += dt;
+    x += vx;
+    vy -= g;
+    y += vy;
+  
+    plot(path, x, y, t);
+  }
+}
+
+for(var i = 1; i < 6; i++) {
+  for(var j = 1; j < 6; j++) {
+    project(i * 3, j * 6);
+  }
+}
+
+</script>
+</body>
+</html>
