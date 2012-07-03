@@ -1,0 +1,137 @@
+<html>
+<head>
+<style>
+</style>
+<body>
+<script>
+function svgEl (parent, tag) {
+  var ns = "http://www.w3.org/2000/svg";
+  var el = document.createElementNS(ns, tag);
+  parent.appendChild(el);
+  return el;
+};
+
+var container = document.createElement('div');
+document.body.appendChild(container);
+container.style.width = '500px';
+container.style.height = '500px';
+container.style.margin = 'auto';
+container.style.padding = '0';
+container.style.border = '1px solid';
+
+var svg = svgEl(container, 'svg');
+svg.setAttribute('width', 500);
+svg.setAttribute('height', 500);
+svg.setAttribute('viewbox', '0 0 500 500');
+svg.style.margin = '0';
+
+var r = 0;
+var g = 0;
+var b = 0;
+
+function getColor () {
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+container.ontouchstart = function (e) {
+  e.preventDefault();
+  if(e.touches.length > 1) {
+    return;
+  }
+  else {
+    var x0 = e.touches[0].pageX - container.offsetLeft;
+    var y0 = e.touches[0].pageY - container.offsetTop;
+    var path = svgEl(svg, 'path');
+    path.setAttribute('stroke', getColor());
+    path.setAttribute('fill', 'none');
+    path.setAttribute('d', 'M' + x0 + ' ' + y0);
+    container.ontouchmove = function (e) {
+      e.preventDefault();
+      var x = e.touches[0].pageX - container.offsetLeft;
+      var y = e.touches[0].pageY - container.offsetTop;
+      var d = path.getAttribute('d');
+      d += 'L' + x + ' ' + y;
+      path.setAttribute('d', d);
+    }
+  }
+}
+
+var colorPicker = document.createElement('div');
+colorPicker.style.width = '400px';
+colorPicker.style.height = '50px';
+colorPicker.style.margin = 'auto';
+colorPicker.style.marginTop = '50px';
+
+document.body.appendChild(colorPicker);
+
+var rButton = document.createElement('button');
+rButton.style.backgroundColor = 'rgb(255, 0, 0)';
+rButton.style.width = '100px';
+rButton.style.height = '50px';
+rButton.style.border = 'none';
+rButton.ontouchstart= function (e) {
+  e.preventDefault();
+  r = 255;
+  g = 0;
+  b = 0;
+  rButton.style.opacity = 0;
+  gButton.style.opacity = 1;
+  bButton.style.opacity = 1;
+  kButton.style.opacity = 1;
+}
+colorPicker.appendChild(rButton);
+
+var gButton = document.createElement('button');
+gButton.style.backgroundColor = 'rgb(0, 255, 0)';
+gButton.style.width = '100px';
+gButton.style.height = '50px';
+gButton.style.border = 'none';
+gButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 255;
+  b = 0;
+  rButton.style.opacity = 1;
+  gButton.style.opacity = 0;
+  bButton.style.opacity = 1;
+  kButton.style.opacity = 1;
+}
+colorPicker.appendChild(gButton);
+
+var bButton = document.createElement('button');
+bButton.style.backgroundColor = 'rgb(0, 0, 255)';
+bButton.style.width = '100px';
+bButton.style.height = '50px';
+bButton.style.border = 'none';
+bButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 0;
+  b = 255;
+  rButton.style.opacity = 1;
+  gButton.style.opacity = 1;
+  bButton.style.opacity = 0;
+  kButton.style.opacity = 1;
+}
+colorPicker.appendChild(bButton);
+
+var kButton = document.createElement('button');
+kButton.style.backgroundColor = 'rgb(0, 0, 0)';
+kButton.style.width = '100px';
+kButton.style.height = '50px';
+kButton.style.border = 'none';
+kButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 0;
+  b = 0;
+  rButton.style.opacity = 1;
+  gButton.style.opacity = 1;
+  bButton.style.opacity = 1;
+  kButton.style.opacity = 0;
+}
+kButton.style.opacity = 0;
+colorPicker.appendChild(kButton);
+</script>
+</body>
+</html>
