@@ -73,10 +73,10 @@ container.ontouchstart = function (e) {
 
 var colorPicker = document.createElement('div');
 colorPicker.style.width = '400px';
-colorPicker.style.height = '50px';
+colorPicker.style.height = '100px';
 colorPicker.style.margin = 'auto';
 colorPicker.style.marginTop = '50px';
-
+colorPicker.style.backgroundColor = getColor();
 document.body.appendChild(colorPicker);
 
 var rButton = document.createElement('button');
@@ -93,6 +93,7 @@ rButton.ontouchstart= function (e) {
   gButton.style.opacity = 1;
   bButton.style.opacity = 1;
   kButton.style.opacity = 1;
+  colorPicker.style.backgroundColor = getColor();
 }
 colorPicker.appendChild(rButton);
 
@@ -110,6 +111,7 @@ gButton.ontouchstart = function (e) {
   gButton.style.opacity = 0;
   bButton.style.opacity = 1;
   kButton.style.opacity = 1;
+  colorPicker.style.backgroundColor = getColor();
 }
 colorPicker.appendChild(gButton);
 
@@ -127,6 +129,7 @@ bButton.ontouchstart = function (e) {
   gButton.style.opacity = 1;
   bButton.style.opacity = 0;
   kButton.style.opacity = 1;
+  colorPicker.style.backgroundColor = getColor();
 }
 colorPicker.appendChild(bButton);
 
@@ -144,6 +147,7 @@ kButton.ontouchstart = function (e) {
   gButton.style.opacity = 1;
   bButton.style.opacity = 1;
   kButton.style.opacity = 0;
+  colorPicker.style.backgroundColor = getColor();
 }
 kButton.style.opacity = 0;
 colorPicker.appendChild(kButton);
