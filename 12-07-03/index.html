@@ -152,10 +152,10 @@ kButton.ontouchstart = function (e) {
 kButton.style.opacity = 0;
 colorPicker.appendChild(kButton);
 
-srcButton = document.createElement('button');
-srcButton.innerHTML = 'SVG';
-document.body.appendChild(srcButton);
-srcButton.ontouchstart = function () {
+var svgButton = document.createElement('button');
+svgButton.innerHTML = 'SVG';
+document.body.appendChild(svgButton);
+svgButton.ontouchstart = function () {
   svgXML += '</svg>';
   var src = document.createElement('div');
   src.style.width = '100%';
