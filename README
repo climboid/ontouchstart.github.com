@@ -1,3 +1,6 @@
-http://ontouchstart.github.com is a CoffeeScript based HTML5 sketchbook for proof-of-concept testing in mobile computation and user experience on touch UI based mobile devices. It is NOT designed for browsers without touch UI. 
+http://ontouchstart.github.com is an HTML5 sketchbook for proof-of-concept testing in computation and user 
+experience on touch UI based mobile devices. It is NOT designed for browsers without touch UI. 
 
-The code in the sketchbook is copyrighted by Sam Liu under Creative Commons Attribution 3.0 Unported License and NEITHER TESTED NOR SUITABLE FOR REAL-WORLD PRODUCTION AT ANY SCALE.
+The code in the sketchbook is copyrighted by Sam Liu under 
+Creative Commons Attribution 3.0 Unported License 
+and NEITHER TESTED NOR SUITABLE FOR REAL-WORLD PRODUCTION AT ANY SCALE.
