@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+</head>
+<body>
+<script>
+function LineSec(parent) {
+  var el = document.createElement('div');
+  el.style.position = 'absolute';
+  el.style.padding = 0;
+  el.style.margin = 0;
+  parent.appendChild(el);
+
+  var x, y, length, width, angle;
+
+  this.set = function (o) {
+    if(o.x) {x = o.x;}
+    if(o.y) {y = o.y;}
+
+    if(o.length) {length = o.length;}
+    if(o.width) {width = o.width;}
+
+    if(o.angle) {angle = o.angle;}
+  }
+
+    
+  this.render = function () {
+    el.style.backgroundColor = '#000000';
+    el.style.width = length + 'px';
+    el.style.height = width + 'px';
+    el.style.left = x + parent.offsetLeft + 'px';
+    el.style.top = y + parent.offsetTop + 'px';
+    el.style.webkitTransformOrigin = '0 50%';
+    el.style.webkitTransform = 'rotate(-' + angle + 'rad)';
+  }
+}
+
+var container = document.createElement('div');
+container.style.width = '500px';
+container.style.height = '500px';
+container.style.padding = '0';
+container.style.margin = 'auto';
+container.style.border = '1px solid';
+document.body.appendChild(container);
+
+var lineList = []
+for(var i = 0; i < 6; i++) {
+  lineList[i] = new LineSec(container);
+  lineList[i].set({ 'x': 250, 'y': 250, 'length': 200, 'width' : 1 });
+  lineList[i].set({ 'angle': (i * Math.PI/3) });
+  lineList[i].render();
+}
+
+var angle = 0;
+function spin() {
+  for(var i = 0; i < 6; i++) {
+    lineList[i].set({ 'angle': (i * Math.PI/3 + angle)});
+    lineList[i].render();
+  }
+  angle += Math.PI/360;
+}
+
+container.ontouchstart = function (e) {
+  e.preventDefault();
+  container.ontouchmove = function (e) {
+    e.preventDefault();
+    spin();
+  };
+};
+</script>
+</body>
