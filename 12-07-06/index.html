@@ -13,61 +13,87 @@ function LineSec(parent) {
   el.style.margin = 0;
   parent.appendChild(el);
 
-  var x, y, length, width, angle;
+  var x, y, length, angle;
 
   this.set = function (o) {
     if(o.x) {x = o.x;}
     if(o.y) {y = o.y;}
-
     if(o.length) {length = o.length;}
-    if(o.width) {width = o.width;}
-
     if(o.angle) {angle = o.angle;}
   }
 
-    
+  this.fromTo = function (x1, y1, x2, y2) {
+    x = x1;
+    y = y1;
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    length = Math.sqrt(dx * dx + dy * dy);
+    angle = Math.atan2(-dy, dx) + Math.PI * 2;
+  }    
+
   this.render = function () {
     el.style.backgroundColor = '#000000';
     el.style.width = length + 'px';
-    el.style.height = width + 'px';
+    el.style.height = '1px';
+    el.style.border = 'none';
     el.style.left = x + parent.offsetLeft + 'px';
-    el.style.top = y + parent.offsetTop + 'px';
+    el.style.top = (y + parent.offsetTop - 0.5)+ 'px';
     el.style.webkitTransformOrigin = '0 50%';
     el.style.webkitTransform = 'rotate(-' + angle + 'rad)';
   }
 }
 
-var container = document.createElement('div');
-container.style.width = '500px';
-container.style.height = '500px';
-container.style.padding = '0';
-container.style.margin = 'auto';
-container.style.border = '1px solid';
-document.body.appendChild(container);
+function polygon (n) {
+  var container = document.createElement('div');
+  container.style.width = '500px';
+  container.style.height = '500px';
+  container.style.padding = '0';
+  container.style.margin = 'auto';
+  container.style.marginTop = '50px';
+  container.style.border = '1px solid';
+  container.innerHTML = '<center>n = ' + n + '</center>';
+  document.body.appendChild(container);
 
-var lineList = []
-for(var i = 0; i < 6; i++) {
-  lineList[i] = new LineSec(container);
-  lineList[i].set({ 'x': 250, 'y': 250, 'length': 200, 'width' : 1 });
-  lineList[i].set({ 'angle': (i * Math.PI/3) });
-  lineList[i].render();
-}
-
-var angle = 0;
-function spin() {
-  for(var i = 0; i < 6; i++) {
-    lineList[i].set({ 'angle': (i * Math.PI/3 + angle)});
+  var lineList = [];
+  for(var i = 0; i < n; i++) {
+    var angle = 2 * i * Math.PI / n;
+    lineList[i] = new LineSec(container);
+    lineList[i].set({ 'x': 250, 'y': 250, 'length': 200});
+    lineList[i].set({ 'angle': angle});
     lineList[i].render();
   }
-  angle += Math.PI/360;
+
+  var vertexList = [];
+
+  for(var i = 0; i < n; i++) {
+    var angle = 2 * i * Math.PI / n;
+    var x = 250 + 200 * Math.cos(angle);
+    var y = 250 + 200 * Math.sin(-angle);
+    vertexList[i] = [x, y];
+  }
+
+  var edgeList = [];
+
+  for(var i = 0; i < n; i++) {
+    var x1 = vertexList[i][0];
+    var y1 = vertexList[i][1];
+    if(i == (n - 1) ) {
+      var x2 = vertexList[0][0];
+      var y2 = vertexList[0][1];
+    }
+    else {
+      var x2 = vertexList[i+1][0];
+      var y2 = vertexList[i+1][1];
+    }
+    edgeList[i] = new LineSec(container);
+    edgeList[i].fromTo(x1, y1, x2, y2);
+    edgeList[i].render();
+  }
 }
 
-container.ontouchstart = function (e) {
-  e.preventDefault();
-  container.ontouchmove = function (e) {
-    e.preventDefault();
-    spin();
-  };
-};
+for(var i = 3; i < 13; i++) {
+  polygon(i);
+}
+
 </script>
 </body>
