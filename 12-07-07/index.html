@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+</head>
+<body>
+<script>
+function LineSec(parent) {
+  this.el = document.createElement('div');
+  this.el.style.position = 'absolute';
+  this.el.style.padding = 0;
+  this.el.style.margin = 0;
+  parent.appendChild(this.el);
+  this.parent = parent;
+}
+
+LineSec.prototype.set = function (o) {
+  if(o.x) {this.x = o.x;}
+  if(o.y) {this.y = o.y;}
+  if(o.length) {this.length = o.length;}
+  if(o.angle) {this.angle = o.angle;}
+}
+
+LineSec.prototype.fromTo = function (x1, y1, x2, y2) {
+  this.x = x1;
+  this.y = y1;
+  var dx = x2 - x1;
+  var dy = y2 - y1;
+  this.length = Math.sqrt(dx * dx + dy * dy);
+  this.angle = Math.atan2(-dy, dx) + Math.PI * 2;
+}    
+
+LineSec.prototype.render = function () {
+  this.el.style.backgroundColor = '#000000';
+  this.el.style.width = this.length + 'px';
+  this.el.style.height = '1px';
+  this.el.style.border = 'none';
+  this.el.style.left = this.x + this.parent.offsetLeft + 'px';
+  this.el.style.top = (this.y + this.parent.offsetTop - 0.5)+ 'px';
+  this.el.style.webkitTransformOrigin = '0 50%';
+  this.el.style.webkitTransform = 'rotate(-' + this.angle + 'rad)';
+//  this.el.style.webkitTransform = 'translate3d(' + this.x + 'px';
+//  this.el.style.webkitTransform += ',';
+//  this.el.style.webkitTransform += (this.y - 0.5)+ 'px,0)';
+//  this.el.style.webkitTransform += 'rotate(-' + this.angle + 'rad)';
+}
+
+function Polygon (parent, n) {
+  var container = document.createElement('div');
+  container.style.width = '500px';
+  container.style.height = '500px';
+  container.style.padding = '0';
+  container.style.margin = 'auto';
+  container.style.marginTop = '50px';
+  container.style.border = '1px solid';
+  container.innerHTML = '<center>n = ' + n + '</center>';
+  parent.appendChild(container);
+
+  var vertexList = [];
+
+  for(var i = 0; i < n; i++) {
+    var angle = 2 * i * Math.PI / n;
+    var x = 250 + 200 * Math.cos(angle);
+    var y = 250 + 200 * Math.sin(-angle);
+    vertexList[i] = [x, y];
+  }
+
+  var edgeList = [];
+
+  for(var i = 0; i < n; i++) {
+    var x1 = vertexList[i][0];
+    var y1 = vertexList[i][1];
+    if(i == (n - 1) ) {
+      var x2 = vertexList[0][0];
+      var y2 = vertexList[0][1];
+    }
+    else {
+      var x2 = vertexList[i+1][0];
+      var y2 = vertexList[i+1][1];
+    }
+    edgeList[i] = new LineSec(container);
+    edgeList[i].fromTo(x1, y1, x2, y2);
+    edgeList[i].render();
+  }
+}
+
+for(var i = 3; i < 13; i++) {
+  new Polygon(document.body, i);
+}
+
+</script>
+</body>
