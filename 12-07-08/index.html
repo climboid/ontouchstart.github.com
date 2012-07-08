@@ -55,6 +55,19 @@ svgJS += "svgAttrEvt.initEvent('svgAttr', false, false);";
 
 svgJS += svgEl + ";";
 svgJS += "var svg = svgEl(document.body, 'svg');";
+
+svgJS += "svgAttrEvt.name = 'width';";
+svgJS += "svgAttrEvt.value = '500';";
+svgJS += "svg.dispatchEvent(svgAttrEvt);";
+
+svgJS += "svgAttrEvt.name = 'height';";
+svgJS += "svgAttrEvt.value = '500';";
+svgJS += "svg.dispatchEvent(svgAttrEvt);";
+
+svgJS += "svgAttrEvt.name = 'viewbox';";
+svgJS += "svgAttrEvt.value = '0 0 500 500';";
+svgJS += "svg.dispatchEvent(svgAttrEvt);";
+
 svgJS += "svg.setAttribute('width', 500);";
 svgJS += "svg.setAttribute('height', 500);";
 svgJS += "svg.setAttribute('viewbox', '0 0 500 500');";
@@ -129,11 +142,7 @@ container.ontouchstart = function (e) {
       pathXMLList.push(pathXML);
 
       var pathJS = "var path = svgEl(svg, 'path');";
-/*
-      pathJS += "path.setAttribute('stroke','" + path.getAttribute('stroke') + "');";
-      pathJS += "path.setAttribute('fill','" + path.getAttribute('fill') + "');";
-      pathJS += "path.setAttribute('d','" + path.getAttribute('d') + "');";
-*/
+
       pathJS += "svgAttrEvt.name = 'stroke';";
       pathJS += "svgAttrEvt.value = '" + path.getAttribute('stroke') + "';";
       pathJS += "path.dispatchEvent(svgAttrEvt);";
