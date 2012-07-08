@@ -1,0 +1,261 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+<style>
+</style>
+<body>
+<script>
+function svgEl (parent, tag) {var ns = "http://www.w3.org/2000/svg";var el = document.createElementNS(ns, tag);parent.appendChild(el);return el;};
+
+var container = document.createElement('div');
+document.body.appendChild(container);
+container.style.width = '500px';
+container.style.height = '500px';
+container.style.margin = 'auto';
+container.style.padding = '0';
+container.style.border = '1px solid';
+
+var svg = svgEl(container, 'svg');
+svg.setAttribute('width', 500);
+svg.setAttribute('height', 500);
+svg.setAttribute('viewbox', '0 0 500 500');
+svg.style.margin = '0';
+
+var svgXML = '<?xml version="1.0" encoding="UTF-8"?>';
+svgXML += '<svg xmlns="http://www.w3.org/2000/svg" ';
+svgXML += 'width="500" height="500" ';
+svgXML += 'viewbox="0 0 500 500" > ';
+
+var svgJS = '(function () {' ;
+svgJS += svgEl + ";";
+svgJS += "var svg = svgEl(document.body, 'svg');";
+svgJS += "svg.setAttribute('width', 500);";
+svgJS += "svg.setAttribute('height', 500);";
+svgJS += "svg.setAttribute('viewbox', '0 0 500 500');";
+
+var pathXMLList = [];
+
+var pathJSList = [];
+
+var r = 0;
+var g = 0;
+var b = 0;
+
+function getStrokeColor () {
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+var fill = false;
+
+function getFillColor () {
+  if(fill) {
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+  else {
+    return 'none';
+  }
+}
+
+container.ontouchstart = function (e) {
+  e.preventDefault();
+  var x0, y0;
+  if(e.touches.length > 1) {
+    return;
+  }
+  else {
+    x0 = e.touches[0].pageX - container.offsetLeft;
+    y0 = e.touches[0].pageY - container.offsetTop;
+    
+    var path = svgEl(svg, 'path');
+    path.setAttribute('stroke', getStrokeColor());
+    path.setAttribute('fill', getFillColor());
+    path.setAttribute('d', 'M' + x0 + ' ' + y0);
+    container.ontouchmove = function (e) {
+      e.preventDefault();
+      if(e.touches.length > 1) {
+        return;
+      }
+      var x = e.touches[0].pageX - container.offsetLeft;
+      var y = e.touches[0].pageY - container.offsetTop;
+      var d = path.getAttribute('d');
+      d += 'L' + x + ' ' + y;
+      path.setAttribute('d', d);
+    }
+    container.ontouchend = function (e) {
+      var pathXML = '<path';
+      pathXML += ' stroke="' + path.getAttribute('stroke') + '"';
+      pathXML += ' fill="' + path.getAttribute('fill') + '"';
+      pathXML += ' d="' + path.getAttribute('d') + '"';
+      pathXML += '/>';
+      pathXMLList.push(pathXML);
+
+      var pathJS = "var path = svgEl(svg, 'path');";
+      pathJS += "path.setAttribute('stroke','" + path.getAttribute('stroke') + "');";
+      pathJS += "path.setAttribute('fill','" + path.getAttribute('fill') + "');";
+      pathJS += "path.setAttribute('d','" + path.getAttribute('d') + "');";
+
+      pathJSList.push(pathJS);
+      showHideButtons();
+    }
+  }
+}
+
+var colorPicker = document.createElement('div');
+colorPicker.style.width = '400px';
+colorPicker.style.height = '50px';
+colorPicker.style.margin = 'auto';
+colorPicker.style.border = '1px solid';
+document.body.appendChild(colorPicker);
+
+var rButton = document.createElement('button');
+rButton.style.backgroundColor = 'rgb(255, 0, 0)';
+rButton.style.width = '100px';
+rButton.style.height = '50px';
+rButton.style.border = 'none';
+rButton.ontouchstart= function (e) {
+  e.preventDefault();
+  r = 255;
+  g = 0;
+  b = 0;
+  updateFillToggle();  
+}
+colorPicker.appendChild(rButton);
+
+var gButton = document.createElement('button');
+gButton.style.backgroundColor = 'rgb(0, 255, 0)';
+gButton.style.width = '100px';
+gButton.style.height = '50px';
+gButton.style.border = 'none';
+gButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 255;
+  b = 0;
+  updateFillToggle();
+}
+colorPicker.appendChild(gButton);
+
+var bButton = document.createElement('button');
+bButton.style.backgroundColor = 'rgb(0, 0, 255)';
+bButton.style.width = '100px';
+bButton.style.height = '50px';
+bButton.style.border = 'none';
+bButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 0;
+  b = 255;
+  updateFillToggle();
+}
+colorPicker.appendChild(bButton);
+
+var kButton = document.createElement('button');
+kButton.style.backgroundColor = 'rgb(0, 0, 0)';
+kButton.style.width = '100px';
+kButton.style.height = '50px';
+kButton.style.border = 'none';
+kButton.ontouchstart = function (e) {
+  e.preventDefault();
+  r = 0;
+  g = 0;
+  b = 0;
+  updateFillToggle();
+}
+colorPicker.appendChild(kButton);
+
+var fillToggle = document.createElement('div');
+fillToggle.style.width = '400px';
+fillToggle.style.height = '50px';
+fillToggle.style.margin = 'auto';
+fillToggle.style.border = '1px solid ' + getStrokeColor();
+document.body.appendChild(fillToggle);
+
+function updateFillToggle () {
+  if(fill) {
+    fillToggle.style.backgroundColor = getFillColor();
+  }
+  else {
+    fillToggle.style.backgroundColor = 'transparent';
+  }
+  fillToggle.style.border = '1px solid ' + getStrokeColor();
+}
+
+fillToggle.ontouchstart = function (e) {
+  e.preventDefault();
+  if(fill) {
+    fill = false;
+    updateFillToggle();
+  }
+  else {
+    fill = true;
+    updateFillToggle();
+  }
+}
+
+var undoButton = document.createElement('button');
+undoButton.style.margin = '50px';
+undoButton.innerHTML = 'Undo';
+document.body.appendChild(undoButton);
+undoButton.ontouchstart = function (e) {
+  e.preventDefault();
+  svg.removeChild(svg.lastChild);
+  pathXMLList.pop();
+  pathJSList.pop();
+  showHideButtons();
+}
+
+function showHideButtons () {
+  if(pathXMLList.length == 0) {
+    undoButton.style.display = 'none';
+    svgButton.style.display = 'none';
+    jsButton.style.display = 'none';
+  }
+  else {
+    undoButton.style.display = 'block';
+    svgButton.style.display = 'block';
+    jsButton.style.display = 'block';
+  }
+}
+
+var svgButton = document.createElement('button');
+svgButton.style.margin = '50px';
+svgButton.innerHTML = 'SVG';
+document.body.appendChild(svgButton);
+svgButton.ontouchstart = function () {
+  for(var i = 0; i < pathXMLList.length; i++) {
+    svgXML += pathXMLList[i];
+  }
+  svgXML += '</svg>';
+  var src = document.createElement('div');
+  src.style.width = '100%';
+  src.style.height = '100%';
+  src.style.font = '14px monospace';
+  document.body.innerHTML = '';
+  src.innerText = svgXML;  
+  document.body.appendChild(src);
+}
+
+var jsButton = document.createElement('button');
+jsButton.style.margin = '50px';
+jsButton.innerHTML = 'JS';
+document.body.appendChild(jsButton);
+jsButton.ontouchstart = function () {
+  for(var i = 0; i < pathJSList.length; i++) {
+    svgJS += pathJSList[i];
+  }
+  svgJS += '})();';
+  var src = document.createElement('div');
+  src.style.width = '100%';
+  src.style.height = '100%';
+  src.style.font = '14px monospace';
+  document.body.innerHTML = '';
+  src.innerText = svgJS;  
+  document.body.appendChild(src);
+}
+
+showHideButtons();
+</script>
+</body>
+</html>
