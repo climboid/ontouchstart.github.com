@@ -7,7 +7,18 @@ ontouchstart
 </style>
 <body>
 <script>
-function svgEl (parent, tag) {var ns = "http://www.w3.org/2000/svg";var el = document.createElementNS(ns, tag);parent.appendChild(el);return el;};
+var svgAttrEvt = document.createEvent('Events');
+svgAttrEvt.initEvent('svgAttr', false, false);
+
+function svgEl (parent, tag) {
+  var ns = "http://www.w3.org/2000/svg";
+  var el = document.createElementNS(ns, tag);
+  el.addEventListener('svgAttr', function(e) {
+    e.target.setAttribute(e.name, e.value);
+  });
+  parent.appendChild(el);
+  return el;
+};
 
 var container = document.createElement('div');
 document.body.appendChild(container);
@@ -18,9 +29,18 @@ container.style.padding = '0';
 container.style.border = '1px solid';
 
 var svg = svgEl(container, 'svg');
-svg.setAttribute('width', 500);
-svg.setAttribute('height', 500);
-svg.setAttribute('viewbox', '0 0 500 500');
+svgAttrEvt.name = 'width';
+svgAttrEvt.value = '500';
+svg.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'height';
+svgAttrEvt.value = '500';
+svg.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'viewbox';
+svgAttrEvt.value = '0 0 500 500';
+svg.dispatchEvent(svgAttrEvt);
+
 svg.style.margin = '0';
 
 var svgXML = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -29,6 +49,10 @@ svgXML += 'width="500" height="500" ';
 svgXML += 'viewbox="0 0 500 500" > ';
 
 var svgJS = '(function () {' ;
+
+svgJS += "var svgAttrEvt = document.createEvent('Events');";
+svgJS += "svgAttrEvt.initEvent('svgAttr', false, false);";
+
 svgJS += svgEl + ";";
 svgJS += "var svg = svgEl(document.body, 'svg');";
 svgJS += "svg.setAttribute('width', 500);";
@@ -69,9 +93,19 @@ container.ontouchstart = function (e) {
     y0 = e.touches[0].pageY - container.offsetTop;
     
     var path = svgEl(svg, 'path');
-    path.setAttribute('stroke', getStrokeColor());
-    path.setAttribute('fill', getFillColor());
-    path.setAttribute('d', 'M' + x0 + ' ' + y0);
+
+    svgAttrEvt.name = 'stroke';
+    svgAttrEvt.value = getStrokeColor();
+    path.dispatchEvent(svgAttrEvt);
+
+    svgAttrEvt.name = 'fill';
+    svgAttrEvt.value = getFillColor();
+    path.dispatchEvent(svgAttrEvt);
+
+    svgAttrEvt.name = 'd';
+    svgAttrEvt.value = 'M' + x0 + ' ' + y0;
+    path.dispatchEvent(svgAttrEvt);
+
     container.ontouchmove = function (e) {
       e.preventDefault();
       if(e.touches.length > 1) {
@@ -81,7 +115,10 @@ container.ontouchstart = function (e) {
       var y = e.touches[0].pageY - container.offsetTop;
       var d = path.getAttribute('d');
       d += 'L' + x + ' ' + y;
-      path.setAttribute('d', d);
+
+      svgAttrEvt.name = 'd';
+      svgAttrEvt.value = d;
+      path.dispatchEvent(svgAttrEvt);
     }
     container.ontouchend = function (e) {
       var pathXML = '<path';
@@ -92,9 +129,22 @@ container.ontouchstart = function (e) {
       pathXMLList.push(pathXML);
 
       var pathJS = "var path = svgEl(svg, 'path');";
+/*
       pathJS += "path.setAttribute('stroke','" + path.getAttribute('stroke') + "');";
       pathJS += "path.setAttribute('fill','" + path.getAttribute('fill') + "');";
       pathJS += "path.setAttribute('d','" + path.getAttribute('d') + "');";
+*/
+      pathJS += "svgAttrEvt.name = 'stroke';";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('stroke') + "';";
+      pathJS += "path.dispatchEvent(svgAttrEvt);";
+
+      pathJS += "svgAttrEvt.name = 'fill';";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('fill') + "';";
+      pathJS += "path.dispatchEvent(svgAttrEvt);";
+
+      pathJS += "svgAttrEvt.name = 'd';";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('d') + "';";
+      pathJS += "path.dispatchEvent(svgAttrEvt);";
 
       pathJSList.push(pathJS);
       showHideButtons();
