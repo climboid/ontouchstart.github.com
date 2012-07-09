@@ -1,4 +1,9 @@
-(function () {var svgAttrEvt = document.createEvent('Events');svgAttrEvt.initEvent('svgAttr', false, false);function svgEl(parent, tag) {
+(function () {
+
+var svgAttrEvt = document.createEvent('Events');
+svgAttrEvt.initEvent('svgAttr', false, false);
+
+function svgEl(parent, tag) {
 var ns = "http://www.w3.org/2000/svg";
 var el = document.createElementNS(ns, tag);
 el.addEventListener('svgAttr', function(e) {
@@ -6,4 +11,253 @@ e.target.setAttribute(e.name, e.value);
 });
 parent.appendChild(el);
 return el;
-};var svg = svgEl(document.body, 'svg');svgAttrEvt.name = 'width';svgAttrEvt.value = '500';svg.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'height';svgAttrEvt.value = '500';svg.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'viewbox';svgAttrEvt.value = '0 0 500 500';svg.dispatchEvent(svgAttrEvt);svg.setAttribute('width', 500);svg.setAttribute('height', 500);svg.setAttribute('viewbox', '0 0 500 500');var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M129 231L123 220L123 217L123 213L123 206L123 203L123 199L123 194L125 187L126 182L127 177L129 172L130 168L132 163L136 157L139 152L143 146L146 140L151 134L155 129L162 122L167 117L173 113L180 107L186 100L195 95L204 90L210 86L217 83L224 80L234 76L242 74L248 71L256 70L265 70L273 69L279 69L285 69L293 69L301 69L306 70L312 71L319 75L329 77L335 80L344 84L351 88L358 93L365 98L372 103L377 107L381 113L386 120L391 126L396 132L402 137L405 144L409 150L413 157L416 163L419 169L422 176L425 183L427 192L428 200L428 208L428 217L428 223L428 231L428 238L427 247L425 256L422 264L418 270L416 278L409 287L403 293L399 300L391 308L386 315L379 321L372 329L365 335L356 340L348 345L339 349L330 354L322 357L316 361L307 362L301 365L294 366L288 367L282 367L274 367L266 367L261 367L255 367L250 367L243 367L237 366L231 363L225 362L219 362L214 360L206 357L200 354L195 352L190 349L186 347L180 343L174 340L172 337L167 334L164 330L160 326L157 324L155 320L153 316L150 312L148 307L145 303L143 300L141 296L139 292L137 287L136 280L136 275L135 270L132 266L131 263L130 257L130 254L129 250L126 246L125 242L125 237L123 234L123 231L123 226L123 222L123 218L123 214L123 210L123 206L123 205L123 203L123 200L123 199L123 197';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M117 200L102 187L99 187L95 187L91 187L86 187L83 187L77 189L72 194L69 199L63 204L62 209L60 215L58 222L58 231L58 240L58 248L58 255L58 261L58 266L61 270L62 274L67 277L71 279L75 280L80 282L86 282L94 282L99 280L106 279L111 275L114 274L117 270L120 269L121 269L122 269L123 269';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M436 195L437 187L441 183L446 182L450 182L455 181L459 181L464 181L468 181L470 182L472 182L474 183L476 186L477 187L477 191L478 194L478 200L478 205L478 209L476 217L472 223L470 231L465 238L463 245L459 250L455 254L453 257L448 263L444 265L440 269L436 269L433 270L431 271L428 271L427 271L426 271L425 271';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M217 168L205 168L203 171L199 176L195 178L191 182L188 187L186 194L186 199L185 204L185 209L185 213L185 219L186 223L186 227L190 231L194 234L199 237L204 240L208 241L213 242L218 242L223 242L231 241L237 238L242 236L248 231L254 228L259 224L262 219L266 215L270 211L273 208L273 205L274 201L274 197L274 192L271 189L268 183L265 181L260 176L256 171L254 167L248 163L245 162L240 160L233 160L228 160L225 160L223 160L223 162';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M344 160L326 163L322 169L320 176L316 183L315 191L311 200L310 208L310 215L308 222L308 227L308 231L308 234L310 237L311 241L314 243L316 245L317 246L321 247L322 248L326 248L330 248L335 247L340 245L344 243L349 241L353 237L358 234L362 231L366 229L370 227L372 224L376 222L379 218L381 214L385 210L385 206L388 201L389 199L390 194L390 190L390 186L389 182L386 178L382 176L377 171L372 168L366 166L361 164L354 164L347 164L343 164L338 166L335 169';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M398 186L395 183L398 181L400 177L403 176L405 173L409 171L409 169L411 169L412 168L413 168L414 168L416 168L417 167L419 167L421 167L422 167L423 167';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M199 196L180 190L178 190L173 190L169 187L164 187L159 185L154 182L149 181L143 177L135 176L130 174L122 173L117 172L113 172L111 172L111 173';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M273 204L270 200L275 200L280 199L285 199L289 199L293 199L297 199L299 199L303 199L307 199L310 200L311 200L312 201';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M127 167L117 174L117 176L117 177L116 178L116 181L116 182';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M222 284L224 289L228 293L231 294L236 298L238 300L242 301L246 302L250 303L254 305L260 306L264 306L270 306L275 306L280 306L285 306L292 306L296 306L301 305L306 303L311 301L316 300L321 296L326 293L330 291L335 288L338 285L339 282L342 280L342 279L343 278L343 277L344 275L345 274';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M167 42L171 44L172 47L173 51L174 56L177 60L180 63L181 67L182 70L185 74L186 76L187 77L188 79L190 80L190 81L190 83L191 85L194 90L196 94L199 97L203 98';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M269 15L269 24L269 26L269 29L269 33L269 35L269 39L269 40L269 43L269 46L269 49L269 53L269 57L270 60L271 62L271 63L271 65L273 65L273 62';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M396 20L386 23L385 25L385 28L381 32L379 35L376 39L372 44L371 49L367 53L366 57L365 60L363 63L362 65L362 67L362 69L362 70L362 71';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M222 189L217 196L217 197L217 199L217 200L217 201L218 201L219 203L220 203L222 203L223 203L224 203L225 203L227 201L228 201L228 200L228 199L228 197L228 196L227 196';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M344 194L340 200L340 201L340 203L340 204L340 205L340 206L342 208L343 209L344 209L345 209L347 209L348 209L349 209L351 209L352 209L352 208L352 206L353 206L353 205L353 204L353 203L352 203L351 203';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M270 245L262 254L262 255L262 256L262 257L262 259L264 260L265 263L266 263L268 264L269 265L271 266L273 266L275 266L277 266L278 266L279 266L280 266L282 266L283 265L284 264L285 263L287 261L288 260L289 259L291 257L292 256L292 255L292 254';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M177 360L168 367L167 371L162 375L157 380L151 386L145 393L139 399L134 405L129 411L122 418L114 426L107 432L100 439L94 442L89 446L85 449L80 453L74 455L69 460L63 464L61 467L57 469L56 473L54 478';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M362 351L367 356L370 360L372 362L377 367L381 372L385 375L389 381L393 386L396 393L402 398L407 404L411 408L416 412L421 417L425 423L428 427L433 435L439 437L441 441L446 446L450 449L453 453L456 455L459 459L460 460L463 463L464 464L465 465L465 467L467 467L468 468L469 469';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M224 382';path.dispatchEvent(svgAttrEvt);var path = svgEl(svg, 'path');svgAttrEvt.name = 'stroke';svgAttrEvt.value = 'rgb(0,0,0)';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'fill';svgAttrEvt.value = 'none';path.dispatchEvent(svgAttrEvt);svgAttrEvt.name = 'd';svgAttrEvt.value = 'M206 379L211 390L211 393L211 394L213 398L214 400L215 404L217 407L218 411L219 413L222 416L223 418L223 419L224 422L227 423L228 423L229 425L231 426L232 427L234 428L236 430L237 430L238 430L241 431L242 432L243 434L246 434L248 435L250 435L252 436L254 436L256 436L259 436L260 436L262 436L265 436L266 436L269 436L271 436L273 436L277 436L279 436L280 436L283 436L285 436L288 435L289 434L292 434L292 432L293 431L296 430L297 430L299 430L301 427L303 426L305 425L307 423L310 422L310 421L311 418L314 417L316 417L317 414L320 413L321 411L322 409L324 407L325 405L328 403L329 400L333 399L334 397L335 395L336 393L338 391L339 390L340 388L340 386L340 385L342 384L342 381L342 380L342 379L342 376L342 375L342 374L343 374L343 372L343 371L344 370L344 368L344 367';path.dispatchEvent(svgAttrEvt);})();
+}
+
+var svg = svgEl(document.body, 'svg');
+svgAttrEvt.name = 'width';
+svgAttrEvt.value = '500';
+svg.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'height';
+svgAttrEvt.value = '500';
+svg.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'viewbox';
+svgAttrEvt.value = '0 0 500 500';
+svg.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M312 112L296 108L289 108L283 108L277 109L266 111L260 113L250 116L237 120L228 125L218 131L208 137L199 145L188 154L182 162L176 169L169 180L166 189L162 197L159 206L157 214L155 226L155 233L155 243L155 251L155 260L157 268L158 274L162 282L164 287L167 293L172 298L174 305L180 310L182 315L186 320L190 325L194 328L199 330L204 334L209 337L213 339L218 342L223 343L229 344L236 347L242 348L248 348L256 348L266 348L273 348L282 348L289 345L298 343L305 342L312 338L320 335L329 330L335 326L342 322L347 317L352 312L358 306L362 300L367 294L371 288L375 282L379 275L381 269L384 261L385 254L385 246L385 240L385 231L385 223L384 214L381 206L379 197L376 189L372 180L367 171L363 162L358 154L353 148L349 141L344 136L340 131L335 126L331 125L329 121L325 120L322 120L322 118L321 118L321 116';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M217 204L205 210L205 214L203 219L203 223L203 227L204 232L205 236L209 240L213 243L218 245L223 246L229 247L234 248L238 248L242 248L246 248L250 245L254 241L256 237L259 232L260 227L260 222L261 217L261 211L261 206L260 203L256 200L254 196L248 194L245 192L240 192L236 192L231 192L229 192L225 194L225 196';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M331 199L322 196L321 196L319 196L317 196L316 197L314 199L311 200L310 204L306 206L303 210L301 213L297 218L296 220L293 226L292 227L292 231L292 232L292 233L292 234L292 237L293 237L294 238L297 240L298 241L301 242L303 243L306 243L308 243L310 245L312 246L315 246L316 246L317 246L320 246L322 246L324 246L326 246L329 246L330 246L333 246L335 245L336 243L339 243L342 241L343 238L345 238L347 237L347 236L347 234L347 233L347 232L348 229L348 227L348 224L348 220L348 218L348 215L348 214L348 213L348 211L347 209L347 206L344 206L343 204L342 203L339 200L336 199L334 197L331 195L329 195L329 194';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M352 210L359 205L361 205L363 204L366 203L367 201L368 200L370 200L371 200L372 200L374 200';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M268 219L280 215L284 215L287 215L289 217L292 218L292 219L292 220L292 222';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M171 196L173 192L178 192L185 194L191 194L199 196L204 199L206 200L210 203L211 205L213 206L214 209L214 210L214 211L215 213L217 213';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M248 277L246 287L246 291L246 293L247 297L250 300L252 301L255 303L260 305L262 306L266 306L273 307L277 307L280 307L284 307L287 307L291 307L292 306L297 306L299 302L303 300L306 298L310 296L310 293L312 292L314 289L314 287L315 287';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M277 246L284 245L285 246L287 248L288 251L289 255L289 257L289 260L289 263L288 264L285 265L284 266L283 266L280 266L279 266L279 265L278 264L277 263';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M393 203L396 191L400 190L404 189L407 187L409 186L411 186L413 186L416 186L417 186L419 187L421 189L422 189L422 190L423 192L423 195L425 197L426 200L427 201L428 204L428 206L428 208L428 210L428 213L428 217L428 219L428 220L428 224L428 226L427 229L426 232L425 234L423 237L422 238L422 240L421 241L419 242L418 243L417 243L416 243L413 243L412 243L409 243L407 243L405 243L403 243';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M153 197L149 191L149 189L148 185L145 182L144 180L143 177L141 176L139 176L136 176L135 176L132 176L130 177L127 181L126 183L123 189L122 192L121 197L120 201L120 206L118 210L118 214L118 219L118 222L118 226L118 227L120 229L121 231L122 232L123 233L126 237L129 238L130 240L132 242L135 243L136 245L136 246L137 247L139 248L140 248L141 248L143 248L144 247L145 246L145 245L146 245L146 243L148 243L149 242L149 241';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M197 60L199 63L205 69L210 75L215 83L220 88L225 94L229 97L232 102L234 107L236 109L237 111L238 112L240 113L241 113';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M284 30L283 33L283 40L283 48L282 57L280 65L280 72L279 77L278 81L277 85L277 89L275 92L275 93';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M391 34L385 46L379 57L372 67L366 75L361 83L356 90L353 95L351 100L348 103L347 106L347 107';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M187 347L185 352L178 362L167 376L155 390L143 404L130 417L121 428L113 439L107 448L104 455L102 459';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M343 349L352 358L354 362L359 368L366 375L372 381L377 389L385 397L390 403L396 412L403 418L408 423L413 430L417 435L421 439L425 442L427 446L430 449L431 450L432 453L432 455';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'none';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M222 385L223 393L223 399L224 405L229 414L232 421L236 427L240 432L243 437L248 441L254 442L260 445L266 446L274 446L279 446L285 446L292 442L298 437L303 431L310 423L315 417L319 408L322 403L325 395L326 390L328 385L329 381L329 379L329 376L329 374L329 371';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M237 210L229 218L229 219L229 220L229 222L229 223L229 224L231 224L232 224L234 226L236 226L237 226L238 226L240 226L241 224L242 223L242 222L242 220L242 219L242 218L242 217L242 215';
+path.dispatchEvent(svgAttrEvt);
+
+var path = svgEl(svg, 'path');
+svgAttrEvt.name = 'stroke';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'fill';
+svgAttrEvt.value = 'rgb(0,0,0)';
+path.dispatchEvent(svgAttrEvt);
+
+svgAttrEvt.name = 'd';
+svgAttrEvt.value = 'M333 214L321 218L321 219L321 220L321 222L321 223L321 224L321 226L322 226L324 226L325 226L326 226L328 226L329 226L330 226L331 226L333 226L333 224L333 223L333 222L331 220';
+path.dispatchEvent(svgAttrEvt);
+
+})();

@@ -48,29 +48,25 @@ svgXML += '<svg xmlns="http://www.w3.org/2000/svg" ';
 svgXML += 'width="500" height="500" ';
 svgXML += 'viewbox="0 0 500 500" > ';
 
-var svgJS = '(function () {' ;
+var svgJS = '(function () {\n\n' ;
 
-svgJS += "var svgAttrEvt = document.createEvent('Events');";
-svgJS += "svgAttrEvt.initEvent('svgAttr', false, false);";
+svgJS += "var svgAttrEvt = document.createEvent('Events');\n";
+svgJS += "svgAttrEvt.initEvent('svgAttr', false, false);\n\n";
 
-svgJS += svgEl + ";";
-svgJS += "var svg = svgEl(document.body, 'svg');";
+svgJS += svgEl + "\n\n";
+svgJS += "var svg = svgEl(document.body, 'svg');\n";
 
-svgJS += "svgAttrEvt.name = 'width';";
-svgJS += "svgAttrEvt.value = '500';";
-svgJS += "svg.dispatchEvent(svgAttrEvt);";
+svgJS += "svgAttrEvt.name = 'width';\n";
+svgJS += "svgAttrEvt.value = '500';\n";
+svgJS += "svg.dispatchEvent(svgAttrEvt);\n\n";
 
-svgJS += "svgAttrEvt.name = 'height';";
-svgJS += "svgAttrEvt.value = '500';";
-svgJS += "svg.dispatchEvent(svgAttrEvt);";
+svgJS += "svgAttrEvt.name = 'height';\n";
+svgJS += "svgAttrEvt.value = '500';\n";
+svgJS += "svg.dispatchEvent(svgAttrEvt);\n\n";
 
-svgJS += "svgAttrEvt.name = 'viewbox';";
-svgJS += "svgAttrEvt.value = '0 0 500 500';";
-svgJS += "svg.dispatchEvent(svgAttrEvt);";
-
-svgJS += "svg.setAttribute('width', 500);";
-svgJS += "svg.setAttribute('height', 500);";
-svgJS += "svg.setAttribute('viewbox', '0 0 500 500');";
+svgJS += "svgAttrEvt.name = 'viewbox';\n";
+svgJS += "svgAttrEvt.value = '0 0 500 500';\n";
+svgJS += "svg.dispatchEvent(svgAttrEvt);\n\n";
 
 var pathXMLList = [];
 
@@ -141,19 +137,19 @@ container.ontouchstart = function (e) {
       pathXML += '/>';
       pathXMLList.push(pathXML);
 
-      var pathJS = "var path = svgEl(svg, 'path');";
+      var pathJS = "var path = svgEl(svg, 'path');\n";
 
-      pathJS += "svgAttrEvt.name = 'stroke';";
-      pathJS += "svgAttrEvt.value = '" + path.getAttribute('stroke') + "';";
-      pathJS += "path.dispatchEvent(svgAttrEvt);";
+      pathJS += "svgAttrEvt.name = 'stroke';\n";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('stroke') + "';\n";
+      pathJS += "path.dispatchEvent(svgAttrEvt);\n\n";
 
-      pathJS += "svgAttrEvt.name = 'fill';";
-      pathJS += "svgAttrEvt.value = '" + path.getAttribute('fill') + "';";
-      pathJS += "path.dispatchEvent(svgAttrEvt);";
+      pathJS += "svgAttrEvt.name = 'fill';\n";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('fill') + "';\n";
+      pathJS += "path.dispatchEvent(svgAttrEvt);\n\n";
 
-      pathJS += "svgAttrEvt.name = 'd';";
-      pathJS += "svgAttrEvt.value = '" + path.getAttribute('d') + "';";
-      pathJS += "path.dispatchEvent(svgAttrEvt);";
+      pathJS += "svgAttrEvt.name = 'd';\n";
+      pathJS += "svgAttrEvt.value = '" + path.getAttribute('d') + "';\n";
+      pathJS += "path.dispatchEvent(svgAttrEvt);\n\n";
 
       pathJSList.push(pathJS);
       showHideButtons();
@@ -292,7 +288,13 @@ svgButton.ontouchstart = function () {
   src.style.height = '100%';
   src.style.font = '14px monospace';
   document.body.innerHTML = '';
-  src.innerText = svgXML;  
+  src.innerText = svgXML;
+
+  var parser = new DOMParser();
+  var dom = parser.parseFromString(svgXML, 'text/xml');
+
+  document.body.appendChild(dom.getElementsByTagName('svg')[0].cloneNode(true));
+
   document.body.appendChild(src);
 }
 
@@ -305,13 +307,18 @@ jsButton.ontouchstart = function () {
     svgJS += pathJSList[i];
   }
   svgJS += '})();';
+
   var src = document.createElement('div');
   src.style.width = '100%';
   src.style.height = '100%';
   src.style.font = '14px monospace';
   document.body.innerHTML = '';
   src.innerText = svgJS;  
-  document.body.appendChild(src);
+
+  var script = document.createElement('script');
+  script.innerText = svgJS;
+  document.body.appendChild(script);
+  document.body.appendChild(src);  
 }
 
 showHideButtons();
