@@ -45,9 +45,6 @@ ontouchstart
       "height" : height + "px",
       "margin" : "20px auto",
       "border" : "1px solid" });
-    container.ontouchstart = function (e) {
-      e.preventDefault();
-    };
      
     var data = [];
     for(var i = 0; i < n; i++) {
@@ -73,15 +70,17 @@ ontouchstart
       }
     }
 
-    setTimeout(function() {
+    container.ontouchstart = function(e) {
+      e.preventDefault();
       for(var i in data) {
         if(data.hasOwnProperty(i)) {
          css(boxList[i], {
            "webkitTransitionDuration" : 10 * data[i] + "ms",
+           "webkitTransitionTimingFunction" : "linear",
            "height": data[i] + "px"});
         }
       }
-    }, 1000);
+    };
   }
   
   randomBarChart(3, 600, 400);
