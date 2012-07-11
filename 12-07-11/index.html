@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+<body>
+<script>
+(function() {
+  function div(parent) {
+    var el = document.createElement('div');
+    parent.appendChild(el);
+    return el;
+  }
+
+  function css(el, css) {
+    for(var k in css) {
+      if(css.hasOwnProperty(k)) {
+        el.style[k] = css[k];
+      }
+    }
+  }
+
+  function bar(parent, x, dx, y) {
+    var box = div(parent);
+     
+    css(box, {
+      "position" : "absolute",
+      "left" : x + "px",
+      "top" : (parent.clientHeight - y) + "px",
+      "width": dx + "px",
+      "height": y + "px",
+      "background" : "#CC0000",
+      "color" : "#000000",
+      "font" : "14px American Typewriter",
+      "textAlign" : "center" });
+    return box;
+  }
+
+  function randomBarChart(n, width, height) {
+    var container = div(document.body);
+    css(container, {
+      "position" : "relative",
+      "width" : width + "px",
+      "height" : height + "px",
+      "margin" : "20px auto",
+      "border" : "1px solid" });
+    container.ontouchstart = function (e) {
+      e.preventDefault();
+    };
+     
+    var data = [];
+    for(var i = 0; i < n; i++) {
+      data[i] = Math.floor(Math.random() * container.clientHeight);
+    }
+
+    var slotWidth = container.clientWidth / data.length;
+    var barWidth = 0.8 * slotWidth;
+
+    for(var i in data) {
+      if(data.hasOwnProperty(i)) {
+        var x = i * slotWidth  + (slotWidth - barWidth) / 2 ;
+        var y = data[i];
+        var box = bar(container, x, barWidth, y);
+        box.ontouchstart = function(e) {
+          console.log(y);
+          e.preventDefault();
+          if(e.touches.length == 1) {
+            e.target.innerHTML = e.target.style.height.replace('px', '');
+          }           
+        };
+        box.ontouchend = function(e) {
+          e.target.innerHTML = '';
+        };
+      }
+    }
+  }
+  
+  randomBarChart(3, 600, 400);
+  randomBarChart(6, 600, 400);
+  randomBarChart(9, 600, 400);
+  randomBarChart(12, 600, 400);
+
+  randomBarChart(3, 400, 300);
+  randomBarChart(6, 400, 300);
+  randomBarChart(9, 400, 300);
+  randomBarChart(12, 400, 300);
+
+})();
+</script>
+</body>
