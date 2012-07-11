@@ -26,13 +26,14 @@ ontouchstart
     css(box, {
       "position" : "absolute",
       "left" : x + "px",
-      "top" : (parent.clientHeight - y) + "px",
+      "bottom" : 0,
       "width": dx + "px",
       "height": y + "px",
       "background" : "#CC0000",
       "color" : "#000000",
       "font" : "14px American Typewriter",
       "textAlign" : "center" });
+
     return box;
   }
 
@@ -55,22 +56,32 @@ ontouchstart
 
     var slotWidth = container.clientWidth / data.length;
     var barWidth = 0.8 * slotWidth;
-
+    var boxList = [];
     for(var i in data) {
       if(data.hasOwnProperty(i)) {
         var x = i * slotWidth  + (slotWidth - barWidth) / 2 ;
-        var y = data[i];
-        var box = bar(container, x, barWidth, y);
-        box.ontouchstart = function(e) {
+        boxList[i] = bar(container, x, barWidth, 0);
+
+        boxList[i].ontouchstart = function(e) {
           if(e.touches.length == 1) {
             e.target.innerHTML = e.target.style.height.replace('px', '');
           }           
         };
-        box.ontouchend = function(e) {
+        boxList[i].ontouchend = function(e) {
           e.target.innerHTML = '';
         };
       }
     }
+
+    setTimeout(function() {
+      for(var i in data) {
+        if(data.hasOwnProperty(i)) {
+         css(boxList[i], {
+           "webkitTransitionDuration" : 10 * data[i] + "ms",
+           "height": data[i] + "px"});
+        }
+      }
+    }, 1000);
   }
   
   randomBarChart(3, 600, 400);
