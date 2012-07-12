@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+<body>
+<script>
+(function() {
+  function div(parent) {
+    var el = document.createElement('div');
+    parent.appendChild(el);
+    return el;
+  }
+
+  function css(el, css) {
+    for(var k in css) {
+      if(css.hasOwnProperty(k)) {
+        el.style[k] = css[k];
+      }
+    }
+  }
+
+  function bar(parent, x, dx, y) {
+    var box = div(parent);
+     
+    css(box, {
+      "position" : "absolute",
+      "left" : x + "px",
+      "bottom" : 0,
+      "width": dx + "px",
+      "height": y + "px",
+      "background" : "#CC0000",
+      "color" : "#000000",
+      "font" : "14px American Typewriter",
+      "textAlign" : "center" });
+
+    return box;
+  }
+
+  function randomBarChart(n, width, height) {
+    var container = div(document.body);
+    css(container, {
+      "position" : "relative",
+      "width" : width + "px",
+      "height" : height + "px",
+      "margin" : "20px auto",
+      "border" : "1px solid" });
+     
+    var data = [];
+    for(var i = 0; i < n; i++) {
+      data[i] = Math.floor(Math.random() * container.clientHeight);
+    }
+
+    var slotWidth = container.clientWidth / data.length;
+    var barWidth = 0.8 * slotWidth;
+    var boxList = [];
+    for(var i in data) {
+      if(data.hasOwnProperty(i)) {
+        var x = i * slotWidth  + (slotWidth - barWidth) / 2 ;
+        boxList[i] = bar(container, x, barWidth, 0);
+
+        boxList[i].ontouchstart = function(e) {
+          if(e.touches.length == 1) {
+            e.target.innerHTML = e.target.style.height.replace('px', '');
+          }           
+        };
+        boxList[i].ontouchend = function(e) {
+          e.target.innerHTML = '';
+        };
+      }
+    }
+
+    container.ontouchstart = function(e) {
+      e.preventDefault();
+      var animate;
+      if(e.touches.length > 1) {
+        animate = function (i) {
+          css(boxList[i], {
+           "webkitTransitionDelay" : 0,
+           "webkitTransitionDuration" : 10 * data[i] + "ms",
+           "webkitTransitionTimingFunction" : "linear",
+           "height": data[i] + "px"});
+        };
+      }
+      else {
+        animate = function (i) {
+          css(boxList[i], {
+           "webkitTransitionDelay" : 500 * i + "ms",
+           "webkitTransitionDuration" : 500 + "ms",
+           "webkitTransitionTimingFunction" : "linear",
+           "height": data[i] + "px"});
+        }
+      }
+      for(var i in data) {
+        if(data.hasOwnProperty(i)) {
+          animate(i);
+        }
+      }
+    };
+  }
+  
+  randomBarChart(3, 600, 400);
+  randomBarChart(6, 600, 400);
+  randomBarChart(9, 600, 400);
+  randomBarChart(12, 600, 400);
+
+  randomBarChart(3, 400, 300);
+  randomBarChart(6, 400, 300);
+  randomBarChart(9, 400, 300);
+  randomBarChart(12, 400, 300);
+
+})();
+</script>
+</body>
