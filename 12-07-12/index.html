@@ -34,6 +34,11 @@ ontouchstart
       "font" : "14px American Typewriter",
       "textAlign" : "center" });
 
+    box.update = function () {
+      setInterval(function() {
+        box.innerHTML = box.clientHeight;
+      }, 100);
+    }
     return box;
   }
 
@@ -43,7 +48,7 @@ ontouchstart
       "position" : "relative",
       "width" : width + "px",
       "height" : height + "px",
-      "margin" : "20px auto",
+      "margin" : "50px auto",
       "border" : "1px solid" });
      
     var data = [];
@@ -58,15 +63,6 @@ ontouchstart
       if(data.hasOwnProperty(i)) {
         var x = i * slotWidth  + (slotWidth - barWidth) / 2 ;
         boxList[i] = bar(container, x, barWidth, 0);
-
-        boxList[i].ontouchstart = function(e) {
-          if(e.touches.length == 1) {
-            e.target.innerHTML = e.target.style.height.replace('px', '');
-          }           
-        };
-        boxList[i].ontouchend = function(e) {
-          e.target.innerHTML = '';
-        };
       }
     }
 
@@ -77,7 +73,7 @@ ontouchstart
         animate = function (i) {
           css(boxList[i], {
            "webkitTransitionDelay" : 0,
-           "webkitTransitionDuration" : 10 * data[i] + "ms",
+           "webkitTransitionDuration" : 50 * data[i] + "ms",
            "webkitTransitionTimingFunction" : "linear",
            "height": data[i] + "px"});
         };
@@ -85,8 +81,8 @@ ontouchstart
       else {
         animate = function (i) {
           css(boxList[i], {
-           "webkitTransitionDelay" : 500 * i + "ms",
-           "webkitTransitionDuration" : 500 + "ms",
+           "webkitTransitionDelay" : 5000 * i + "ms",
+           "webkitTransitionDuration" : 5000 + "ms",
            "webkitTransitionTimingFunction" : "linear",
            "height": data[i] + "px"});
         }
@@ -94,6 +90,7 @@ ontouchstart
       for(var i in data) {
         if(data.hasOwnProperty(i)) {
           animate(i);
+          boxList[i].update();
         }
       }
     };
