@@ -28,7 +28,7 @@ for( var i in localStorage) {
     var key = document.createElement('button');
     key.innerHTML = i;
     key.value = localStorage.getItem(i);
-    key.onclick = function () {
+    key.ontouchstart = function () {
       input.innerText = this.value;
       var obj = JSON.parse(this.value);
       if(obj.hasOwnProperty("main")) {
@@ -46,7 +46,7 @@ for( var i in localStorage) {
     del.innerHTML = 'DEL';
     del.key = i;
     div.appendChild(del);
-    del.onclick = function () {
+    del.ontouchstart = function () {
       localStorage.removeItem(this.key);
       document.location.href = '.';    
     }
@@ -55,7 +55,7 @@ for( var i in localStorage) {
   }
 }
 
-add.onclick = function () {
+add.ontouchstart = function () {
   try {
     var jsonObj = JSON.parse(input.value);
     var jsonString = JSON.stringify(jsonObj);
