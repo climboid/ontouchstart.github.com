@@ -8,6 +8,7 @@
 </style>
 </head>
 <body>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/sha1.js"></script>
 <script>
 var input = document.createElement('textarea');
 input.cols = 80;
@@ -15,15 +16,41 @@ input.rows = 24;
 
 document.body.appendChild(input);
 
-var send = document.createElement('button');
-send.innerHTML = 'Validate JSON String';
-document.body.appendChild(send);
+var add = document.createElement('button');
+add.innerHTML = 'ADD';
+document.body.appendChild(add);
 
-send.onclick = function () {
+for( var i in localStorage) {
+  if(localStorage.hasOwnProperty(i)) {
+    var div = document.createElement('div')
+    var key = document.createElement('button');
+    key.innerHTML = i;
+    key.value = localStorage.getItem(i);
+    key.onclick = function () {
+      input.innerText = this.value;
+    }
+
+    var del = document.createElement('button');
+    del.innerHTML = 'DEL';
+    del.key = i;
+    div.appendChild(del);
+    del.onclick = function () {
+      localStorage.removeItem(this.key);
+      document.location.href = '.';    
+    }
+    div.appendChild(key);
+    document.body.appendChild(div);
+  }
+}
+
+add.onclick = function () {
   try {
     var jsonObj = JSON.parse(input.value);
     var jsonString = JSON.stringify(jsonObj);
-    document.body.innerHTML = jsonString;
+    var sha1 = CryptoJS.SHA1(jsonString);
+    document.title = sha1;
+    localStorage.setItem(sha1, jsonString);
+    document.location.href = '.';    
   }
   catch(err) {
     input.value += '\n' + err;
