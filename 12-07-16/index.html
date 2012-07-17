@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>ontouchstart</title>
+<style>
+* {
+  font: 18px American Typewriter;
+}
+</style>
+</head>
+<body>
+<script>
+var input = document.createElement('textarea');
+input.cols = 80;
+input.rows = 24;
+
+document.body.appendChild(input);
+
+var send = document.createElement('button');
+send.innerHTML = 'Validate JSON String';
+document.body.appendChild(send);
+
+send.onclick = function () {
+  try {
+    var jsonObj = JSON.parse(input.value);
+    var jsonString = JSON.stringify(jsonObj);
+    document.body.innerHTML = jsonString;
+  }
+  catch(err) {
+    input.value += '\n' + err;
+  }
+};
+</script>
+</body>
+</html>
