@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>
+ontouchstart
+</title>
+</head>
+<body>
+<script>
+function SlideControl (parent, x1, x2, cb) {
+  var that = this;
+  that.cb = cb;
+  that.parent = parent;
+  that.x1 = x1;
+  that.x2 = x2;
+  that.div = document.createElement('div');
+  that.div.style.position = 'absolute';
+  that.div.style.height = '100%';
+  that.div.style.background = 'red';
+  that.parent.appendChild(this.div);
+  that.update();
+}
+
+SlideControl.prototype.touchDraggable = function () {
+  var that = this;
+  that.div.ontouchstart = function (e) {
+    e.preventDefault();
+    var x0 = e.touches[0].pageX;
+    var x1 = that.x1;
+    var x2 = that.x2;
+    that.div.ontouchmove = function(e){
+      e.preventDefault();
+      var dx = e.touches[0].pageX - x0;
+      that.x1 = x1 + dx;
+      that.x2 = x2 + dx;
+
+      if(that.x1 < 0) {
+        that.x1 = 0;
+        that.x2 = x2 - x1;
+        that.update();
+        return;
+      }
+      if(that.x2 > that.parent.clientWidth) {
+        that.x2 = that.parent.clientWidth;
+        that.x1 = that.x2 - x2 + x1;
+        that.update();
+        return;
+      }
+      that.update();
+    }
+    e.target.ontouchend = function(e){
+      that.div.ontouchmove = null;
+    }
+  };
+};
+
+SlideControl.prototype.mouseDraggable = function () {
+  var that = this;
+  that.div.onmousedown = function (e) {
+    e.preventDefault();
+    var x0 = e.pageX;
+    var x1 = that.x1;
+    var x2 = that.x2;
+    that.div.onmousemove = function(e){
+      var dx = e.pageX - x0;
+      that.x1 = x1 + dx;
+      that.x2 = x2 + dx;
+
+      if(that.x1 < 0) {
+        that.x1 = 0;
+        that.x2 = x2 - x1;
+        that.update();
+        return;
+      }
+      if(that.x2 > that.parent.clientWidth) {
+        that.x2 = that.parent.clientWidth;
+        that.x1 = that.x2 - x2 + x1;
+        that.update();
+        return;
+      }
+      that.update();
+    }
+    e.target.onmouseup = function(e){
+      that.div.onmousemove = null;
+    }
+  };
+};
+
+SlideControl.prototype.update = function () {
+  this.div.style.left = this.x1 + 'px';
+  this.div.style.width = (this.x2 - this.x1) + 'px';
+  this.cb(this.x1, this.x2);
+};
+
+var rail = document.createElement('div');
+rail.style.position = 'relative';
+rail.style.width = '500px';
+rail.style.height = '50px';
+rail.style.margin = 'auto';
+rail.style.background = '#003300';
+document.body.appendChild(rail);
+
+var output = document.createElement('div');
+document.body.appendChild(output);
+
+var sc = new SlideControl(rail, 0, 100, function (x1, x2) {
+    output.innerHTML = '[' + x1 + ',' + x2 + ']';
+  });
+
+if('ontouchstart' in document.body) {
+  sc.touchDraggable();
+}
+else {
+  sc.mouseDraggable();
+}
+
+</script>
+</body>
+</html>
