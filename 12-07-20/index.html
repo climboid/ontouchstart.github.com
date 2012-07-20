@@ -195,6 +195,9 @@ SlideControl.prototype.mouseDraggable = function () {
     hotspot.onmouseup = function(e){
       hotspot.onmousemove = null;
     }
+    hotspot.onmouseout = function(e){
+      hotspot.onmousemove = null;
+    }
   };
 
   leftButton.onmousedown = function (e) {
@@ -225,6 +228,9 @@ SlideControl.prototype.mouseDraggable = function () {
     leftButton.onmouseup = function(e){
       leftButton.onmousemove = null;
     }
+    leftButton.onmouseout = function(e){
+      leftButton.onmousemove = null;
+    }
   };
 
   rightButton.onmousedown = function (e) {
@@ -253,6 +259,9 @@ SlideControl.prototype.mouseDraggable = function () {
       that.update();
     }
     rightButton.onmouseup = function(e){
+      rightButton.onmousemove = null;
+    }
+    rightButton.onmouseout = function(e){
       rightButton.onmousemove = null;
     }
   };
