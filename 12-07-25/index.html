@@ -10,6 +10,7 @@
 <body>
 <script src="sha1.js"></script>
 <script>
+(function() {
 var input = document.createElement('textarea');
 input.cols = 80;
 input.rows = 6;
@@ -47,9 +48,15 @@ function tree(parent, jsonObj) {
   parent.appendChild(dl);
 }
 
+var ol = document.createElement('ol');
+document.body.appendChild(ol);
+
+var output = document.createElement('div');
+document.body.appendChild(output);
+
 for( var i in localStorage) {
   if(localStorage.hasOwnProperty(i)) {
-    var div = document.createElement('div')
+    var li = document.createElement('li')
     var key = document.createElement('button');
     key.innerHTML = i;
     key.value = localStorage.getItem(i);
@@ -62,12 +69,13 @@ for( var i in localStorage) {
       main.style.display = 'none';
       add.style.display = 'none';
 
-      tree(document.body, obj);
+      output.innerHTML = this.innerHTML ;
+      tree(output, obj);
       
       if(obj.hasOwnProperty("main")) {
         var run = document.createElement('button');
         run.innerHTML = 'RUN';
-        document.body.appendChild(run);
+        output.appendChild(run);
         run.onclick = function () {
           try {
             eval('f = ' + obj["main"]);
@@ -83,13 +91,13 @@ for( var i in localStorage) {
     var del = document.createElement('button');
     del.innerHTML = 'DEL';
     del.key = i;
-    div.appendChild(del);
+    li.appendChild(del);
     del.onclick = function () {
       localStorage.removeItem(this.key);
       document.location.href = '.';    
     }
-    div.appendChild(key);
-    document.body.appendChild(div);
+    li.appendChild(key);
+    ol.appendChild(li);
   }
 }
 
@@ -141,7 +149,7 @@ xhrMain.onreadystatechange = function () {
 
 xhrMain.open('get', 'main.js');
 xhrMain.send();
-
+})();
 </script>
 </body>
 </html>
