@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>ontouchstart</title>
+<style>
+* {
+  font: 18px American Typewriter;
+}
+</style>
+</head>
+<body>
+<script src="sha1.js"></script>
+<script>
+var input = document.createElement('textarea');
+input.cols = 80;
+input.rows = 6;
+input.json = {};
+
+var main = document.createElement('textarea');
+main.cols = 80;
+main.rows = 12;
+
+document.body.appendChild(input);
+document.body.appendChild(main);
+
+var add = document.createElement('button');
+add.innerHTML = 'ADD';
+document.body.appendChild(add);
+
+function tree(parent, jsonObj) {
+  var dl = document.createElement('dl');
+  for (var key in jsonObj) {
+    if(jsonObj.hasOwnProperty(key)) {
+      var value = jsonObj[key];
+      var dt = document.createElement('dt');
+      dt.innerHTML = key;
+      var dd = document.createElement('dd');
+      if(typeof value === 'string' || typeof value === 'number' ) {
+        dd.innerHTML = '<pre>' +  value + '</pre>';
+      }
+      else {
+        tree(dd, value);
+      }
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    }
+  }
+  parent.appendChild(dl);
+}
+
+for( var i in localStorage) {
+  if(localStorage.hasOwnProperty(i)) {
+    var div = document.createElement('div')
+    var key = document.createElement('button');
+    key.innerHTML = i;
+    key.value = localStorage.getItem(i);
+    key.onclick = function () {
+      var obj = JSON.parse(this.value);
+      main.value = obj.main;
+      var data = JSON.parse(this.value);
+      delete(data.main);
+      input.style.display = 'none';
+      main.style.display = 'none';
+      add.style.display = 'none';
+
+      tree(document.body, obj);
+      
+      if(obj.hasOwnProperty("main")) {
+        var run = document.createElement('button');
+        run.innerHTML = 'RUN';
+        document.body.appendChild(run);
+        run.onclick = function () {
+          try {
+            eval('f = ' + obj["main"]);
+            f.apply(obj);
+          }
+          catch (err) {
+            console.log(err);
+          }
+        };
+      }
+    }
+
+    var del = document.createElement('button');
+    del.innerHTML = 'DEL';
+    del.key = i;
+    div.appendChild(del);
+    del.onclick = function () {
+      localStorage.removeItem(this.key);
+      document.location.href = '.';    
+    }
+    div.appendChild(key);
+    document.body.appendChild(div);
+  }
+}
+
+add.onclick = function () {
+  try {
+    var jsonObj = JSON.parse(input.value);
+    jsonObj.main = main.value;
+    var jsonString = JSON.stringify(jsonObj);
+    var sha1 = CryptoJS.SHA1(jsonString);
+    document.title = sha1;
+    localStorage.setItem(sha1, jsonString);
+    document.location.href = '.';    
+  }
+  catch(err) {
+    input.value += '\n' + err;
+  }
+};
+
+
+var xhrInput = new XMLHttpRequest();
+
+xhrInput.onreadystatechange = function () {
+  if(xhrInput.readyState === 4) {
+    try {
+      input.json = JSON.parse(xhrInput.responseText);
+      input.value = JSON.stringify(input.json);
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+xhrInput.open('get', 'input.json');
+xhrInput.send();
+
+var xhrMain = new XMLHttpRequest();
+
+xhrMain.onreadystatechange = function () {
+  if(xhrMain.readyState === 4) {
+    try {
+      main.value = xhrMain.responseText;
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+xhrMain.open('get', 'main.js');
+xhrMain.send();
+
+</script>
+</body>
+</html>
