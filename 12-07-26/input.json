@@ -1,0 +1,33 @@
+{
+  "railStyle" : {
+    "position" : "relative",
+    "width" : "500px",
+    "height" :  "50px",
+    "margin" : "auto",
+    "background" : "#003300",
+    "overflow" : "hidden"
+  },
+  "controlStyle": {
+    "position" : "absolute",
+    "height" : "100%",
+    "background" : "red",
+    "margin" : 0,
+    "padding" : 0
+  },
+  "leftButtonStyle" : {
+    "position" : "absolute",
+    "width" : "40px",
+    "height" : "100%",
+    "background" : "#cc0000",
+    "top" : 0,
+    "left" : "-40px"
+  },
+  "rightButtonStyle" : {
+    "position" : "absolute",
+    "width" : "40px",
+    "height" : "100%",
+    "background" : "#cc0000",
+    "top" : 0,
+    "right" : "-40px"
+  }  
+}
