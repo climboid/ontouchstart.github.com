@@ -53,16 +53,21 @@
         });
       grid[i][j].innerHTML = '';
       grid[i][j].avoid = false;
+      grid[i][j].x = i;
+      grid[i][j].y = j;
+      grid[i][j].ontouchstart = function () {
+         randomWalk(this.x, this.y);
+      }
     }
   }
 
   function stuck(x, y) {
-    if(x == 0 || x == n-1 || y == 0 || y == n-1) {
+    if(x < 1 || x > n-2 || y < 1 || y > n-2) {
       return false;
     }
     else {
-      return ( grid[x-1][y].avoid && grid[x][y-1].avoid &&
-grid[x+1][y].avoid && grid[x][y+1].avoid );
+      return (grid[x-1][y].avoid && grid[x][y-1].avoid &&
+grid[x+1][y].avoid && grid[x][y+1].avoid);
     }    
   }
 
@@ -99,13 +104,16 @@ grid[x+1][y].avoid && grid[x][y+1].avoid );
     var x = x0;
     var y = y0;
     var counter = 0;
-   
+    var stack = 0;
+
     function walk() {
+      stack++;
+//      console.log( 'stack = ' + stack);
       grid[x][y].innerHTML = counter;
       grid[x][y].style.background = 'rgba(255,255,0,0.5)';
-      if(stuck(x,y)) {
-        document.title = 'stuck at ' + x + ',' + y;       
-        return;
+
+      if(stack > 1000) {
+        return false;
       }    
 
       grid[x][y].avoid = true;
@@ -113,63 +121,63 @@ grid[x+1][y].avoid && grid[x][y+1].avoid );
    
       switch(direction) {
         case 0:
-          if( x < n-1 && grid[x+1][y].avoid ) {
-           walk();
+          if( x < n-1 && grid[x+1][y].avoid || stuck(x+1, y)) {
+           return walk();
           }
           else {
             counter++;
             cut(x, y, direction);
             x++;
             if(x < n) {
-              walk();
+              return walk();
             }
           }
           break;
         case 1:
-          if( y > 0 && grid[x][y-1].avoid ) {
-            walk();
+          if( y > 0 && grid[x][y-1].avoid || stuck(x, y-1)) {
+            return walk();
           }
           else {
             counter++;
             cut(x, y, direction);
             y--;
             if(y > -1) {
-              walk();
+              return walk();
             }
           }
           break;
         case 2:
-          if( x > 0 && grid[x-1][y].avoid ) {
-            walk();
+          if( x > 0 && grid[x-1][y].avoid || stuck(x-1, y)) {
+            return walk();
           }
           else {
             counter++;   
             cut(x, y, direction);
             x--;
             if(x > -1) {
-              walk();
+              return walk();
             }
           }
           break;
         case 3:
-          if( y < n-1 && grid[x][y+1].avoid ) {
-            walk();
+          if( y < n-1 && grid[x][y+1].avoid || stuck(x, y+1)) {
+            return walk();
           }
           else {
             counter++;             
             cut(x, y, direction);
             y++;
             if(y < n) {
-              walk();
+              return walk();
             }
           }
           break;
         }
+      stack--;
+      return true;
     }
-    walk();
+    return walk();
   }
- 
-  randomWalk(12,12);
 
 }());
 </script>
