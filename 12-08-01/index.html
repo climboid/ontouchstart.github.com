@@ -139,6 +139,9 @@ grid[x+1][y].avoid && grid[x][y+1].avoid));
     var pathColor = randomColor();
 
     function walk() {
+      grid[x][y].ontouchstart = function () {
+        log('(' + this.x + ',' + this.y + ') can not be a starting point.', 'rgba(255,0,0,0.5)');
+      };
       path.push([x,y]);
       grid[x][y].innerHTML = counter;
       grid[x][y].style.background = pathColor;
@@ -157,7 +160,7 @@ grid[x+1][y].avoid && grid[x][y+1].avoid));
         }
 
         if(availableStartList.length == 0) {
-          log('totally stuck at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+          log('completely stuck at ' + counter + ' (' + x + ',' + y + ')', pathColor);
           return false;
         }
         var start = availableStartList.pop();     
