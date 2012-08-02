@@ -25,13 +25,17 @@
   var n = 25;
   var size = 500/n;
   var board = div(container, {
+      webkitUserSelect: 'none',
       position : 'relative',
       width : (n * size) + 'px',
       height : (n * size) + 'px',
       margin : '5% auto',
-      padding : 0
+      textAlign : 'center',
+      border : '3px solid black',
+      padding : 0,
     });
 
+  board.innerHTML = 'ontouchstart';
   var logContainer = div(container);
   function log(message, color) {
     var color = color || 'transparent';
@@ -40,10 +44,15 @@
 
   var grid = [];
   var emptyCellList = [];
+
+  function buildMaze() {
+    board.innerHTML = '';
+    logContainer.innerHTML = '';  
   for(var i = 0; i < n; i++) {
     grid[i] = [];
     for(var j = 0; j < n; j++) {
       grid[i][j] = div(board, {
+          webkitUserSelect: 'none',
           width : (size-2) + 'px',
           height : (size-2) + 'px',
           background : 'transparent',
@@ -51,7 +60,7 @@
           left : (i * size) + 'px',
           top : (j * size) + 'px',
           textAlign : 'center',
-          fontSize : '10px',
+          fontSize : '8px',
           margin : 0,
           borderRight : '1px solid black',
           borderTop : '1px solid black',
@@ -227,16 +236,20 @@ grid[x+1][y].avoid && grid[x][y+1].avoid));
   while(emptyCellList.length > 0) {
 emptyCellList[Math.floor(Math.random()*emptyCellList.length)].start();
   }
-
-  board.ontouchstart = function () {
-    for(var i = 0; i < n; i++) {
-      for(var j = 0; j < n; j++) {
-        grid[i][j].style.backgroundColor = 'transparent';
-        grid[i][j].style.color = 'transparent';
-      }
-    }
-    logContainer.style.display = 'none';
   }
+
+//  buildMaze();
+//  board.ontouchstart = function () {
+//    for(var i = 0; i < n; i++) {
+//      for(var j = 0; j < n; j++) {
+//        grid[i][j].style.backgroundColor = 'transparent';
+////        grid[i][j].innerHTML = '';
+//      }
+//    }
+//    logContainer.innerHTML = '';
+    board.ontouchstart = buildMaze;
+//  }
+
 
 }());
 </script>
