@@ -1,0 +1,421 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>ontouchstart</title>
+<head>
+<body>
+<a href="https://github.com/ontouchstart/ontouchstart.github.com/blob/master/12-08-03/index.html">src</a>
+<script>
+(function () {
+  function div (parent, cssOptions) {
+    var el = document.createElement('div');
+    for(var p in cssOptions) {
+      if(cssOptions.hasOwnProperty(p)) {
+        el.style[p] = cssOptions[p];
+      }
+    }
+    parent.appendChild(el);
+    return el;  
+  }
+
+  function randomColor() {
+    var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
+  }
+
+  var container = div(document.body, {
+      width : '100%',
+      height : '100%'
+    });
+  
+  var n = 25;
+  var size = 500/n;
+  var board = div(container, {
+      webkitUserSelect: 'none',
+      position : 'relative',
+      width : (n * size) + 'px',
+      height : (n * size) + 'px',
+      margin : '5% auto',
+      textAlign : 'center',
+      border : '3px solid black',
+      padding : 0,
+    });
+
+  board.innerHTML = 'ontouchstart';
+  var logContainer = div(container);
+  function log(message, color) {
+    var color = color || 'transparent';
+    div(logContainer, { backgroundColor : color }).innerHTML = message;
+  }
+
+  var grid = [];
+  var emptyCellList = [];
+
+  function buildMaze() {
+    board.innerHTML = '';
+    logContainer.innerHTML = '';  
+    for(var i = 0; i < n; i++) {
+      grid[i] = [];
+      for(var j = 0; j < n; j++) {
+        grid[i][j] = div(board, {
+          webkitUserSelect: 'none',
+          width : (size-2) + 'px',
+          height : (size-2) + 'px',
+          background : 'transparent',
+          position : 'absolute',
+          left : (i * size) + 'px',
+          top : (j * size) + 'px',
+          textAlign : 'center',
+          fontSize : '8px',
+          margin : 0,
+          borderRight : '1px solid black',
+          borderTop : '1px solid black',
+          borderLeft : '1px solid black',  
+          borderBottom : '1px solid black'                 
+        });
+        grid[i][j].innerHTML = '';
+        grid[i][j].avoid = false;
+        grid[i][j].x = i;
+        grid[i][j].y = j;
+        grid[i][j].start = function () {
+          randomWalk(this.x, this.y);
+        }
+        emptyCellList.push(grid[i][j]);
+      }
+    }
+
+    function stuck(x, y) {
+      if(x < 1 || x > n-2 || y < 1 || y > n-2) {
+        return false;
+      }
+      else {
+        return (grid[x][y].avoid || (grid[x-1][y].avoid && grid[x][y-1].avoid &&
+grid[x+1][y].avoid && grid[x][y+1].avoid));
+      }    
+    }
+
+    function cut(i, j, direction) {
+      switch(direction) {
+        case 0: 
+          grid[i][j].style.borderRight = '1px solid transparent';
+          if( i < n-1 ){
+            grid[i+1][j].style.borderLeft = '1px solid transparent';
+          }
+          break;
+        case 1:
+          grid[i][j].style.borderTop = '1px solid transparent';
+          if( j > 0 ){
+            grid[i][j-1].style.borderBottom = '1px solid transparent';
+          }
+          break;
+        case 2:
+          grid[i][j].style.borderLeft = '1px solid transparent';
+          if( i > 0 ){
+            grid[i-1][j].style.borderRight = '1px solid transparent';
+          }
+          break;
+        case 3:
+          grid[i][j].style.borderBottom = '1px solid transparent';
+          if( j < n-1 ){
+            grid[i][j+1].style.borderTop = '1px solid transparent';
+          }
+          break;
+      }
+    }
+
+    function getDirectionList (x,y) {
+      var directionList = [];
+      if(!stuck(x+1, y)) {
+        directionList.push(0);
+      }
+      if(!stuck(x, y-1)) {
+        directionList.push(1);
+      }
+      if(!stuck(x-1, y)) {
+        directionList.push(2);
+      }
+      if(!stuck(x, y+1)) {
+        directionList.push(3);
+      }
+      return directionList;
+    }
+  
+    function randomWalk(x0, y0) {
+      var x = x0;
+      var y = y0;
+      var counter = 0;
+      var tryCount = 0;
+      var path = [];
+      var pathColor = randomColor();
+
+      function walk() {
+        path.push([x,y]);
+        grid[x][y].innerHTML = counter;
+        grid[x][y].style.background = pathColor;
+
+        grid[x][y].avoid = true;
+
+        var tmp = [];
+        for(var i = 0; i < emptyCellList.length; i++)  {
+          if(!emptyCellList[i].avoid) {
+             tmp.push(emptyCellList[i]);
+          }
+        }
+        emptyCellList = tmp;
+
+        var directionList = getDirectionList(x,y);      
+        if(directionList.length === 0) {
+          log('stuck at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+          var availableStartList = [];      
+          for(var i = 0; i < path.length; i++) {
+            if(getDirectionList(path[i][0], path[i][1]).length > 0) {
+              availableStartList.push(path[i]);
+            }
+          }
+
+          if(availableStartList.length == 0) {
+            log('completely stuck at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+            for(var i = 0; i < path.length; i++) {
+              grid[path[i][0]][path[i][1]].isDead = true;
+            }
+            return false;
+          }
+          var start = availableStartList.pop();
+          x = start[0];
+          y = start[1];
+          counter=0;
+          return walk();
+        }
+
+        var direction = directionList[Math.floor(Math.random() * directionList.length)];
+   
+        switch(direction) {
+          case 0:
+            counter++;
+            cut(x, y, 0);
+            x++;
+            if(x > n-1) {
+              log('out at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+              return true;
+            }
+            break;
+          case 1:
+            counter++;            
+            cut(x, y, 1);
+            y--;
+            if(y < 0) {
+              log('out at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+              return true;
+            }
+            break;
+          case 2:
+            counter++;   
+            cut(x, y, 2);
+            x--;
+            if(x < 0) {
+              log('out at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+              return true;
+            }
+            break;
+          case 3:
+            counter++;             
+            cut(x, y, direction);
+            y++;
+            if(y > n-1) {
+              log('out at ' + counter + ' (' + x + ',' + y + ')', pathColor);
+              return true;
+            }
+            break;
+        }
+        return walk();
+      }
+      return walk();
+    }
+
+    emptyCellList[Math.floor(n*n/2)].start();
+
+    while(emptyCellList.length > 0) {
+emptyCellList[Math.floor(Math.random()*emptyCellList.length)].start();
+    }
+  }
+
+  function play () {
+    var openCellList = [];
+    logContainer.innerHTML = '';
+
+    function randomLast(inputList) {
+      var outputList = [];
+      var pick = Math.floor(Math.random()*inputList.length);
+      for(var i = 0; i < inputList.length; i++) {
+        if(i !== pick) {
+          outputList.push(inputList[i]);
+        }
+      }
+      outputList.push(inputList[pick]);
+      return outputList;
+    }
+
+    var currentCell;
+    var currentColor = randomColor();
+    function walk(cell) {
+      currentCell = cell;
+      currentCell.style.backgroundColor = currentColor;
+
+      var tmp = [];
+
+      for(var i = 0; i < openCellList.length; i++) {
+        if(openCellList[i].x !== currentCell.x && openCellList[i].y !== currentCell.y) {
+          tmp.push(openCellList[i]);
+        }        
+      }
+      openCellList = tmp;
+
+      updateControl();
+    }
+
+    var controlPanel = div(container, {
+      webkitUserSelect: 'none',
+      position : 'relative',
+      width : (150) + 'px',
+      height : (150) + 'px',
+      margin : '5% auto',
+      textAlign : 'center',
+      border : '3px solid black',
+      padding : 0
+    });
+
+    var control = [];
+    for(var i = 0; i < 3; i++) {
+      control[i] = [];
+      for(var j = 0; j < 3; j++) {
+        control[i][j] = div(controlPanel, {
+          webkitUserSelect: 'none',
+          width : '50px',
+          height : '50px',
+          background : 'green',
+          position : 'absolute',
+          left : (i * 50) + 'px',
+          top : (j * 50) + 'px'   
+        });        
+      }
+    }
+    control[0][0].style.display = 'none';
+    control[0][2].style.display = 'none';
+    control[1][1].style.display = 'none';
+    control[2][0].style.display = 'none';
+    control[2][2].style.display = 'none';
+
+    control[2][1].ontouchstart = function () {
+      var x = currentCell.x;
+      var y = currentCell.y;
+      if(x < n-1) {
+        walk(grid[x+1][y]);
+      }
+      else {
+        out();
+      }
+    }
+
+    control[1][0].ontouchstart = function () {
+      var x = currentCell.x;
+      var y = currentCell.y;
+      if(y > 0) {
+        walk(grid[x][y-1]);
+      }
+      else {
+        out();
+      }
+    }
+
+    control[0][1].ontouchstart = function () {
+      var x = currentCell.x;
+      var y = currentCell.y;
+      if(x > 0 ) {
+        walk(grid[x-1][y]);
+      }
+      else {
+        out();
+      }
+    }
+
+    control[1][2].ontouchstart = function () {
+      var x = currentCell.x;
+      var y = currentCell.y;
+      if(y < n-1) {
+        walk(grid[x][y+1]);
+      }
+      else {
+        out();
+      }
+    }
+
+    function out () {
+      alert('Congratulations! You are out!');
+      openCellList = randomLast(openCellList);
+      currentColor = randomColor();
+      walk(openCellList.pop());
+    }
+
+    function updateControl() {
+      if(currentCell.style.borderRight === '1px solid black') {
+        control[2][1].style.display = 'none';
+      }
+      else {
+        control[2][1].style.display = 'block';
+        control[2][1].style.backgroundColor = currentColor;
+      }
+
+      if(currentCell.style.borderTop === '1px solid black') {
+        control[1][0].style.display = 'none';
+      }
+      else {
+        control[1][0].style.display = 'block';
+        control[1][0].style.backgroundColor = currentColor;
+      }
+
+      if(currentCell.style.borderLeft === '1px solid black') {
+        control[0][1].style.display = 'none';
+      }
+      else {
+        control[0][1].style.display = 'block';
+        control[0][1].style.backgroundColor = currentColor;
+      }
+
+      if(currentCell.style.borderBottom === '1px solid black') {
+        control[1][2].style.display = 'none';
+      }
+      else {
+        control[1][2].style.display = 'block';
+        control[1][2].style.backgroundColor = currentColor;
+      }
+    }
+
+    for(var i = 0; i < n; i++) {
+      for(var j = 0; j < n; j++) {
+        grid[i][j].innerHTML = '';
+        if(grid[i][j].isDead) {
+          grid[i][j].style.backgroundColor = 'red';
+        }
+        else {
+          grid[i][j].style.backgroundColor = 'transparent';
+          openCellList.push(grid[i][j]);
+        }
+      }
+    }
+
+    openCellList = randomLast(openCellList);
+    walk(openCellList.pop());
+  }
+
+  board.ontouchstart = function () {
+    buildMaze();
+    board.ontouchstart = null;
+    play();
+  };
+
+}());
+</script>
+</body>
+</html>
