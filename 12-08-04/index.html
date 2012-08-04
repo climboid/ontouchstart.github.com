@@ -434,6 +434,7 @@ emptyCellList[Math.floor(Math.random()*emptyCellList.length)].start();
 
   board.ontouchstart = function () {
     buildMaze();
+    board.style.border = 'none';
     board.ontouchstart = null;
     play();
   };
