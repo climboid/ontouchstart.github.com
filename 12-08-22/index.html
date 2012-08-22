@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>ontouchstart</title>
+    <script src="jquery.js"></script>
+    <script src="underscore.js"></script>
+    <script src="backbone.js"></script>
+    <script src="raphael.js"></script>
+  </head>
+  <body>
+    <script>
+      function log(objName, parent) {
+        parent = parent || $('body');
+        parent.append(
+          $('<div></div>')
+           .append($('<h1></h1>').html(objName))
+           .append($('<pre></pre>').html(eval(objName)))
+        );
+
+        console.log(objName);
+        console.log(eval(objName));
+      }
+
+      var versionList = [
+        '$.fn.jquery',
+        '_.VERSION',
+        'Backbone.VERSION',
+        'Raphael.version'
+      ];
+
+      _.each(versionList, function(item) { log(item);} );     
+    </script>
+  </body>
+</html>
