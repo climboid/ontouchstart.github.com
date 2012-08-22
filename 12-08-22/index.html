@@ -11,9 +11,9 @@
       function log(objName, parent) {
         parent = parent || $('body');
         parent.append(
-          $('<div></div>')
-           .append($('<h1></h1>').html(objName))
-           .append($('<pre></pre>').html(eval(objName)))
+          $('<dl></dl>')
+           .append($('<dt></dt>').html(objName))
+           .append($('<dd></dd>').html(eval(objName)))
         );
 
         console.log(objName);
@@ -27,7 +27,19 @@
         'Raphael.version'
       ];
 
-      _.each(versionList, function(item) { log(item);} );     
+      _.each(versionList, function(item) { log(item);} );
+
+     var $c = $('<div></div>')
+       .css({position: 'relative', width: 640, height: 480, background: '#ccc'})
+       .attr('id', 'paper')
+       .appendTo($('body'));
+
+     var paper = Raphael('paper', $c.width(), $c.height());
+
+     var ellipse = paper.ellipse($c.width()/2, $c.height()/2, $c.width()/4, $c.height()/4);
+     ellipse.attr('fill', '#f00');
+     ellipse.attr('stroke', 'none');
+     
     </script>
   </body>
 </html>
