@@ -11,40 +11,45 @@
       function log(objName, parent) {
         parent = parent || $('body');
         parent.append(
-          $('<dl></dl>')
-           .append($('<dt></dt>').html(objName))
-           .append($('<dd></dd>').html(eval(objName)))
+        $('<dl></dl>')
+        .append($('<dt></dt>').html(objName))
+        .append($('<dd></dd>').html(eval(objName)))
         );
 
         console.log(objName);
         console.log(eval(objName));
       }
 
-      var versionList = [
+      $(function () {
+        var versionList = [
         '$.fn.jquery',
         '_.VERSION',
         'Backbone.VERSION',
         'Raphael.version'
-      ];
-     var $c = $('<div></div>')
-       .css({
-         position: 'relative',
-         width: '100%', 
-         height: 400, 
-         background: '#ccc'
-       })
-       .attr('id', 'paper')
-       .appendTo($('body'));
+        ];
 
-     var paper = Raphael('paper', $c.width(), $c.height());
+        var $c = $('<div></div>')
+        .css({
+          position: 'relative',
+          width: '100%', 
+          height: 400, 
+          background: '#ccc'
+        })
+        .attr('id', 'paper')
+        .appendTo($('body'));
 
-     var ellipse = paper.ellipse($c.width()/2, $c.height()/2, $c.width()/4, $c.height()/4).attr({
-        fill: '#f00',
-        stroke: 'none'
+        var paper = Raphael('paper', $c.width(), $c.height());
+
+        var ellipse = paper.ellipse($c.width()/2, $c.height()/2, $c.width()/4, $c.height()/4).attr({
+          fill: '#f00',
+          stroke: 'none'
+        });
+
+        var anim = Raphael.animation({rx: $c.height()/4}, 1000);
+        ellipse.animate(anim.delay(1000));
+
+        _.each(versionList, function(item) { log(item);} );
       });
-
-      _.each(versionList, function(item) { log(item);} );
-
     </script>
   </body>
 </html>
