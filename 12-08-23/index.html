@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>ontouchstart</title>
+    <script src="raphael.js"></script>
+  </head>
+  <body>
+    <script>
+      (function play(parent) {
+        parent = parent || document.body;
+
+        var w = document.createElement('div');
+        w.style.width = '100%';
+        w.style.height = '100%';
+
+        var c = document.createElement('div');
+        c.style.position = 'relative';
+        c.style.width = '80%';
+        c.style.height = '60%';
+        c.style.background = '#000';
+        c.style.margin = '20% auto';
+        c.id = 'c';
+
+        w.appendChild(c);
+
+        parent.appendChild(w); 
+
+        var paper = Raphael('c', c.clientWidth, c.clientHeight);
+
+        function randomColor () {
+          var r = Math.floor(Math.random() * 256);
+          var g = Math.floor(Math.random() * 256);
+          var b = Math.floor(Math.random() * 256);
+          var a = Math.random();
+          return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+        }
+
+        function bubble(x, y) {
+           paper.circle(x, y, 40).attr({
+             fill: randomColor(),
+             stroke: 'none'
+           }).animate(Raphael.animation({
+              cx: c.clientWidth/2, 
+              cy: c.clientHeight/2, 
+              r: 0,
+             fill: randomColor()
+             }, 1000));
+        }
+
+        c.ontouchstart = c.ontouchmove = function (e) {
+           e.preventDefault();
+           for(var i = 0; i < e.touches.length; i++) {
+             var x = e.touches[i].pageX - c.offsetLeft;
+             var y = e.touches[i].pageY - c.offsetTop;
+             bubble(x,y);
+           }        
+        };
+
+      })(document.body);
+    </script>
+  </body>
+</html>
+
