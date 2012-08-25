@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ontouchstart</title>
+    <script src="zepto.js"></script>
+    <script src="underscore.js"></script>
+    <script src="backbone.js"></script>
+    <script src="raphael.js"></script>
+  </head>
+  <body>
+    <script>
+      (function play(parent) {
+        parent = parent || document.body;
+        parent.style.padding = 0;
+        parent.style.margin = 0;
+        var $w = $("<div></div>").css({
+        position: "absolute",
+        width: "100%",
+        height: "100%"
+      });
+
+      var $c = $("<div></div>").css({
+      width: "80%",
+      height: "90%",
+      position: "relative",
+      background: "#000",
+      margin: "5% auto"
+    });
+    $w.append($c);
+    $(parent).append($w);
+    var AppView = Backbone.View.extend({
+      initialize : function($el) {
+        var view = this;
+
+        view.$el = $el;
+        view.width = $el.width();
+        view.height = $el.height();
+        view.offset = $el.offset();
+
+        var paper = Raphael($el.get(0), view.width, view.height);
+
+        function randomColor () {
+          var r = Math.floor(Math.random() * 256);
+          var g = Math.floor(Math.random() * 256);
+          var b = Math.floor(Math.random() * 256);
+          var a = Math.random();
+          return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+        }
+
+        function bubble(x, y) {
+          paper.circle(x, y, 40).attr({
+            fill: randomColor(),
+            stroke: "none"
+            }).animate(Raphael.animation({
+            cx: view.width/2, 
+            cy: view.height/2, 
+            r: 0,
+            fill: randomColor()
+          }, 1000));
+        }
+
+        function touchBubble (e) {
+          e.preventDefault();
+          for(var i = 0; i < e.touches.length; i++) {
+            var x = e.touches[i].pageX - view.offset.left;
+            var y = e.touches[i].pageY - view.offset.top;
+            bubble(x,y);
+          }        
+        }
+
+        $el.on("touchstart", touchBubble);
+        $el.on("touchmove", touchBubble);
+
+        $(window).on("orientationchange", function () {
+          view.width = $el.width();
+          view.height = $el.height();
+          view.offset = $el.offset();
+        });
+      }
+    });
+
+    new AppView($c);
+
+  })(document.body);
+</script>
+  </body>
+</html>
