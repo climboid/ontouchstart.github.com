@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <script>
+      var ns = "http://www.w3.org/2000/svg";
+      var svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("viewBox", "0 0 700 500");
+      svg.setAttribute("width", 700);
+      svg.setAttribute("height", 500);
+
+      var path1 = document.createElementNS(ns, "path");
+      path1.setAttribute("d", "M 0 250 L 700 250");
+      path1.setAttribute("stroke", "red");
+      path1.setAttribute("stroke-width", 10);
+      path1.setAttribute("opacity", 0.1);
+
+      var path2 = document.createElementNS(ns, "path");
+      path2.setAttribute("d", "M 0 250 L 700 250");
+      path2.setAttribute("stroke", "red");
+      path2.setAttribute("stroke-width", 10);
+
+      var clipPath = document.createElementNS(ns, "clipPath");
+      clipPath.id = "clip";
+
+      var rect1 = document.createElementNS(ns, "rect");
+      rect1.setAttribute("x", 100);
+      rect1.setAttribute("y", 0);
+      rect1.setAttribute("width", 100);
+      rect1.setAttribute("height", 500);
+   
+      clipPath.appendChild(rect1);
+
+      svg.appendChild(clipPath);
+
+      svg.appendChild(path1);
+      svg.appendChild(path2);
+      path2.setAttribute("clip-path", "url(#clip)");
+
+      var rect2 = document.createElementNS(ns, "rect");
+      rect2.setAttribute("x", 100);
+      rect2.setAttribute("y", 0);
+      rect2.setAttribute("width", 100);
+      rect2.setAttribute("height", 500);
+      rect2.setAttribute("stroke", "blue");
+      rect2.setAttribute("fill", "none");
+
+      document.ontouchstart = function (e) {
+        e.preventDefault();
+        var x0 = e.touches[0].pageX;
+        var x = parseInt(rect2.getAttribute("x"));
+        document.ontouchmove = function (e) {
+          e.preventDefault();
+          var x1 = x + e.touches[0].pageX - x0;
+          rect1.setAttribute("x", x1);
+          rect2.setAttribute("x", x1);
+          document.title = x1;         
+        };
+      };
+      svg.appendChild(rect2);
+
+      document.body.appendChild(svg);
+      
+    </script>
+  </body>
+</html>
