@@ -105,7 +105,12 @@
           var x0 = e.touches[0].pageX;
           var x = parseInt(rect2.getAttribute("x"));
           var dx = parseInt(rect2.getAttribute("width"));
-          if(x0 > x && x0 < x + dx) {        
+
+          var y0 = e.touches[0].pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {        
             document.ontouchmove = function (e) {
               e.preventDefault();
               var x1 = x + e.touches[0].pageX - x0;
@@ -124,7 +129,12 @@
           var x0 = e.pageX;
           var x = parseInt(rect2.getAttribute("x"));
           var dx = parseInt(rect2.getAttribute("width"));
-          if(x0 > x && x0 < x + dx) {        
+
+          var y0 = e.pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {   
             document.onmousemove = function (e) {
               e.preventDefault();
               var x1 = x + e.pageX - x0;
