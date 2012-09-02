@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <script>
+      var ns = "http://www.w3.org/2000/svg";
+      var svg = document.createElementNS(ns, "svg");
+
+      function setCSS(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.style[k] = attr[k];
+          }
+        }
+        return el;
+      }
+
+      function setAttr(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.setAttribute(k, attr[k]);
+          }
+        }
+        return el;
+      }
+
+      function resize (svg, path1, path2, rect1, rect2) {        
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        setAttr(svg, { 
+          "viewBox" : "0 0 " + w + " " + h,
+          "width" : w,
+          "height" : h
+        });
+
+        setCSS(svg, {
+          position : "absolute",
+          left : 0,
+          top : 0,
+          margin : 0,
+          width : w + "px",
+          height : h + "px"
+        });
+
+        setAttr(path1, {
+          "stroke-width" : h/100
+        });
+
+        setAttr(path2, {
+          "stroke-width" : h/100
+        });
+
+        setAttr(rect1, {
+          x : w/2 - w/20,
+          y : 0,
+          width : w/10,
+          height : h
+        });
+
+        setAttr(rect2, {
+          x : w/2 - w/20,
+          y : h - h/3,
+          width : w/10,
+          height : h/10,
+          rx : w/20,
+          ry : h/20
+        });
+      }
+
+      var path1 = document.createElementNS(ns, "path");
+      setAttr(path1, {
+        "stroke" : "red",
+        "stroke-linecap" : "round",
+        "fill" : "none",
+      });
+
+      var path2 = document.createElementNS(ns, "path");
+      setAttr(path2, {
+        "stroke" : "green",
+        "stroke-linecap" : "round",
+        "fill" : "none",
+        "clip-path" : "url(#clip)"
+      });
+
+      var clipPath = document.createElementNS(ns, "clipPath");
+      clipPath.id = "clip";
+
+      var rect1 = document.createElementNS(ns, "rect");
+      clipPath.appendChild(rect1);
+      svg.appendChild(clipPath);
+
+      svg.appendChild(path1);
+      svg.appendChild(path2);
+
+      var rect2 = document.createElementNS(ns, "rect");
+      setAttr(rect2, {
+        stroke : "none",
+        fill : "blue"
+      });            
+
+      if(document.createTouch) {
+        document.ontouchstart = function (e) {
+          e.preventDefault();
+          var x0 = e.touches[0].pageX;
+          var x = parseInt(rect2.getAttribute("x"));
+          var dx = parseInt(rect2.getAttribute("width"));
+
+          var y0 = e.touches[0].pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          var d = "M " + x0 + " " + y0;
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {        
+            document.ontouchmove = function (e) {
+              e.preventDefault();
+              var x1 = x + e.touches[0].pageX - x0;
+              rect1.setAttribute("x", x1);
+              rect2.setAttribute("x", x1);       
+            };
+          }
+          else {
+            document.ontouchmove = function (e) {
+              var x = e.touches[0].pageX;
+              var y = e.touches[0].pageY;
+              d += "L " + x + " " + y;
+              setAttr(path1, { d : d });
+              setAttr(path2, { d : d });
+            };
+          }
+        };
+      }
+      else {
+        document.onmousedown = function (e) {
+          e.preventDefault();
+          var x0 = e.pageX;
+          var x = parseInt(rect2.getAttribute("x"));
+          var dx = parseInt(rect2.getAttribute("width"));
+
+          var y0 = e.pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          var d = "M " + x0 + " " + y0;
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {   
+            document.onmousemove = function (e) {
+              e.preventDefault();
+              var x1 = x + e.pageX - x0;
+              rect1.setAttribute("x", x1);
+              rect2.setAttribute("x", x1);       
+            };
+          }
+          else {
+            document.ontouchmove = function (e) {
+              var x = e.pageX;
+              var y = e.pageY;
+              d += "L " + x + " " + y;
+              setAttr(path1, { d : d });
+              setAttr(path2, { d : d });
+            };
+          }
+        };
+
+        document.onmouseup = function () {
+          document.onmousemove = null;
+        };
+      }
+
+      svg.appendChild(rect2);
+
+      window.onresize = function () {
+        resize(svg, path1, path2, rect1, rect2);
+      };
+
+      document.body.appendChild(svg);
+
+      window.onresize();
+    </script>
+  </body>
+</html>
+
+
