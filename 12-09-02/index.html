@@ -101,6 +101,7 @@
         fill : "blue"
       });            
 
+      var d = "";
       if(document.createTouch) {
         document.ontouchstart = function (e) {
           e.preventDefault();
@@ -112,7 +113,7 @@
           var y = parseInt(rect2.getAttribute("y"));
           var dy = parseInt(rect2.getAttribute("height"));
 
-          var d = "M " + x0 + " " + y0;
+          d += "M " + x0 + " " + y0;
           if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {        
             document.ontouchmove = function (e) {
               e.preventDefault();
@@ -143,7 +144,7 @@
           var y = parseInt(rect2.getAttribute("y"));
           var dy = parseInt(rect2.getAttribute("height"));
 
-          var d = "M " + x0 + " " + y0;
+          d += "M " + x0 + " " + y0;
           if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {   
             document.onmousemove = function (e) {
               e.preventDefault();
