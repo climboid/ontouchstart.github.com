@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <script>
+      function el(tag) {
+        var ns = "http://www.w3.org/2000/svg";
+        return document.createElementNS(ns, tag);
+      }
+
+      var svg = el("svg");
+
+      function setCSS(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.style[k] = attr[k];
+          }
+        }
+        return el;
+      }
+
+      function setAttr(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.setAttribute(k, attr[k]);
+          }
+        }
+        return el;
+      }
+
+      function resize (svg) {        
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        setAttr(svg, { 
+          "viewBox" : "0 0 " + w + " " + h,
+          "width" : w,
+          "height" : h
+        });
+
+        setCSS(svg, {
+          position : "absolute",
+          left : 0,
+          top : 0,
+          margin : 0,
+          width : w + "px",
+          height : h + "px"
+        });
+      }
+
+      var path = el("path");
+      setAttr(path, {
+        "stroke" : "red",
+        "stroke-linecap" : "round",
+        "fill" : "none",
+        "stroke-width" : 3
+      });
+
+      svg.appendChild(path);
+
+      var d = "";
+      
+      if(document.createTouch) {
+        document.ontouchstart = function (e) {
+          e.preventDefault();
+          var x0 = e.touches[0].pageX;
+          var y0 = e.touches[0].pageY;
+          
+          d += "M" + x0 + "," + y0;
+          var circle = el("circle");
+          setAttr(circle, { 
+            cx : x0,
+            cy : y0, 
+            r : 10,
+            stroke : "red",
+            fill : "none" 
+          });
+          svg.appendChild(circle);
+                   
+          document.ontouchmove = function (e) {
+            var x = e.touches[0].pageX;
+            var y = e.touches[0].pageY;
+            d += "L" + x + "," + y;
+            setAttr(path, { d : d });
+            var circle = el("circle");
+            setAttr(circle, { 
+              cx : x,
+              cy : y, 
+              r : 10,
+              stroke : "red",
+              fill : "none" 
+            });
+            svg.appendChild(circle);
+          };
+        };
+      }
+      else {
+        document.onmousedown = function (e) {
+          e.preventDefault();
+          var x0 = e.pageX;
+          var y0 = e.pageY;
+          d += "M" + x0 + "," + y0;
+
+          var circle = el("circle");
+          setAttr(circle, { 
+            cx : x0,
+            cy : y0, 
+            r : 10,
+            stroke : "red",
+            fill : "none" 
+          });
+          svg.appendChild(circle);
+           
+          document.onmousemove = function (e) {
+            var x = e.pageX;
+            var y = e.pageY;
+            d += "L" + x + "," + y;
+            setAttr(path, { d : d });
+
+            var circle = el("circle");
+            setAttr(circle, { 
+              cx : x,
+              cy : y, 
+              r : 10,
+              stroke : "red",
+              fill : "none" 
+            });
+            svg.appendChild(circle);
+          };
+        };
+
+        document.onmouseup = function () {
+          document.onmousemove = null;
+        };
+      }
+
+      window.onresize = function () {
+        resize(svg);
+      };
+
+      document.body.appendChild(svg);
+
+      window.onresize();
+    </script>
+  </body>
+</html>
+
+
+
