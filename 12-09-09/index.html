@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>ontouchstart</title>
+  </head>
+  <body>
+    <script>
+      function el(tag) {
+        var ns = "http://www.w3.org/2000/svg";
+        return document.createElementNS(ns, tag);
+      }
+
+      var svg = el("svg");
+
+      function setCSS(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.style[k] = attr[k];
+          }
+        }
+        return el;
+      }
+
+      function setAttr(el, attr) {
+        for(var k in attr) {
+          if(attr.hasOwnProperty(k)) {
+            el.setAttribute(k, attr[k]);
+          }
+        }
+        return el;
+      }
+
+      function bindResize(el, fn) {
+        window.addEventListener("resize", function () {
+          fn(el);
+        });
+      }
+
+      bindResize(svg, function(svg) {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        setAttr(svg, { 
+          viewBox : "0 0 " + w + " " + h,
+          width : w,
+          height : h
+        });
+
+        setCSS(svg, {
+          position : "absolute",
+          left : 0,
+          top : 0,
+          margin : 0,
+          width : w + "px",
+          height : h + "px"
+        });
+
+      });
+
+      var path1 = el("path");
+      setAttr(path1, {
+        stroke : "red",
+        fill : "none",
+        opacity: 0.5
+      });
+
+      var path2 = el("path");
+      setAttr(path2, {
+        stroke : "green",
+        fill : "none",
+        "clip-path" : "url(#clip)",
+        opacity: 0.5
+      });
+
+      var clipPath = el("clipPath");
+      clipPath.id = "clip";
+
+      var g = el("g");
+      svg.appendChild(g);
+
+      var rect1 = el("rect");
+      clipPath.appendChild(rect1);
+      svg.appendChild(clipPath);
+
+      bindResize(rect1, function(rect1) {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        setAttr(rect1, {
+          x : w/2 - w/10,
+          y : 0,
+          width : w/5,
+          height : h
+        });
+      });
+
+      svg.appendChild(path1);
+      svg.appendChild(path2);
+
+      var rect2 = el("rect");
+      setAttr(rect2, {
+        fill : "none",
+        stroke : "blue"
+      });
+
+      bindResize(rect2, function(rect2) {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        setAttr(rect2, {
+          x : w/2 - w/10,
+          y : h-h/5,
+          width : w/5,
+          height : h/10
+        });
+      });
+
+      function clearBars() {
+        setAttr(g, {visibility: "hidden"});
+        var barList = g.childNodes;
+        for(var i = 0; i < barList.length; i++) {
+          setAttr(barList[i], {visibility: "hidden"});
+        }
+        setAttr(g, {visibility: "visible"});
+      }
+
+      var d = "";
+      if(document.createTouch) {
+        document.ontouchstart = function (e) {
+          e.preventDefault();
+          var x0 = e.touches[0].pageX;
+          var x = parseInt(rect2.getAttribute("x"));
+          var dx = parseInt(rect2.getAttribute("width"));
+
+          var y0 = e.touches[0].pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          d = "M " + x0 + " " + y0;
+          var x_ = x0;
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {        
+            document.ontouchmove = function (e) {
+              e.preventDefault();
+              var x1 = x + e.touches[0].pageX - x0;
+              var y1 = y + e.touches[0].pageY - y0;
+              setAttr(rect1, {x: x1});
+              setAttr(rect2, {x: x1, y:y1});
+            };
+          }
+          else {          
+            clearBars();
+            document.ontouchmove = function (e) {
+              var x = e.touches[0].pageX;
+              var y = e.touches[0].pageY;
+              d += "L " + x + " " + y;
+              var bar = el("rect");
+              g.appendChild(bar);
+              if(x > x_) {
+                setAttr(bar, { 
+                  x : x_, 
+                  y : y, 
+                  width : x - x_, 
+                  height : window.innerHeight, 
+                  fill : "orange",
+                  stroke : "red",
+                  "clip-path" : "url(#clip)"
+                });
+              }
+              else{
+                setAttr(bar, { 
+                  x : x, 
+                  y : y, 
+                  width :  x_ - x, 
+                  height : window.innerHeight, 
+                  fill : "orange",
+                  stroke : "red",
+                  "clip-path" : "url(#clip)"
+                });
+              }
+              x_ = x;
+
+              bindResize(bar, function(bar) {
+                setAttr(bar, {height : window.innerHeight});
+              });
+
+              setAttr(path1, { d : d });
+              setAttr(path2, { d : d });
+            };
+          }
+        };
+      }
+      else {
+        document.onmousedown = function (e) {
+          e.preventDefault();
+          var x0 = e.pageX;
+          var x = parseInt(rect2.getAttribute("x"));
+          var dx = parseInt(rect2.getAttribute("width"));
+
+          var y0 = e.pageY;
+          var y = parseInt(rect2.getAttribute("y"));
+          var dy = parseInt(rect2.getAttribute("height"));
+
+          d = "M " + x0 + " " + y0;
+          var x_ = x0;
+          if(x0 > x && x0 < x + dx && y0 > y && y0 < y + dy) {   
+            document.onmousemove = function (e) {
+              e.preventDefault();
+              var x1 = x + e.pageX - x0;
+              var y1 = y + e.pageY - y0;
+              setAttr(rect1, {x: x1});
+              setAttr(rect2, {x: x1, y:y1});       
+            };
+          }
+          else {
+            clearBars();
+            document.onmousemove = function (e) {
+              var x = e.pageX;
+              var y = e.pageY;
+              d += "L " + x + " " + y;
+
+              var bar = el("rect");
+              g.appendChild(bar);
+              if(x > x_) {
+                setAttr(bar, { 
+                  x : x_, 
+                  y : y, 
+                  width : x - x_, 
+                  height : window.innerHeight, 
+                  fill : "orange",
+                  stroke : "red",
+                  "clip-path" : "url(#clip)"
+                });
+              }
+              else{
+                setAttr(bar, { 
+                  x : x, 
+                  y : y, 
+                  width :  x_ - x, 
+                  height : window.innerHeight, 
+                  fill : "orange",
+                  stroke : "red",
+                  "clip-path" : "url(#clip)"
+                });
+              }
+              x_ = x;
+
+              bindResize(bar, function(bar) {
+                setAttr(bar, {height : window.innerHeight});
+              });
+
+              setAttr(path1, { d : d });
+              setAttr(path2, { d : d });
+            };
+          }
+        };
+
+        document.onmouseup = function () {
+          document.onmousemove = null;
+        };
+      }
+
+      svg.appendChild(rect2);
+
+      document.body.appendChild(svg);
+
+      window.resize = function () {
+        var evt = document.createEvent('UIEvents');
+        evt.initUIEvent('resize', true, false,window,0);
+        window.dispatchEvent(evt);
+      };
+
+      window.resize();
+    </script>
+  </body>
+</html>
