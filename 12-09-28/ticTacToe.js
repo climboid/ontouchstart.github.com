@@ -105,7 +105,7 @@
       }
 
       ctx.beginPath();
-      ctx.lineWidth = 80;
+      ctx.lineWidth = w/4;
       ctx.strokeStyle = 'rgba(255,255,0,0.7)';
       switch (n) {
         case 0:
@@ -150,9 +150,8 @@
           var css = {position: 'absolute',
             width: (w/3-1) + 'px',
             height: (h/3-1) + 'px',
-            left: 0,
-            top: 0,
-            webkitTransform: 'translate3d(' + (w * i / 3) + 'px,' + (h * j / 3) + 'px,0)'
+            left: (w * i / 3) + 'px',
+            top: (h * j / 3) + 'px',
           };
 
           var tile = el('div', {attr: attr, css: css});
@@ -164,14 +163,14 @@
 
     function pick () {
       var root = this;
-      this.style.display = 'none';       
+      root.style.display = 'none';       
       var x = root.getAttribute('x');
       var y = root.getAttribute('y');
       var id = root.getAttribute('id');
       var scoreIndexArray = scoreIndex[id];
      
       ctx.save();
-      ctx.lineWidth = 25;
+      ctx.lineWidth = w/40;
       ctx.lineCap = 'round';
       ctx.beginPath();
       if(OPlaying) {        
