@@ -1,6 +1,6 @@
 (function () {
   var root = this;
-  var w = document.body.scrollWidth / 2;
+  var w = root.innerWidth / 2;
   var h = w;
 
   function setCSS(el, attr) {
@@ -38,15 +38,15 @@
       var css = { position: 'relative',
         width: w + 'px',
         height: h + 'px',
-        marginLeft: ((document.body.scrollWidth - w) / 2) + 'px',
+        marginLeft: ((root.innerWidth - w) / 2) + 'px',
         marginTop: '20px'
       };
 
       var c = el('div', { css : css });
       document.body.appendChild(c);
 
-      root.addEventListener('orientationchange', function () {
-        c.style.marginLeft = (document.body.scrollWidth - w) / 2 + 'px';
+      root.addEventListener('resize', function () {
+        c.style.marginLeft = (root.innerWidth - w) /  2 + 'px';
       });
       return c;
     }
