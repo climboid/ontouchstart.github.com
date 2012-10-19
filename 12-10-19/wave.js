@@ -2,21 +2,6 @@
   var root = this;
 
   function run () {
-    var w = root.innerWidth/2;
-    var h = w / 1.68;
-    var x = d3.scale.linear()
-        .domain([0, 1])
-        .range([0, w]);
-
-    var y = d3.scale.linear()
-        .domain([0, 1])
-        .range([h, 0]);
-
-    var line = d3.svg.line()
-        .interpolate("basis")
-        .x(function(d) { return x(d.x); })
-        .y(function(d) { return y(d.y); });
-
     var body = d3.select("body")
         .html("")
         .style({
@@ -26,58 +11,58 @@
    
     var svg = body.append("svg")
         .style({
-          width: w,
-          height: h,
-          "margin-left": w/2,
-          "margin-top": h/2,
           background: "#000"
         });
 
     var path = svg.append("path")
        .style({
           stroke: "green",
-          "stroke-width" : 2,
+          "stroke-width": 2,
           fill: "none"
        });
 
-    var phase = Math.PI/2;
+    var t = 0;
+    var n = 50;
+    var data = d3.range(n).map(function(i) { return 0; });
+
     function update() {
-      phase = - phase;
+      t++;
       var w = root.innerWidth/2;
       var h = w / 1.68;
+
       svg.style({
           width: w,
           height: h,
           "margin-left": w/2,
-          "margin-top": h/2,
-          background: "#000"
+          "margin-top": h/2
         });
 
       var x = d3.scale.linear()
-          .domain([0, 1])
+          .domain([0, n-1])
           .range([0, w]);
 
       var y = d3.scale.linear()
-          .domain([0, 1])
+          .domain([-1, 1])
           .range([h, 0]);
 
       var line = d3.svg.line()
-          .interpolate("basis")
-          .x(function(d) { return x(d.x); })
-          .y(function(d) { return y(d.y); });
+          .interpolate("basis-open")
+          .x(function(d,i) { return x(i); })
+          .y(function(d) { return y(d); });
 
-      var data = d3.range(100).map(function(i) {
-        return {x: i / 99, y: (Math.sin(i / 3 + phase) + 2) / 4};
-      });
+      data.shift();
       
+      data.push(Math.sin(t/Math.PI)/2);
+
       path.datum(data);
       path.transition()
           .ease("linear")
-          .duration(1000)
+          .duration(100)
           .attr("d", line);
+     setTimeout(update, 100);
     }
-    
-    setInterval(update, 1000);
+    update();    
+
   }
 
   function load() {
@@ -96,12 +81,11 @@
       }
     }
 
-    route("#pulse", "Pulse");
+    route("#wave", "Wave");
   }
 
   root.addEventListener("hashchange", load);
   root.addEventListener("load", load);
 
 }).call(this);
-
 
