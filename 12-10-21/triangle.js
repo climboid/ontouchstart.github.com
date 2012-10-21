@@ -34,10 +34,10 @@
       var sign = 1;
       var n = 10;
       for(var k = 1; k <= n; k++) {
-        y += sign * Math.sin(k * omega * t)/k;
+        y += sign * Math.sin((2 * k - 1) * omega * t)/((2 * k - 1) * (2 * k - 1));
         sign = -sign;
       }
-      return y / Math.PI;
+      return 4 * y / (Math.PI * Math.PI);
     }
 
     function update() {
@@ -94,7 +94,7 @@
       }
     }
 
-    route("#sawtooth", "Sawtooth Wave");
+    route("#triangle", "Triangle Wave");
     document.addEventListener("touchmove", function(e) {
       e.preventDefault();
     });
