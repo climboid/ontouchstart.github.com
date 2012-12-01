@@ -8,7 +8,8 @@
       .on("drag", dragmove)
       .on("dragend", dragend);
 
-    var svg = d3.select("body").append("svg");
+    var svg = d3.select("body").append("svg")
+     .attr( { "width" : 1024, "height": 1024 });
 
     var stars = svg.selectAll("polygon")
         .data([0,1,2,3,4])
