@@ -20,15 +20,15 @@
              y0: 0,
              dx: 0,
              dy: 0,
-             offsetX: 100,
-             offsetY: 180 * d - 40
+             offsetX: -100,
+             offsetY: -180 * d + 40
            }; 
         })
         .attr({
            "fill" : "blue",
            "points" : "350,75 379,161 469,161 397,215 423,301 350,250 277,301 303,215 231,161 321,161",
            "transform" : function(d) {
-               return "translate(" + (d.dx + d.offsetX) + "," + (d.dy + d.offsetY) + ")";
+               return "translate(" + (d.dx - d.offsetX) + "," + (d.dy - d.offsetY) + ")";
            }     
       })
       .call(drag);
@@ -44,7 +44,7 @@
        }
        d.dx = d3.event.x - d.x0;
        d.dy = d3.event.y - d.y0;
-       var transform =  "translate(" + (d.dx + d.offsetX) + "," + (d.dy + d.offsetY) + ")";
+       var transform =  "translate(" + (d.dx - d.offsetX) + "," + (d.dy - d.offsetY) + ")";
        d3.select(this).attr(
          {"transform": transform}
        );
@@ -52,8 +52,8 @@
 
     function dragend(d) {
       d3.select(this).attr("fill", "blue");  
-      d.offsetX += d.dx;
-      d.offsetY += d.dy;
+      d.offsetX -= d.dx;
+      d.offsetY -= d.dy;
       d.x0 = 0;
       d.y0 = 0;
     }
