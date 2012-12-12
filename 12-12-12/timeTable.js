@@ -2,6 +2,11 @@
   var root = this;
 
   function run () {
+    document.body.innerHTML = '';
+    var log = document.createElement('pre');
+    document.body.appendChild(log);
+    var table = document.createElement('table');
+    document.body.appendChild(table);
     var db = openDatabase("db121212", "1.0", "db", 1024 * 1024);
     var now = Date.parse(new Date());
     db.transaction(function(tx) {
@@ -39,9 +44,8 @@
         var sql = "SELECT id, time, duration FROM time_table";
         sql += " ORDER BY time DESC";
         tx.executeSql(sql, [], function(tx, r) {
-           document.body.innerHTML = '<pre>' + sql + '</pre';
-           document.body.innerHTML += '<table>';
-           document.body.innerHTML += '<tr><td>id</td><td>time</td><td>duration</td></tr>';
+           log.innerHTML = sql;
+           table.innerHTML = '';
            for(var i = 0; i < r.rows.length ; i++) {
              var item = r.rows.item(i);
              var t = item.duration/1000;
@@ -58,13 +62,21 @@
                s = '0' + s;
              }
              var duration = h + ':' + m + ':' + s;
-             document.body.innerHTML += '<tr>';
-             document.body.innerHTML += '<td>' + item.id + '</td>';
-             document.body.innerHTML += '<td>' + (new Date(item.time)) +'</td>';
-             document.body.innerHTML += '<td>' + duration + '</td>';
-             document.body.innerHTML += "</tr>";
+             var tr = document.createElement('tr');
+             var td_id = document.createElement('td');
+             var td_time = document.createElement('td');
+             var td_duration = document.createElement('td');
+
+             td_id.innerHTML = item.id;
+             td_time.innerHTML = (new Date(item.time));
+             td_duration.innerHTML = duration;
+
+             tr.appendChild(td_id);
+             tr.appendChild(td_time);
+             tr.appendChild(td_duration);
+
+             table.appendChild(tr);
            }
-           document.body.innerHTML += '</table>';
         });
       });
     }
