@@ -62,6 +62,7 @@
         var y = [];
 
         function plot(container, x, y, t) {
+          container.innerHTML = '';
           var x_min = x[0];
           var x_max = x[0];
 
@@ -95,7 +96,6 @@
 
         }
 
-
         tx.executeSql(sql, [], function(tx, r) {
            log.innerHTML = sql;
            table.innerHTML = '';
@@ -103,18 +103,30 @@
              var item = r.rows.item(i);
 
              var tr = document.createElement('tr');
-
+             var td_del = document.createElement('td');
+             td_del.style.color = '#FF0000';
              var td_time = document.createElement('td');
              var td_latitude = document.createElement('td');
              var td_longitude = document.createElement('td');
              
+             td_del.innerHTML = '&#10008;';
+             td_del.time = item.time;
              td_time.innerHTML = new Date(item.time);
              td_latitude.innerHTML = item.latitude;
              td_longitude.innerHTML = item.longitude;
 
+             tr.appendChild(td_del);
              tr.appendChild(td_time);
              tr.appendChild(td_latitude);
-             tr.appendChild(td_longitude);            
+             tr.appendChild(td_longitude);
+
+             td_del.onclick = function () {
+               var sql = 'DELETE FROM location_table WHERE time = ' + this.time;
+               db.transaction(function(tx) {
+                 tx.executeSql(sql, [], show);
+               });
+
+             };             
 
              table.appendChild(tr);
 
