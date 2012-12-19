@@ -12,7 +12,7 @@
     pathContainer.style.border = '1px solid';
     document.body.appendChild(pathContainer);
 
-    var db = openDatabase("db121218", "1.0", "db", 1024 * 1024);
+    var db = openDatabase("db121219", "1.0", "db", 1024 * 1024);
     var start;
 
     db.transaction(function(tx) {
