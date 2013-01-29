@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<script src="d3.js"></script>
+<script>
+function toggle(el) {
+    if(el.style.display === "none") {
+        el.style.display = "block";
+    }
+    else {
+        el.style.display = "none";
+    }
+}
+
+var functionCount = [];
+var max = 0;
+var min = 0;
+function inspectObj(obj, parent) {
+    for (var k in obj) {
+        if(obj.hasOwnProperty(k)) {
+            (function () {
+                var type = typeof obj[k];
+                var dt = parent.append("dt");
+                dt.style({
+                    margin: 10
+                });
+                dt.html(k + ' (' + type + ')');
+                var dd = parent.append("dd");
+                dd.style({
+                    padding: 10,
+                    border: "1px solid"
+                });
+
+                dt.on('click', function () {
+                    toggle(dd.node());
+                });
+
+                if(type === 'object') {
+                    inspectObj(obj[k], dd)
+                }
+                else {
+                    dd.append("div")
+                    .style({
+                        "font-family": "Monospace"
+                    })
+                    .html(obj[k].toString());
+                    if(type === 'function') {
+                        var count = obj[k].toString().length;
+                        max = count > max? count : max;
+                        min = count < min? count : min;
+                        functionCount.push({name: k, count: count });
+                    }
+                }
+            })();
+        }
+    }
+}
+
+function objTree(obj, name, root) {
+    root.children = root.children || [];
+    var node = { name : name };
+    if(typeof obj === 'object') {
+      for (var k in obj) {
+        if(obj.hasOwnProperty(k)) {
+           objTree(obj[k], k, node);
+        }
+      }
+    }
+    else {
+      node.size = obj.toString().length;
+    }
+    root.children.push(node);
+}
+
+var b = d3.select("body");
+
+inspectObj(d3, b.append("dl"));
+
+b.append("ol")
+  .selectAll("li")
+    .data(functionCount)
+  .enter().append("li")
+    .text(function(d) { return d.name + ":" + d.count; })
+    .append("div")
+    .style({
+       background: "blue",
+       height: "10px",
+       width : function(d) { return  100 * (d.count - min)/(max-min) + "%";}
+     });
+
+var d3Tree = {};
+objTree(d3, 'd3', d3Tree);
+inspectObj(d3Tree.children[0], b.append("dl"));
+
+var tree = d3.layout.tree().size([700, 700]);
+var nodes = tree.nodes(d3Tree);
+b.append("svg")
+    .attr({width : 700, height : 700})
+    .selectAll("path")
+    .data(tree.links(nodes))
+  .enter().append("path")
+    .attr({
+      d : d3.svg.diagonal(),
+      fill : "none",
+      stroke : "blue"
+    });
+
+</script>
+
+</body>
+</html>
